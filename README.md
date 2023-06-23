@@ -7,6 +7,8 @@ The geometry conventions used in this implementation are from a pilots point of 
 - y points right (East), positive **pitch** points nose up
 - z points down (Down), positive **yaw** turns nose right
 
+The AHRS and motion class have not yet been tested with real hardware.
+
 ## Install
 Download the library and ```pip3 install -e .``` or omit the -e switch to install into python's site packages.
 
