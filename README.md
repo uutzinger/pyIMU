@@ -13,7 +13,7 @@ The AHRS and motion class have not yet been tested with real hardware.
 Download the library and ```pip3 install -e .``` or omit the -e switch to install into python's site packages.
 
 ## pyIMU.madgwick
-Contains pose sensor fusion based on Sebastian Madgwick [dissertation work](https://x-io.co.uk/downloads/madgwick_internal_report.pdf) and work by [Mario Garcia] (https://pypi.org/project/AHRS/) as well as work by Richardson Tech (RTIMU).
+Contains pose sensor fusion based on Sebastian Madgwick [dissertation work](https://x-io.co.uk/downloads/madgwick_internal_report.pdf) and work by [Mario Garcia](https://pypi.org/project/AHRS/) as well as work by Richardson Tech (RTIMU).
 
 There is newer [implementation](https://pypi.org/project/imufusion/) based on an alternative approach in the Madgwick [thesis](https://ethos.bl.uk/OrderDetails.do?uin=uk.bl.ethos.681552) which is implemented in C with a Python API.
 
