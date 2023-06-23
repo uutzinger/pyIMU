@@ -32,6 +32,9 @@ type(madgwick.q)
 # provide time increment dt based on time expired between each sensor reading
 madgwick.update(gyr=gyro_data, acc=acc_data, dt=0.01)
 madgwick.update(gyr=gyro_data, acc=acc_data, mag=mag_data, dt=0.01)
+# access the quaternion
+madgwick.q
+# or take the return value of the update function
 ```
 
 ## pyIMU.motion
