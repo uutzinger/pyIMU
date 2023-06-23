@@ -1,6 +1,6 @@
 # pyIMU
 
-Python implementation of **Quaternion** and **Vector** math for Attitude and Heading Reference System (AHRS) as well as **motion** (acceleration, speed, position) estimation based on a Inertial Measurement Unit (IMU) (accelerometer, gyroscope and optional magnetometer).
+Python implementation of **Quaternion** and **Vector** math for Attitude and Heading Reference System (AHRS) as well as **motion** (acceleration, speed, position) estimation based on a Inertial Measurement Unit (IMU) consisting of an accelerometer, gyroscope and optional magnetometer.
 
 The geometry conventions used in this implementation are from a pilots point of view:
 - x points forward (North), positive **roll** turns plane clockwise
@@ -13,7 +13,9 @@ The AHRS and motion class have not yet been tested with real hardware.
 Download the library and ```pip3 install -e .``` or omit the -e switch to install into python's site packages.
 
 ## pyIMU.madgwick
-Contains pose sensor fusion based on Sebastian Madgwick [Dissertation](https://x-io.co.uk/downloads/madgwick_internal_report.pdf)
+Contains pose sensor fusion based on Sebastian Madgwick [dissertation work](https://x-io.co.uk/downloads/madgwick_internal_report.pdf) and work by [Mario Garcia] (https://pypi.org/project/AHRS/) as well as work by Richardson Tech (RTIMU).
+
+There is newer [implementation](https://pypi.org/project/imufusion/) based on an alternative approach in the Madgwick [thesis](https://ethos.bl.uk/OrderDetails.do?uin=uk.bl.ethos.681552) which is implemented in C with a Python API.
 
 ### Magdwick Class
 Incremental sensor fusion to compute pose quaternion from accelerometer, gyroscope and optional magnetometer.
