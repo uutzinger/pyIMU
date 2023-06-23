@@ -47,12 +47,12 @@ class Madgwick:
     This code is based on https://github.com/Mayitzin/ahrs/
     The original paper and formula references for the Madgwick algorithm are 
     - https://x-io.co.uk/downloads/madgwick_internal_report.pdf
-    The publication is
+    The peer reviewed publication for the Madgwick algorithum is
     - https://doi.org/10.1109/ICORR.2011.5975346
     The original C++ implementation is
     - https://x-io.co.uk/open-source-imu-and-ahrs-algorithms/
     There is newer work by the same author at: https://github.com/xioTechnologies/Fusion
-    including magnetic and acceleration rejection.
+    including magnetic and acceleration rejection and C to Python API.
     
     Urs Utzinger 2023
     """
