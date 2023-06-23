@@ -139,7 +139,7 @@ class Madgwick:
             qDot -= gain*gradient                                  # (eq. 33)
         
         # Update orientation
-        q += qDot*dt                                               # (eq. 13)
+        q = q + qDot*dt                                            # (eq. 13)
         q.normalize()
         return q
 
@@ -196,6 +196,6 @@ class Madgwick:
             qDot -= gain*gradient            # np.ndarray          # (eq. 33)
 
         # Update orientation
-        q += qDot*dt                                               # (eq. 13)
+        q = q + qDot*dt                                            # (eq. 13)
         q.normalize()
         return q
