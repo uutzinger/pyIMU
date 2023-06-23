@@ -128,7 +128,7 @@ class Quaternion():
             '''
             multiply quaternion with vector
             vector is converted to quaternion with [0,vector]
-            the computed the same as above with other.w=0
+            then computed the same as above with other.w=0
             '''
             w = - (self.x * other.x) - (self.y * other.y) - (self.z * other.z)
             x =    self.w * other.x  +  self.y * other.z  -  self.z * other.y

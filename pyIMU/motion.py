@@ -4,13 +4,16 @@ from pyIMU.madgwick import Madgwick
 import math
 import time
 
+# https://www.researchgate.net/publication/258817923_FreeIMU_An_Open_Hardware_Framework_for_Orientation_and_Motion_Sensing
+# https://web.archive.org/web/20210308200933/https://launchpad.net/freeimu/
+
 class Motion:
     '''
     IMU Motion Estimation
     '''
     def __init__(self, **kwargs):
 
-        # Tucson Arizona
+        # Default values are for Tucson, Arizona, USA
         self.declination      = kwargs.get('declination', 9.27)    # decimal degrees 
         self.latitude         = kwargs.get('latitude', 32.253460)  # decimal degrees
         self.altitude         = kwargs.get('altitude', 730)        # meter
@@ -46,15 +49,16 @@ class Motion:
         self.motion_previous        = False
         self.motionStart_time       = time.perf_counter()
 
-        self.FUZZY_ACCEL_ZERO       = 0.1 # if more than 0.1m/s^2 acceleration, we are moving
-        self.FUZZY_ACCEL_DELTA_ZERO = 0.0 # 2-4 times the sqrt of acceleration variance
+        # These values need to be tuned for each IMU
+        self.FUZZY_ACCEL_ZERO       = 0.1  # if more than 0.1m/s^2 acceleration, we are moving
+        self.FUZZY_ACCEL_DELTA_ZERO = 0.0  # 2-4 times the sqrt of acceleration variance
         self.FUZZY_GYRO_ZERO        = 0.07 # absolute value of real gyration
         self.FUZZY_DELTA_GYRO_ZERO  = 0.01 # 2-4 times the sqrt of gyration variance
           
         self.timestamp_previous = time.perf_counter()   # provided by caller
-        self.dtmotion           = 0.0                   # no motion occurred yet
+        self.dtmotion           = 0.0                   # no motion has occurred yet
     
-        self.gravity = gravity(latitude=self.latitude, altitude=self.altitude)                            # Gravity on Ellipsoid Surface
+        self.gravity = gravity(latitude=self.latitude, altitude=self.altitude)    # Gravity on Earth's (ellipsoid) Surface
     
         self.madgwick = Madgwick()                      # AHRS filter
     

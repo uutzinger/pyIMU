@@ -79,10 +79,10 @@ class Madgwick:
         self.gyr = copy(gyr)
         self.acc = copy(acc)
              
-        if self.mag is None:
+        if mag is None:
             # Compute with IMU architecture
             if self.q is None:
-                self.q = accel2q(self.acc).normalize()
+                self.q = accel2q(self.acc).normalize() # estimate initial orientation
             else:
                 if dt is None:
                     self.q = self.updateIMU(self.q, self.gyr, self.acc, dt=self.dt, gain=self.gain_imu)
@@ -101,29 +101,28 @@ class Madgwick:
 
         return self.q
         
-    def updateIMU(self, q0: Quaternion, gyr: Vector3D, acc: Vector3D, dt: float, gain: float) -> Quaternion:
+    def updateIMU(self, q: Quaternion, gyr: Vector3D, acc: Vector3D, dt: float, gain: float) -> Quaternion:
         """
         Quaternion Estimation with a Gyroscope and Accelerometer.
-        q0  : A-priori quaternion.
+        q   : A-priori quaternion.
         gyr : Vector3D of tri-axial Gyroscope in rad/s
         acc : Vector3D of tri-axial Accelerometer in m/s^2
         dt  : float, default: None, Time step, in seconds, between consecutive Quaternions.
         Returns
-        q : Estimated quaternion.
+        q   : Estimated quaternion.
         """
         
-        # Estimated orientation change from gyroscope
-        qDot = 0.5 * q0 * gyr                                      # (eq. 12)
-
-        a = copy(acc)
-        q = copy(q0)
-        
+        a = acc
         a.normalize()
+        q.normalize()
+        
+        # Estimated orientation change from gyroscope
+        qDot = 0.5 * q * gyr                                       # (eq. 12)
 
         # Objective function                                       # (eq. 25)
-        f = Vector3D(2.0*(q.x*q.z - q.w*q.y) - a.x,
-                     2.0*(q.w*q.x + q.y*q.z) - a.y,
-                     2.0*(0.5-q.x**2-q.y**2) - a.z)
+        f = np.array([2.0*(q.x*q.z - q.w*q.y) - a.x,
+                      2.0*(q.w*q.x + q.y*q.z) - a.y,
+                      2.0*(0.5-q.x**2-q.y**2) - a.z])
         
         if f.norm > 0:
             # Jacobian                                             # (eq. 26)
@@ -132,21 +131,21 @@ class Madgwick:
                           [ 0.0,     -4.0*q.x, -4.0*q.y, 0.0    ]])
             
             # Sensitivity Matrix                                   # (eq. 34)
-            gradient = J.T@f.v                    # np.ndarray
-            gradient /= np.linalg.norm(gradient)  # np.ndarray
+            gradient = J.T@f
+            gradient = gradient / np.linalg.norm(gradient)
 
             # Update orientation change
-            qDot -= gain*gradient                                  # (eq. 33)
+            qDot = qDot - gain*gradient                            # (eq. 33)
         
         # Update orientation
         q = q + qDot*dt                                            # (eq. 13)
         q.normalize()
         return q
 
-    def updateMARG(self, q0: Quaternion, gyr: Vector3D, acc: Vector3D, mag: Vector3D, dt: float, gain: float) -> Quaternion:
+    def updateMARG(self, q: Quaternion, gyr: Vector3D, acc: Vector3D, mag: Vector3D, dt: float, gain: float) -> Quaternion:
         """
         Quaternion Estimation with a Gyroscope, Accelerometer and Magnetometer.
-        q0  : A-priori quaternion.
+        q   : A-priori quaternion.
         gyr : Vector3D of tri-axial Gyroscope in rad/s
         acc : Vector3D of tri-axial Accelerometer in m/s^2
         mag : Vector3D of tri-axial Magnetometer in nT
@@ -154,20 +153,19 @@ class Madgwick:
         Returns
         q : Estimated quaternion.
         """
-        
-        # Estimated orientation change from gyroscope
-        qDot = 0.5 * q0 * gyr                                      # (eq. 12)
 
-        a = copy(acc)
-        q = copy(q0)
-        m = copy(mag)
+        a = acc
+        m = mag
         
         a.normalize()
         q.normalize()
         m.normalize()
         
+        # Estimated orientation change from gyroscope
+        qDot = 0.5 * q * gyr                                       # (eq. 12)
+        
         # Rotate normalized magnetometer measurements
-        h = q * mag * q.conj                                       # (eq. 45)
+        h = q * m * q.conj                                         # (eq. 45)
         bx = math.sqrt(h.x**2 + h.y**2)                            # (eq. 46)
         bz = h.z
 
@@ -189,13 +187,13 @@ class Madgwick:
                           [ 2.0*bx*q.y,            2.0*bx*q.z-4.0*bz*q.x, 2.0*bx*q.w-4.0*bz*q.y,  2.0*bx*q.x           ]])
 
             # Sensitivity Matrix
-            gradient = J.T@f.v                                     # (eq. 34)
-            gradient /= np.linalg.norm(gradient)  # np.ndarray
+            gradient = J.T@f                                      # (eq. 34)
+            gradient = gradient / np.linalg.norm(gradient)
 
             # Updated orientation change            
-            qDot -= gain*gradient            # np.ndarray          # (eq. 33)
+            qDot = qDot - gain*gradient                           # (eq. 33)
 
         # Update orientation
-        q = q + qDot*dt                                            # (eq. 13)
+        q = q + qDot*dt                                           # (eq. 13)
         q.normalize()
         return q
