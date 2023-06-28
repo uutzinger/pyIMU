@@ -3,6 +3,7 @@ from pyIMU.quaternion import Vector3D, Quaternion, TWOPI, DEG2RAD
 import numpy as np
 import math
 import struct
+from copy import copy
 
 ###########################################################
 # Utility Functions
@@ -112,21 +113,18 @@ def q2rpy(pose: Quaternion) -> Vector3D:
     siny_cosp =       2.0 * (pose.w * pose.z + pose.x * pose.y)
     cosy_cosp = 1.0 - 2.0 * (pose.y**2 + pose.z**2)
     yaw = math.atan2(siny_cosp, cosy_cosp)
+
     return Vector3D(x=roll, y=pitch, z=yaw)
 
-def rpy2q(r=0.0, p=0.0, y=0.0) -> Quaternion:
+def rpy2q(rpy) -> Quaternion:
     '''assume vector contains roll, pitch, yaw and convert to quaternion'''
     
-    if np.isscalar(r):
-        roll  = r
-        pitch = p
-        yaw   = y
-    elif isinstance(r, Vector3D):
-        roll  = r.x 
-        pitch = r.y
-        yaw   = r.z
+    if isinstance(rpy, Vector3D):
+        roll  = rpy.x 
+        pitch = rpy.y
+        yaw   = rpy.z
     elif isinstance(r, np.ndarray):
-        if len(r) == 3:
+        if len(rpy) == 3:
             roll, pitch, yaw = r
     else:
         raise TypeError("Unsupported operand type for rpy2q: {}".format(type(r)))
@@ -145,31 +143,24 @@ def rpy2q(r=0.0, p=0.0, y=0.0) -> Quaternion:
 
     return Quaternion(w, x, y, z)
 
-def accel2rpy(x=0., y=0., z=0.) -> Vector3D:
+def accel2rpy(acc) -> Vector3D:
 
-    if np.isscalar(x):
-        _x = x
-        _y = y
-        _z = z
-    elif isinstance(x, Vector3D):
-        _x = x.x 
-        _y = x.y
-        _z = x.z
-    elif isinstance(x, np.ndarray):
-        if len(x) == 3:
-            _x, _y, _z = x
+    if isinstance(acc, Vector3D):
+        _acc = copy(acc)
+    elif isinstance(acc, np.ndarray):
+        if len(acc) == 3:
+            _acc = Vector3D(acc)
     else:
         raise TypeError("Unsupported operand type for accel2rpy: {}".format(type(x)))
 
-    normAccel = Vector3D(_x, _y, _z)
-    normAccel.normalize()
+    _acc.normalize()
 
-    roll  =  math.atan2(normAccel.y, normAccel.z)
-    pitch = -math.atan2(normAccel.x, math.sqrt(normAccel.y * normAccel.y + normAccel.z * normAccel.z))
+    roll  =  math.atan2(_acc.y, _acc.z)
+    pitch = -math.atan2(_acc.x, math.sqrt(_acc.y * _acc.y + _acc.z * _acc.z))
     yaw   =  0.0
     return(Vector3D(roll, pitch, yaw))
 
-def accel2q(x=0.,y=0.,z=0.) -> Quaternion:
+def accel2q(acc) -> Quaternion:
     '''
     Converts Accelerometer to Quaternion assuming no motion
     Input accelerometer reading x,y,z
@@ -177,30 +168,21 @@ def accel2q(x=0.,y=0.,z=0.) -> Quaternion:
     '''
     # # vec_z = Vector3D(0, 0, 1.0)
     # # angle = math.acos(z.dot(normAccel)) simplified to
-    # angle = math.acos(normAccel.z)
-    # # vec = normAccel.cross(vec_z) simplified to
-    # vec = Vector3D(x=normAccel.y, y=-normAccel.x, z=0.)
+    # angle = math.acos(_acc.z)
+    # # vec = _acc.cross(vec_z) simplified to
+    # vec = Vector3D(x=_acc.y, y=-_acc.x, z=0.)
     # return vec.angle2q(angle)
-
-    if np.isscalar(x):
-        _x = x
-        _y = y
-        _z = z
-    elif isinstance(x, Vector3D):
-        _x = x.x 
-        _y = x.y
-        _z = x.z
-    elif isinstance(x, np.ndarray):
-        if len(x) == 3:
-            _x, _y, _z = x
+    if isinstance(acc, Vector3D):
+        _acc = copy(acc) 
+    elif isinstance(acc, np.ndarray):
+        if len(acc) == 3:
+            _acc = Vector3D(acc)
     else:
-        raise TypeError("Unsupported operand type for accel2rpy: {}".format(type(x)))
+        raise TypeError("Unsupported operand type for accel2rpy: {}".format(type(acc)))
 
-    normAccel = Vector3D(_x, _y, _z)
-    normAccel.normalize()
-
-    roll  =  math.atan2(normAccel.y, normAccel.z)
-    pitch = -math.atan2(normAccel.x, math.sqrt(normAccel.y * normAccel.y + normAccel.z * normAccel.z))
+    _acc.normalize()
+    roll  =  math.atan2(_acc.y, _acc.z)
+    pitch = -math.atan2(_acc.x, math.sqrt(_acc.y * _acc.y + _acc.z * _acc.z))
     # yaw   =  0.0
 
     cosY2 = math.cos(pitch * 0.5)
@@ -213,9 +195,9 @@ def accel2q(x=0.,y=0.,z=0.) -> Quaternion:
     y =  sinY2 * cosX2
     z = -sinY2 * sinX2
 
-    return Quaternion(w, x, y, z)
+    return Quaternion(w=w, x=x, y=y, z=z)
     
-def accelmag2q(accel, mag) -> Quaternion:
+def accelmag2q(acc, mag) -> Quaternion:
     '''
     Estimate Pose Vector from Accelerometer and Compass
     1) Acceleration to Roll Pitch Yaw=0.0
@@ -223,17 +205,30 @@ def accelmag2q(accel, mag) -> Quaternion:
     3) Rotate Compass to World from estimated Pose
     4) Update estimated Yaw in Euler and return result
     '''
-    if isinstance(accel, np.ndarray):
-        if len(accel) == 3:
-            accel = Vector3D(accel)
+
+    if isinstance(acc, Vector3D):
+        _acc = copy(acc)
+    elif isinstance(acc, np.ndarray):
+        if len(acc) == 3:
+            _acc = Vector3D(acc)
+    else:
+        raise TypeError("Unsupported operand type for accel2rpy: {}".format(type(acc)))
+
+    if isinstance(mag, Vector3D):
+        _mag = copy(mag) 
+    elif isinstance(mag, np.ndarray):
+        if len(mag) == 3:
+            _mag = Vector3D(mag)
+    else:
+        raise TypeError("Unsupported operand type for accel2rpy: {}".format(type(mag)))
             
-    rpy = accel2rpy(accel.x, accel.y, accel.z) # rpy.z = 0
+    rpy = accel2rpy(_acc) # resutls rpy.z = 0
 
     # rpy to quaternion, simplified because rpy.z is zero
-    cosP2 = math.cos(rpy.p * 0.5)
-    sinP2 = math.sin(rpy.p * 0.5)
-    cosR2 = math.cos(rpy.r * 0.5)
-    sinR2 = math.sin(rpy.r * 0.5)
+    cosP2 = math.cos(rpy.y * 0.5) # P
+    sinP2 = math.sin(rpy.y * 0.5) # P
+    cosR2 = math.cos(rpy.x * 0.5) # R
+    sinR2 = math.sin(rpy.x * 0.5) # R
     q = Quaternion(
         w =  cosP2 * cosR2,
         x =  cosP2 * sinR2, 
@@ -244,9 +239,9 @@ def accelmag2q(accel, mag) -> Quaternion:
     # rotate Magnetometer to Q pose
     m = Quaternion(
         w = 0.,
-        x = mag.x,
-        y = mag.y,
-        z = mag.z
+        x = _mag.x,
+        y = _mag.y,
+        z = _mag.z
     )
     m = q * m * q.conjugate # conversion from sensor frame to world frame
 
@@ -254,9 +249,11 @@ def accelmag2q(accel, mag) -> Quaternion:
     rpy.z = -math.atan2(m.y, m.x)
     
     # Convert RPY to Quaternion
-    return rpy2q(rpy)
+    q = rpy2q(rpy)
 
-def heading(pose: Quaternion, mag, declination=0.0) -> float:
+    return q
+
+def heading(pose:Quaternion, mag, declination=0.0) -> float:
     '''
     Tilt compensated heading from compass
     Corrected for local magnetic declination
@@ -267,30 +264,32 @@ def heading(pose: Quaternion, mag, declination=0.0) -> float:
     Output:
       heading:    float
     '''
-
-    # NOT TESTED YET
-    
     if isinstance(mag, np.ndarray):
-        mag=Vector3D(mag)
+        _mag = Vector3D(mag)
     elif isinstance(mag, Vector3D):
-        pass
+        _mag = copy(mag)
     else:
         raise TypeError("Unsupported operand type for mag: {}".format(type(mag)))
 
-    # Convert pose quaternion to RPY
-    rpy = q2rpy(pose)
-    
-    cos_roll  = math.cos(rpy.x())
-    sin_roll  = math.sin(rpy.x())
-    cos_pitch = math.cos(rpy.y())
-    sin_pitch = math.sin(rpy.y())
+    _mag.normalize()
 
-    # Tilt compensated magnetic field X component:
-    head_x = mag.x*cos_pitch + mag.y*sin_roll*sin_pitch + mag.z*cos_roll*sin_pitch
-    # Tilt compensated magnetic field Y component:
-    head_y = mag.y*cos_roll - mag.z*sin_roll;
-    # Magnetic Heading
-    heading = -math.atan2(head_y,head_x) - declination
+    _mag_conjugate = pose * _mag * pose.conjugate
+    heading = math.atan2(_mag_conjugate.y,_mag_conjugate.x) - declination
+
+    # # Convert pose quaternion to RPY
+    # rpy = q2rpy(pose)
+
+    # cos_roll  = math.cos(rpy.x)
+    # sin_roll  = math.sin(rpy.x)
+    # cos_pitch = math.cos(rpy.y)
+    # sin_pitch = math.sin(rpy.y)
+
+    # # Tilt compensated magnetic field X component:
+    # head_x = _mag.x*cos_pitch + _mag.y*sin_roll*sin_pitch + _mag.z*cos_roll*sin_pitch
+    # # Tilt compensated magnetic field Y component:
+    # head_y = _mag.y*cos_roll - _mag.z*sin_roll;
+    # # Magnetic Heading
+    # heading = -math.atan2(head_y,head_x) - declination
 
     return heading if heading > 0 else TWOPI + heading
 
@@ -364,3 +363,4 @@ def gravity(latitude: float, altitude: float) -> float:
         gravity *= 1.-2.*altitude*(1.+f+m-2*f*sin2)/a + 3.*altitude**2/a**2   # Gravity Above Ellipsoid
 
     return gravity
+

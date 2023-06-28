@@ -135,7 +135,7 @@ class Quaternion():
             y =    self.w * other.y  -  self.x * other.z  +  self.z * other.x
             z =    self.w * other.z  +  self.x * other.y  -  self.y * other.x
             return Quaternion(w, x, y, z)
-        elif isinstance(other, (int, float)):
+        elif np.isscalar(other):
             '''multiply with scalar'''
             return Quaternion(self.w*other,self.x*other,self.y*other,self.z*other)
         else:
@@ -145,16 +145,22 @@ class Quaternion():
         return self.__mul__(other)
     
     def __truediv__(self, other):
-        if isinstance(other, (int, float)):
+        if np.isscalar(other):
             return Quaternion(self.w/other,self.x/other,self.y/other,self.z/other)
         else:
             raise TypeError("Unsupported operand type")
-    
+
+    def __floordiv__(self, other):
+        if np.isscalar(other):
+            return Quaternion(self.w//other,self.x//other,self.y//other,self.z//other)
+        else:
+            raise TypeError("Unsupported operand type")
+
     def __eq__(self, other):
         '''are the two quaternions equal'''
         return (self.w==other.w and self.x==other.x and self.y==other.y and self.z==other.z)
 
-    def normalize(self) -> float:
+    def normalize(self):
         mag = self.norm
         if mag != 0:
             self.w /= mag
@@ -326,20 +332,28 @@ class Vector3D():
         else:
             raise TypeError("Unsupported operand type for *: Vector3D and {}".format(type(other)))
 
-    def __rmul__(self, scalar):
-        return self.__mul__(scalar)
+    def __rmul__(self, other):
+        return self.__mul__(other)
 
-    def __div__(self, other):
-        if isinstance(other, (int, float)) and other != 0:
+    def __truediv__(self, other):
+        if np.isscalar(other):
             return Vector3D(self.x / other, self.y / other, self.z / other)
         elif isinstance(other, Vector3D):
             return Vector3D(self.x / other.x, self.y / other.y, self.z / other.z)
         else:
-            raise ValueError("Unsupported operand value for /: {}".format(other))
+            raise ValueError("Unsupported operand type for /: {}".format(other))
+
+    def __floordiv__(self, other):
+        if np.isscalar(other):
+            return Vector3D(self.x // other, self.y // other, self.z // other)
+        elif isinstance(other, Vector3D):
+            return Vector3D(self.x // other.x, self.y // other.y, self.z // other.z)
+        else:
+            raise ValueError("Unsupported operand type for //: {}".format(other))
 
     def __pow__(self, other):
         '''potentiate'''
-        if isinstance(other, (int, float)):
+        if np.isscalar(other):
             return Vector3D(self.x ** other, self.y ** other, self.z ** other)
         elif isinstance(other, Vector3D):
             return Vector3D(self.x ** other.x, self.y ** other.y, self.z ** other.z)
@@ -348,23 +362,43 @@ class Vector3D():
 
     def __eq__(self, other):
         '''are the two vectors equal'''
-        return (self.x==other.x and self.y==other.y and self.z==other.z)
+        if np.isscalar(other):
+            return Vector3D(self.x == other, self.y == other, self.z == other)
+        elif isinstance(other, Vector3D):
+            return Vector3D(self.x==other.x, self.y==other.y, self.z==other.z)
+        else:
+            raise TypeError("Unsupported operand type for **: Vector3D and {}".format(type(other)))
 
     def __lt__(self, other):
         '''is vector smaller than other'''
-        return Vector3D(x=self.x < other.x, y=self.y<other.y, z=self.z<other.z)
+        if np.isscalar(other):
+            return Vector3D(self.x < other, self.y < other, self.z < other)
+        elif isinstance(other, Vector3D):
+            return Vector3D(x=self.x < other.x, y=self.y<other.y, z=self.z<other.z)
+        else:
+            raise TypeError("Unsupported operand type for **: Vector3D and {}".format(type(other)))
 
     def min(self, other):
         '''smaller component of the two vectors'''        
-        return Vector3D(x=min(self.x, other.x), y=min(self.y, other.y), z=min(self.z, other.z))
+        if np.isscalar(other):
+            return Vector3D(min(self.x, other), min(self.y, other), min(self.z < other))
+        elif isinstance(other, Vector3D):
+            return Vector3D(x=min(self.x, other.x), y=min(self.y, other.y), z=min(self.z, other.z))
+        else:
+            raise TypeError("Unsupported operand type for **: Vector3D and {}".format(type(other)))
 
     def max(self, other):
         '''larger component of the two vectors'''        
-        return Vector3D(x=max(self.x, other.x), y=max(self.y, other.y), z=max(self.z, other.z))
+        if np.isscalar(other):
+            return Vector3D(max(self.x, other), max(self.y, other), max(self.z < other))
+        elif isinstance(other, Vector3D):
+            return Vector3D(x=max(self.x, other.x), y=max(self.y, other.y), z=max(self.z, other.z))
+        else:
+            raise TypeError("Unsupported operand type for **: Vector3D and {}".format(type(other)))
 
     def abs(self):
         '''absolute'''        
-        return Vector3D(x=math.abs(self.x), y=math.abs(self.y), z=math.abs(self.z))
+        return Vector3D(x=abs(self.x), y=abs(self.y), z=abs(self.z))
 
     def normalize(self):
         mag = self.norm
