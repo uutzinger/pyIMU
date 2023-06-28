@@ -1,11 +1,12 @@
 """
-cal_gui.py - Calibration GUI for FreeIMU boards
+cal_gui.py - Calibration GUI for IMU devices
+
 Copyright (C) 2012 Fabio Varesano <fabio at varesano dot net>
+Updates by Urs Utzinger 2023
 
 Development of this code has been supported by the Department of Computer Science,
 Universita' degli Studi di Torino, Italy within the Piemonte Project
 http://www.piemonte.di.unito.it/
-
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the version 3 GNU General Public License as
@@ -34,11 +35,14 @@ import pyqtgraph.opengl as gl
 import cal_lib, numpy
 
 acc_file_name = "acc.txt"
-magn_file_name = "magn.txt"
-calibration_h_file_name = "calibration.h"
+mag_file_name = "mag.txt"
+gyr_file_name = "gyr.txt"
 
-acc_range = 25000
-magn_range = 1000
+calibration_h_file_name = "calibration.json"
+
+acc_range = 25000 # +/- Display Range
+mag_range = 1000  # +/- Display Range
+gyr_range = 1000  # +/- Display Range
 
 class FreeIMUCal(QMainWindow, Ui_FreeIMUCal):
   def __init__(self):
@@ -62,7 +66,8 @@ class FreeIMUCal(QMainWindow, Ui_FreeIMUCal):
     
     # data storages
     self.acc_data = [[], [], []]
-    self.magn_data = [[], [], []]
+    self.mag_data = [[], [], []]
+    self.gyr_data = [[], [], []]
     
     # setup graphs
     self.accXY.setXRange(-acc_range, acc_range)
@@ -76,12 +81,12 @@ class FreeIMUCal(QMainWindow, Ui_FreeIMUCal):
     self.accYZ.setAspectLocked()
     self.accZX.setAspectLocked()
     
-    self.magnXY.setXRange(-magn_range, magn_range)
-    self.magnXY.setYRange(-magn_range, magn_range)
-    self.magnYZ.setXRange(-magn_range, magn_range)
-    self.magnYZ.setYRange(-magn_range, magn_range)
-    self.magnZX.setXRange(-magn_range, magn_range)
-    self.magnZX.setYRange(-magn_range, magn_range)
+    self.magnXY.setXRange(-mag_range, mag_range)
+    self.magnXY.setYRange(-mag_range, mag_range)
+    self.magnYZ.setXRange(-mag_range, mag_range)
+    self.magnYZ.setYRange(-mag_range, mag_range)
+    self.magnZX.setXRange(-mag_range, mag_range)
+    self.magnZX.setYRange(-mag_range, mag_range)
     
     self.magnXY.setAspectLocked()
     self.magnYZ.setAspectLocked()
@@ -211,7 +216,7 @@ class FreeIMUCal(QMainWindow, Ui_FreeIMUCal):
     self.serWorker = SerialWorker(ser = self.ser)
     self.connect(self.serWorker, SIGNAL("new_data(PyQt_PyObject)"), self.newData)
     self.serWorker.start()
-    print "Starting SerialWorker"
+    print("Starting SerialWorker")
     self.samplingToggleButton.setText("Stop Sampling")
     
     self.samplingToggleButton.clicked.disconnect(self.sampling_start)
@@ -233,11 +238,11 @@ class FreeIMUCal(QMainWindow, Ui_FreeIMUCal):
   def calibrate(self):
     # read file and run calibration algorithm
     (self.acc_offset, self.acc_scale) = cal_lib.calibrate_from_file(acc_file_name)
-    (self.magn_offset, self.magn_scale) = cal_lib.calibrate_from_file(magn_file_name)
+    (self.mag_offset, self.mag_scale) = cal_lib.calibrate_from_file(mag_file_name)
     
     # map floats into integers
     self.acc_offset = map(int, self.acc_offset)
-    self.magn_offset = map(int, self.magn_offset)
+    self.mag_offset = map(int, self.mag_offset)
     
     # show calibrated tab
     self.tabWidget.setCurrentIndex(1)
@@ -252,30 +257,30 @@ class FreeIMUCal(QMainWindow, Ui_FreeIMUCal):
     self.calRes_acc_SCz.setText(str(self.acc_scale[2]))
     
     #populate acc calibration output on gui
-    self.calRes_magn_OSx.setText(str(self.magn_offset[0]))
-    self.calRes_magn_OSy.setText(str(self.magn_offset[1]))
-    self.calRes_magn_OSz.setText(str(self.magn_offset[2]))
+    self.calRes_mag_OSx.setText(str(self.mag_offset[0]))
+    self.calRes_mag_OSy.setText(str(self.mag_offset[1]))
+    self.calRes_mag_OSz.setText(str(self.mag_offset[2]))
     
-    self.calRes_magn_SCx.setText(str(self.magn_scale[0]))
-    self.calRes_magn_SCy.setText(str(self.magn_scale[1]))
-    self.calRes_magn_SCz.setText(str(self.magn_scale[2]))
+    self.calRes_mag_SCx.setText(str(self.mag_scale[0]))
+    self.calRes_mag_SCy.setText(str(self.mag_scale[1]))
+    self.calRes_mag_SCz.setText(str(self.mag_scale[2]))
     
     # compute calibrated data
     self.acc_cal_data = cal_lib.compute_calibrate_data(self.acc_data, self.acc_offset, self.acc_scale)
-    self.magn_cal_data = cal_lib.compute_calibrate_data(self.magn_data, self.magn_offset, self.magn_scale)
+    self.mag_cal_data = cal_lib.compute_calibrate_data(self.mag_data, self.mag_offset, self.mag_scale)
     
     # populate 2D graphs with calibrated data
     self.accXY_cal.plot(x = self.acc_cal_data[0], y = self.acc_cal_data[1], clear = True, pen='r')
     self.accYZ_cal.plot(x = self.acc_cal_data[1], y = self.acc_cal_data[2], clear = True, pen='g')
     self.accZX_cal.plot(x = self.acc_cal_data[2], y = self.acc_cal_data[0], clear = True, pen='b')
     
-    self.magnXY_cal.plot(x = self.magn_cal_data[0], y = self.magn_cal_data[1], clear = True, pen='r')
-    self.magnYZ_cal.plot(x = self.magn_cal_data[1], y = self.magn_cal_data[2], clear = True, pen='g')
-    self.magnZX_cal.plot(x = self.magn_cal_data[2], y = self.magn_cal_data[0], clear = True, pen='b')
+    self.magnXY_cal.plot(x = self.mag_cal_data[0], y = self.mag_cal_data[1], clear = True, pen='r')
+    self.magnYZ_cal.plot(x = self.mag_cal_data[1], y = self.mag_cal_data[2], clear = True, pen='g')
+    self.magnZX_cal.plot(x = self.mag_cal_data[2], y = self.mag_cal_data[0], clear = True, pen='b')
     
     # populate 3D graphs with calibrated data
     acc3D_cal_data = np.array(self.acc_cal_data).transpose()
-    magn3D_cal_data = np.array(self.magn_cal_data).transpose()
+    magn3D_cal_data = np.array(self.mag_cal_data).transpose()
     
     sp = gl.GLScatterPlotItem(pos=acc3D_cal_data, color = (1, 1, 1, 1), size=2)
     self.acc3D_cal.addItem(sp)
@@ -308,14 +313,14 @@ const float acc_scale_x = %f;
 const float acc_scale_y = %f;
 const float acc_scale_z = %f;
 
-const int magn_off_x = %d;
-const int magn_off_y = %d;
-const int magn_off_z = %d;
-const float magn_scale_x = %f;
-const float magn_scale_y = %f;
-const float magn_scale_z = %f;
+const int mag_off_x = %d;
+const int mag_off_y = %d;
+const int mag_off_z = %d;
+const float mag_scale_x = %f;
+const float mag_scale_y = %f;
+const float mag_scale_z = %f;
 """
-    calibration_h_text = text % (self.acc_offset[0], self.acc_offset[1], self.acc_offset[2], self.acc_scale[0], self.acc_scale[1], self.acc_scale[2], self.magn_offset[0], self.magn_offset[1], self.magn_offset[2], self.magn_scale[0], self.magn_scale[1], self.magn_scale[2])
+    calibration_h_text = text % (self.acc_offset[0], self.acc_offset[1], self.acc_offset[2], self.acc_scale[0], self.acc_scale[1], self.acc_scale[2], self.mag_offset[0], self.mag_offset[1], self.mag_offset[2], self.mag_scale[0], self.mag_scale[1], self.mag_scale[2])
     
     calibration_h_folder = QFileDialog.getExistingDirectory(self, "Select the Folder to which save the calibration.h file")
     calibration_h_file = open(os.path.join(str(calibration_h_folder), calibration_h_file_name), "w")
@@ -327,8 +332,8 @@ const float magn_scale_z = %f;
   def save_calibration_eeprom(self):
     self.ser.write("c")
     # pack data into a string 
-    offsets = pack('<hhhhhh', self.acc_offset[0], self.acc_offset[1], self.acc_offset[2], self.magn_offset[0], self.magn_offset[1], self.magn_offset[2])
-    scales = pack('<ffffff', self.acc_scale[0], self.acc_scale[1], self.acc_scale[2], self.magn_scale[0], self.magn_scale[1], self.magn_scale[2])
+    offsets = pack('<hhhhhh', self.acc_offset[0], self.acc_offset[1], self.acc_offset[2], self.mag_offset[0], self.mag_offset[1], self.mag_offset[2])
+    scales = pack('<ffffff', self.acc_scale[0], self.acc_scale[1], self.acc_scale[2], self.mag_scale[0], self.mag_scale[1], self.mag_scale[2])
     # transmit to microcontroller
     self.ser.write(offsets)
     self.ser.write(scales)
@@ -353,24 +358,24 @@ const float magn_scale_z = %f;
     self.acc_data[1].append(reading[1])
     self.acc_data[2].append(reading[2])
     
-    self.magn_data[0].append(reading[6])
-    self.magn_data[1].append(reading[7])
-    self.magn_data[2].append(reading[8])
+    self.mag_data[0].append(reading[6])
+    self.mag_data[1].append(reading[7])
+    self.mag_data[2].append(reading[8])
     
     
     self.accXY.plot(x = self.acc_data[0], y = self.acc_data[1], clear = True, pen='r')
     self.accYZ.plot(x = self.acc_data[1], y = self.acc_data[2], clear = True, pen='g')
     self.accZX.plot(x = self.acc_data[2], y = self.acc_data[0], clear = True, pen='b')
     
-    self.magnXY.plot(x = self.magn_data[0], y = self.magn_data[1], clear = True, pen='r')
-    self.magnYZ.plot(x = self.magn_data[1], y = self.magn_data[2], clear = True, pen='g')
-    self.magnZX.plot(x = self.magn_data[2], y = self.magn_data[0], clear = True, pen='b')
+    self.magnXY.plot(x = self.mag_data[0], y = self.mag_data[1], clear = True, pen='r')
+    self.magnYZ.plot(x = self.mag_data[1], y = self.mag_data[2], clear = True, pen='g')
+    self.magnZX.plot(x = self.mag_data[2], y = self.mag_data[0], clear = True, pen='b')
     
     acc_pos = numpy.array([self.acc_data[0],self.acc_data[1],self.acc_data[2]]).transpose()
     self.acc3D_sp.setData(pos=acc_pos, color = (1, 1, 1, 1), size=2)
     
-    magn_pos = numpy.array([self.magn_data[0],self.magn_data[1],self.magn_data[2]]).transpose()
-    self.magn3D_sp.setData(pos=magn_pos, color = (1, 1, 1, 1), size=2)
+    mag_pos = numpy.array([self.mag_data[0],self.mag_data[1],self.mag_data[2]]).transpose()
+    self.magn3D_sp.setData(pos=mag_pos, color = (1, 1, 1, 1), size=2)
 
 
 class SerialWorker(QThread):
@@ -384,7 +389,7 @@ class SerialWorker(QThread):
   def run(self):
     print "sampling start.."
     self.acc_file = open(acc_file_name, 'w')
-    self.magn_file = open(magn_file_name, 'w')
+    self.mag_file = open(mag_file_name, 'w')
     count = 100
     in_values = 9
     reading = [0.0 for i in range(in_values)]
@@ -398,14 +403,14 @@ class SerialWorker(QThread):
         # prepare readings to store on file
         acc_readings_line = "%d %d %d\r\n" % (reading[0], reading[1], reading[2])
         self.acc_file.write(acc_readings_line)
-        magn_readings_line = "%d %d %d\r\n" % (reading[6], reading[7], reading[8])
-        self.magn_file.write(magn_readings_line)
+        mag_readings_line = "%d %d %d\r\n" % (reading[6], reading[7], reading[8])
+        self.mag_file.write(mag_readings_line)
       # every count times we pass some data to the GUI
       self.emit(SIGNAL("new_data(PyQt_PyObject)"), reading)
       print ".",
     # closing acc and magn files
     self.acc_file.close()
-    self.magn_file.close()
+    self.mag_file.close()
     return 
   
   def __del__(self):
