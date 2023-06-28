@@ -40,7 +40,7 @@ madgwick.q
 ## pyIMU.motion
 
 ### Motion Class
-Motion estimation based on IMU data. The implementation is inspired by [Gate tracking] (https://github.com/xioTechnologies/Gait-Tracking/)
+Motion estimation based on IMU data. The implementation is inspired by [Gate tracking](https://github.com/xioTechnologies/Gait-Tracking/)
 
 Example:
 ```
@@ -98,7 +98,7 @@ The class supports
 ### General Utility
 - clip
 - clamp
-- invSqrt (Do not use. Check also exercise in tests folder where fast inverse sqrt is implemented in C and pybind11. It's not fast on common desktop CPUs)
+- invSqrt (Do not use)
 
 ### RunningAverage
 Running average filter providing average and variance.
