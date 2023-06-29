@@ -24,73 +24,115 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import numpy as np
 from numpy import linalg
 
+def calibrate(data):
+    
+    (center, radii, evecs, v)= ellipsoid_fit(data)
+ 
+    scaleMat = linalg.inv(np.array([[radii(1), 0, 0], [0, radii(2), 0], [0, 0, radii(3)]]) * min(radii)) 
+    
+    correctionMat = evecs * scaleMat * evecs.T
+        
+    # now correct the data to show that it works
 
+    magVector = np.array([x - center(1), y - center(2), z - center(3)]).T # take off center offset
+    # magVector = correctionMat * magVector;				              # do rotation and scale
+    magVector = evecs * magVector				                          # do rotation and scale
+    xCorr = magVector[0, :]					                              # get corrected vectors
+    yCorr = magVector[1, :]
+    zCorr = magVector[2, :]
 
-def calibrate(x, y, z):
-  H = np.array([x, y, z, -y**2, -z**2, np.ones([len(x), 1])])
-  H = np.transpose(H)
-  w = x**2
-  
-  (X, residues, rank, shape) = linalg.lstsq(H, w)
-  
-  OSx = X[0] / 2
-  OSy = X[1] / (2 * X[3])
-  OSz = X[2] / (2 * X[4])
-  
-  A = X[5] + OSx**2 + X[3] * OSy**2 + X[4] * OSz**2
-  B = A / X[3]
-  C = A / X[4]
-  
-  SCx = np.sqrt(A)
-  SCy = np.sqrt(B)
-  SCz = np.sqrt(C)
-  
-  # type conversion from numpy.float64 to standard python floats
-  offsets = [OSx, OSy, OSz]
-  scale = [SCx, SCy, SCz]
-  
-  offsets = map(np.asscalar, offsets)
-  scale = map(np.asscalar, scale)
-  
-  return (offsets, scale)
+    print('{:f} {:f} {:f} {:f} {:f} {:f} {:f} {:f} {:f} {:f} {:f} {:f}'.format(
+        center(1), center(2), center(3),
+        correctionMat(1, 1), correctionMat(1, 2), correctionMat(1, 3),
+        correctionMat(2, 1), correctionMat(2, 2), correctionMat(2, 3),
+        correctionMat(3, 1), correctionMat(3, 2), correctionMat(3, 3)))
 
+    # scale = np.diag(correctionMat)
+    
+    return (center, correctionMat)
+
+    # H = np.array([x, y, z, -y**2, -z**2, np.ones([len(x), 1])])
+    # H = np.transpose(H)
+    # w = x**2
+
+    # # solving H * a = w for a
+    # # a0*x + a1*y + a2*z - a3*y^2 - a4*z^2 -x^2 = -a5
+    # # Ax^2 + By^2 + Cz^2 + 2Gx + 2Hy + 2Iz = 1
+
+    # (X, residues, rank, shape) = linalg.lstsq(H, w)
+
+    # OSx = X[0] / 2
+    # OSy = X[1] / (2 * X[3])
+    # OSz = X[2] / (2 * X[4])
+
+    # A = X[5] + OSx**2 + X[3] * OSy**2 + X[4] * OSz**2
+    # B = A / X[3]
+    # C = A / X[4]
+
+    # SCx = np.sqrt(A)
+    # SCy = np.sqrt(B)
+    # SCz = np.sqrt(C)
+
+    # # type conversion from numpy.float64 to standard python floats
+    # offsets = [OSx, OSy, OSz]
+    # scale   = [SCx, SCy, SCz]
+
+    # offsets = map(np.asscalar, offsets)
+    # scale   = map(np.asscalar, scale)
+
+    # return (offsets, scale)
 
 def calibrate_from_file(file_name):
-  samples_f = open(file_name, 'r')
-  samples_x = []
-  samples_y = []
-  samples_z = []
-  for line in samples_f:
-    reading = line.split()
-    if len(reading) == 3:
-      samples_x.append(int(reading[0]))
-      samples_y.append(int(reading[1]))
-      samples_z.append(int(reading[2]))
+    '''read data from file, each line has 3 floats'''
+    samples_f = open(file_name, 'r')
+    samples_x = []
+    samples_y = []
+    samples_z = []
+    for line in samples_f:
+        reading = line.split()
+        if len(reading) == 3:
+            samples_x.append(int(reading[0]))
+            samples_y.append(int(reading[1]))
+            samples_z.append(int(reading[2]))
+    
+    (center, correctionMat) = calibrate(np.array([samples_x, samples_y, samples_z]))
+    
+    return (center, correctionMat)
 
-  return calibrate(np.array(samples_x), np.array(samples_y), np.array(samples_z))
+def compute_calibrate_data(data, offsets, correctionMat):
+    
+    output = None
+
+    if isinstance(data, np.ndarray):
+        if data.shape[-1] == 3:
+            if isinstance(offsets, np.ndarray):
+                o_shape = offsets.shape
+                if offsets.shape[-1] == 3 and len(o_shape)==1:
+                    if data is not None:
+                        output = data - offsets # subtract offsets
+
+    if isinstance(correctionMat, np.ndarray):
+        c_shape = correctionMat.shape
+        if len(c_shape) == 2:
+            if c_shape[0] == 3 and c_shape[1] == 3:
+                if output is not None:
+                    output = output @ correctionMat # apply scale and cross axis sensitivity
+
+    return output
 
 
-def compute_calibrate_data(data, offsets, scale):
-  output = [[], [], []]
-  for i in range(len(data[0])):
-    output[0].append((data[0][i] - offsets[0]) / scale[0])
-    output[1].append((data[1][i] - offsets[1]) / scale[1])
-    output[2].append((data[2][i] - offsets[2]) / scale[2])
-  return output
-
-
-def ellipsoid_fit(X, **kwargs):
+def ellipsoid_fit(data, **kwargs):
     '''
-    Fit an ellispoid/sphere to a set of xyz data points:
+    Fit an ellipsoid/sphere to a set of xyz data points:
 
-      [center, radii, evecs, pars ] = ellipsoid_fit( X )
+      [center, radii, evecs, pars ] = ellipsoid_fit( data )
       [center, radii, evecs, pars ] = ellipsoid_fit( np.array([x y z]) );
-      [center, radii, evecs, pars ] = ellipsoid_fit( X, 1 );
-      [center, radii, evecs, pars ] = ellipsoid_fit( X, 2, 'xz' );
-      [center, radii, evecs, pars ] = ellipsoid_fit( X, 3 );
+      [center, radii, evecs, pars ] = ellipsoid_fit( data, 1 );
+      [center, radii, evecs, pars ] = ellipsoid_fit( data, 2, 'xz' );
+      [center, radii, evecs, pars ] = ellipsoid_fit( data, 3 );
 
     Parameters:
-    * X=[x y z]    - Cartesian data, n x 3 matrix or three n x 1 vectors
+    * data=[x y z]    - Cartesian data, n x 3 matrix or three n x 1 vectors
     * option       - 0 fits an arbitrary ellipsoid (default),
                    - 1 fits an ellipsoid with its axes along [x y z] axes
                    - 2 followed by, say, 'xy' fits as 1 but also x_rad = y_rad
@@ -113,12 +155,12 @@ def ellipsoid_fit(X, **kwargs):
     option  = kwargs.get('option', 0)
     equals  = kwargs.get('equals', 'xy')
     
-    if X.shape[1] != 3:
+    if data.shape[1] != 3:
         raise ValueError('Input data must have three columns!')
     else:
-        x = X[:, 0]
-        y = X[:, 1]
-        z = X[:, 2]
+        x = data[:, 0]
+        y = data[:, 1]
+        z = data[:, 2]
     
     # Need nine or more data points
     if len(x) < 9 and option == 0:
@@ -192,16 +234,23 @@ def ellipsoid_fit(X, **kwargs):
 
 if __name__ == "__main__":
   
-  print "Calibrating from acc.txt"
-  (offsets, scale) = calibrate_from_file("acc.txt")
-  print "Offsets:"
-  print offsets
-  print "Scales:"
-  print scale
+  print("Calibrating from acc.txt")
+  (offsets, correctionMat) = calibrate_from_file("acc.txt")
+  print("Offsets:")
+  print(offsets)
+  print("Correction Matrix:")
+  print(correctionMat)
+
+  print("Calibrating from gyr.txt")
+  (offsets, correctionMat) = calibrate_from_file("gyr.txt")
+  print("Offsets:")
+  print(offsets)
+  print("Correction Matrix:")
+  print(correctionMat)
   
-  print "Calibrating from magn.txt"
-  (offsets, scale) = calibrate_from_file("magn.txt")
-  print "Offsets:"
-  print offsets
-  print "Scales:"
-  print scale
+  print("Calibrating from mag.txt")
+  (offsets, correctionMat) = calibrate_from_file("mag.txt")
+  print("Offsets:")
+  print(offsets)
+  print("Correction Matrix:")
+  print(correctionMat)

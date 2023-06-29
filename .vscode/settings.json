@@ -1,3 +1,7 @@
 {
-    "iis.configDir": ""
+    "iis.configDir": "",
+    "cSpell.words": [
+        "eeprom",
+        "microcontroller"
+    ]
 }

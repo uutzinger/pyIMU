@@ -309,20 +309,27 @@ class Vector3D():
         elif isinstance(other, Vector3D):
             return Vector3D(self.x * other.x, self.y * other.y, self.z * other.z)            
         elif isinstance(other, np.ndarray):
-            if len(other) == 3:
-                return Vector3D(self.x * other[0], self.y * other[1], self.z * other[2])
-            elif len(other) == 4:
-                '''
-                other is quaternion of w,x,y,z 
-                convert vector to quaternion [0,x,y,z]
-                '''
-                # x1, y1, z1     = self.v # w1 is 0, dont use
-                other_w, other_x, other_y, other_z = other
-                w = - self.x * other_x - self.y * other_y - self.z * other_z
-                x =   self.x * other_w + self.y * other_z - self.z * other_y
-                y = - self.x * other_z + self.y * other_w + self.z * other_x
-                z =   self.x * other_y - self.y * other_x + self.z * other_w
-                return Quaternion(w, x, y, z)
+            shape = other.shape
+            if len(shape) == 1:
+                if shape[0] == 3:
+                    return Vector3D(self.x * other[0], self.y * other[1], self.z * other[2])
+                elif shape[0] == 4:
+                    '''
+                    other is quaternion of w,x,y,z 
+                    convert vector to quaternion [0,x,y,z]
+                    '''
+                    # x1, y1, z1     = self.v # w1 is 0, dont use
+                    other_w, other_x, other_y, other_z = other
+                    w = - self.x * other_x - self.y * other_y - self.z * other_z
+                    x =   self.x * other_w + self.y * other_z - self.z * other_y
+                    y = - self.x * other_z + self.y * other_w + self.z * other_x
+                    z =   self.x * other_y - self.y * other_x + self.z * other_w
+                    return Quaternion(w, x, y, z)
+            elif shape == (3,3):
+                '''Matrix Multiplication'''
+                rotated_vector = np.dot(np.array([self.x,self.y,self.z]),other)
+                return(Vector3D(x=rotated_vector[0], y=rotated_vector[1], z=rotated_vector[2]))
+                
         elif isinstance(other, Quaternion):
                 w = - self.x * other.x - self.y * other.y - self.z * other.z
                 x =   self.x * other.w + self.y * other.z - self.z * other.y

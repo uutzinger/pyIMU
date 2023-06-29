@@ -130,3 +130,20 @@ This work is based on Fabio Varesano's [implementation](https://www.researchgate
 
 Calibration
 - ellipsoid_fit: fits ellipsoid to [x,y,z] data, needed for IMU calibration
+
+### Installing Virtual Serial Port
+- Linux
+
+'''
+sudo apt-get install tty0tty
+sudo depmod
+sudo modprobe tty0tty
+sudo chmod 666 /dev/tnt*
+minicom /dev/tnt0 -b 9600
+sudo modprobe tty0tty baud_base=115200
+nano /etc/modules
+  add tty0tty at the end
+'''
+
+- Windows
+[com0com](https://sourceforge.net/projects/com0com/)
