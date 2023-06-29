@@ -21,23 +21,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-
-import sys, os
-
-from PyQT5 import uic
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtGui import QMainWindow, QCursor, QFileDialog
-from PyQt5.QtCore import Qt, QThread, QSettings, SIGNAL
+from PyQt5 import uic
+from PyQt5.QtCore import Qt, QObject, pyqtSlot, QThread, QSettings, pyqtSignal
+from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QFileDialog
+from PyQt5.QtGui import QCursor, QIcon
 
 import pyqtgraph.opengl as gl
 
-import json
-
+import sys, os
 import numpy as np
 import serial, time
 import struct
-import cal_lib, numpy
+import json
 import logging
+import pathlib
+
+import cal_lib
 
 # User Settings
 ######################################################################
@@ -73,44 +72,119 @@ def hex_to_float(hex_chars):
     hex_bytes = bytes.fromhex(hex_chars)  # Convert hex characters to bytes
     return struct.unpack('!f', hex_bytes)[0]     
 
-# Main Class
+######################################################################
+# Serial Worker Class
+######################################################################
+
+class SerialWorker(QThread):
+  
+  new_data = pyqtSignal(object)
+  
+  def __init__(self, ser=None):
+    QThread.__init__(self)
+    self.ser = ser
+    self.exiting = False
+        
+  def run(self):
+    print("Setting up sampling...")
+
+    if self.ui.accRecord.checkbox.isChecked():
+      if self.ui.accAppend.checkbox.isChecked():
+        self.acc_file = open(acc_file_name, 'a')
+      else:
+        self.acc_file = open(acc_file_name, 'w')
+    else:
+      self.acc_file = None
+    if self.ui.gyrRecord.checkbox.isChecked():
+      if self.ui.gyrAppend.checkbox.isChecked():
+        self.gyr_file = open(gyr_file_name, 'a')
+      else:
+        self.gyr_file = open(gyr_file_name, 'w')
+    else:
+      self.gyr_file = None
+    if self.ui.magRecord.checkbox.isChecked():
+      if self.ui.magAppend.checkbox.isChecked():
+        self.mag_file = open(mag_file_name, 'a')
+      else:
+        self.mag_file = open(mag_file_name, 'w')
+    else:
+      self.mag_file = None
+    
+    count = 100 # read 100 values then pass last one to GUI
+    in_values = 9 # 3 values for acc, gyr and mag
+    reading = [0.0 for i in range(in_values)]
+
+    print("Start sampling...")    
+    while not self.exiting:
+      self.ser.flushInput()                        # clear serial input buffer
+      self.ser.write( 'b{}\r\n'.format(count) )    # request data
+      for j in range(count):  
+        for i in range(in_values):
+          byte_array = self.ser.read(8)            # byte array of 8 bytes for each floating point value (float is 4 bytes and when converted to readable hex is 8 bytes)
+          hex_chars = ''.join(byte_array.decode()) # convert byte array to string
+          reading[i] = hex_to_float(hex_chars)     #
+        self.ser.read(2) # consumes remaining '\r\n'
+
+        # store readings in files
+        if self.acc_file != None: 
+          acc_readings_line = "{:f} {:f} {:f}\r\n".format(reading[0], reading[1], reading[2])
+          self.acc_file.write(acc_readings_line)
+        if self.gyr_file != None: 
+          gyr_readings_line = "{:f} {:f} {:f}\r\n".format(reading[3], reading[4], reading[5])
+          self.gyr_file.write(gyr_readings_line)
+        if self.mag_file != None: 
+          mag_readings_line = "{:f} {:f} {:f}\r\n".format(reading[6], reading[7], reading[8])
+          self.mag_file.write(mag_readings_line)
+        
+      # every count times we pass last reading to the GUI
+      self.new_data.emit(reading)      
+      print(".")
+
+    # closing acc,gyr and mag files
+    if self.acc_file != None: self.acc_file.close()
+    if self.gyr_file != None: self.gyr_file.close()
+    if self.mag_file != None: self.mag_file.close()
+    return 
+  
+  def __del__(self):
+    self.exiting = True
+    self.wait()
+    print("SerialWorker exits...")
+
+######################################################################
+# Main Program
 ######################################################################
 
 class FreeIMUCal(QMainWindow):
 
-  def __init__(self, parent=None):
-
-    super(FreeIMUCal, self).__init__(parent) # parent constructor
+  def __init__(self):
+    super().__init__()
 
     self.logger = logging.getLogger("Main")
 
-    #----------------------------------------------------------------------------------------------------------------------
-    # User Interface
-    #----------------------------------------------------------------------------------------------------------------------
+    # Load UI and setup widgets
     self.ui = uic.loadUi('freeimu_cal.ui', self)
-    # window_icon = pkg_resources.resource_filename('camera_gui.images', 'camera_48.png')
-    # self.setWindowIcon(QIcon(window_icon))
+    
     self.setWindowTitle("FreeIMU Cal")
+    current_directory = str(pathlib.Path(__file__).parent.absolute())
+    path = current_directory + '/FreeIMU.png'
+    self.setWindowIcon(QIcon(path))
     
     # load user settings
     self.settings = QSettings("FreeIMU Calibration Application", "Fabio Varesano")
     # restore previous serial port used
-    self.serialPortEdit.setText(self.settings.value("calgui/serialPortEdit", "").toString())
+    # self.ui.serialPortEdit.setText(self.settings.value("calgui/serialPortEdit", "").toString())
+    self.ui.serialPortEdit.setText(self.settings.value("calgui/serialPortEdit", ""))
     
     # when user hits enter, we generate the clicked signal to the button so that connection starts
-    self.connect(self.serialPortEdit, SIGNAL("returnPressed()"), self.connectButton, SIGNAL("clicked()"))
-    
+    self.ui.serialPortEdit.returnPressed.connect(self.ui.connectButton.click)
+
     # Connect up the buttons to their functions
-    self.connectButton.clicked.connect(self.serial_connect)
-    self.samplingToggleButton.clicked.connect(self.sampling_start)
+    self.ui.connectButton.clicked.connect(self.serial_connect)
+    self.ui.samplingToggleButton.clicked.connect(self.sampling_start)
     self.set_status("Disconnected")
-    
-    # data storages
-    self.acc_data = numpy.empty([1,3])
-    self.mag_data = numpy.empty([1,3])
-    self.gyr_data = numpy.empty([1,3])
-    
-    # setup graphs
+
+    # Setup graphs
     self.ui.accXY.setXRange(-acc_range, acc_range)
     self.ui.accXY.setYRange(-acc_range, acc_range)
     self.ui.accYZ.setXRange(-acc_range, acc_range)
@@ -207,7 +281,7 @@ class FreeIMUCal(QMainWindow):
     self.mag3D_sp = gl.GLScatterPlotItem()
     self.ui.mag3D.addItem(self.mag3D_sp)
     
-    # axis for the cal 3D graph
+    # Axis for the cal 3D graph
     g_a = gl.GLAxisItem()
     g_a.setSize(x=10000, y=10000, z=10000)
     self.ui.acc3D_cal.addItem(g_a)
@@ -219,7 +293,12 @@ class FreeIMUCal(QMainWindow):
     g_m = gl.GLAxisItem()
     g_m.setSize(x=1000, y=1000, z=1000)
     self.ui.mag3D_cal.addItem(g_m)
-    
+
+    # data storages
+    self.acc_data = np.empty([1,3])
+    self.mag_data = np.empty([1,3])
+    self.gyr_data = np.empty([1,3])
+      
   def set_status(self, status):
     self.statusbar.showMessage(self.tr(status))
 
@@ -272,7 +351,6 @@ class FreeIMUCal(QMainWindow):
     QApplication.restoreOverrideCursor()
     self.connectButton.setEnabled(True)
 
-    
   def serial_disconnect(self):
     print("Disconnecting from " + self.serial_port)
     self.ser.close()
@@ -291,11 +369,10 @@ class FreeIMUCal(QMainWindow):
       
   def sampling_start(self):
     self.serWorker = SerialWorker(ser = self.ser)
-    self.connect(self.serWorker, SIGNAL("new_data(PyQt_PyObject)"), self.newData)
+    self.serWorker.new_data.connect(self.newData)
     self.serWorker.start()
     print("Starting SerialWorker")
     self.samplingToggleButton.setText("Stop Sampling")
-    
     self.samplingToggleButton.clicked.disconnect(self.sampling_start)
     self.samplingToggleButton.clicked.connect(self.sampling_end)
     
@@ -440,7 +517,7 @@ class FreeIMUCal(QMainWindow):
       
     }
     
-    calibration_h_folder = QFileDialog.getExistingDirectory(self, "Select the Folder to which save the calibration.h file")
+    calibration_h_folder = QFileDialog.getExistingDirectory(self, "Select the Folder to which save the calibration.json file")
     with open(os.path.join(str(calibration_h_folder), calibration_json_file_name), "w") as file:
       json.dump(data, file)
     
@@ -528,87 +605,13 @@ const float mag_scale_z = %f;
     self.gyr3D_sp.setData(pos=self.gyr_data, color = (1, 1, 1, 1), size=2)
     self.mag3D_sp.setData(pos=self.mag_data, color = (1, 1, 1, 1), size=2)
 
-class SerialWorker(QThread):
-  def __init__(self, parent = None, ser = None):
-    QThread.__init__(self, parent)
-    self.exiting = False
-    self.ser = ser
-        
-  def run(self):
-    print("Starting sampling...")
-    if self.ui.accRecord.checkbox.isChecked():
-      if self.ui.accAppend.checkbox.isChecked():
-        self.acc_file = open(acc_file_name, 'a')
-      else:
-        self.acc_file = open(acc_file_name, 'w')
-    else:
-      self.acc_file = None
-    if self.ui.gyrRecord.checkbox.isChecked():
-      if self.ui.gyrAppend.checkbox.isChecked():
-        self.gyr_file = open(gyr_file_name, 'a')
-      else:
-        self.gyr_file = open(gyr_file_name, 'w')
-    else:
-      self.gyr_file = None
-    if self.ui.magRecord.checkbox.isChecked():
-      if self.ui.magAppend.checkbox.isChecked():
-        self.mag_file = open(mag_file_name, 'a')
-      else:
-        self.mag_file = open(mag_file_name, 'w')
-    else:
-      self.mag_file = None
-    
-    count = 100 # read 100 values then pass single one to GUI
-    in_values = 9 # 3 values for acc, gyr and mag
-    reading = [0.0 for i in range(in_values)]
-    
-    while not self.exiting:
-      self.ser.write('b') # request data
-      self.ser.write(chr(count))
-      for j in range(count):
-        for i in range(in_values):
-          byte_array = self.ser.read(8)            # byte array of 8 bytes
-          hex_chars = ''.join(byte_array.decode()) # convert byte array to string
-          reading[i] = hex_to_float(hex_chars)     #
-
-        self.ser.read(2) # consumes remaining '\r\n'
-
-        # prepare readings to store in file
-
-        if self.acc_file != None: 
-          acc_readings_line = "{:f} {:f} {:f}\r\n".format(reading[0], reading[1], reading[2])
-          self.acc_file.write(acc_readings_line)
-
-        if self.gyr_file != None: 
-          gyr_readings_line = "{:f} {:f} {:f}\r\n".format(reading[3], reading[4], reading[5])
-          self.gyr_file.write(gyr_readings_line)
-
-        if self.mag_file != None: 
-          mag_readings_line = "{:f} {:f} {:f}\r\n".format(reading[6], reading[7], reading[8])
-          self.mag_file.write(mag_readings_line)
-        
-      # every count times we pass some data to the GUI
-      self.emit(SIGNAL("new_data(PyQt_PyObject)"), reading)
-      print(".")
-
-    # closing acc,gyr and mag files
-    if self.acc_file != None: self.acc_file.close()
-    if self.gyr_file != None: self.gyr_file.close()
-    if self.mag_file != None: self.mag_file.close()
-    return 
-  
-  def __del__(self):
-    self.exiting = True
-    self.wait()
-    print("SerialWorker exits...")
-
-
 ######################################################################
 # Main Program
 ######################################################################
 
-app = QApplication(sys.argv)
-window = FreeIMUCal()
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = FreeIMUCal()
 
-window.show()
-sys.exit(app.exec_())
+    window.show()
+    sys.exit(app.exec_())
