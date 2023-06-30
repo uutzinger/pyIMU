@@ -131,18 +131,29 @@ This work is based on Fabio Varesano's [implementation](https://www.researchgate
 Calibration
 - ellipsoid_fit: fits ellipsoid to [x,y,z] data, needed for IMU calibration
 
+### Dependencies
+- PyOpenGL
+- PyQt5
+- wxPython
+- scipy
+- pyqtgraph
+
+Perhaps
+- pyserial
+- comtypes
+
 ### Installing Virtual Serial Port
 - Linux
 
+https://www.baeldung.com/linux/make-virtual-serial-port
+
 '''
-sudo apt-get install tty0tty
-sudo depmod
-sudo modprobe tty0tty
-sudo chmod 666 /dev/tnt*
-minicom /dev/tnt0 -b 9600
-sudo modprobe tty0tty baud_base=115200
-nano /etc/modules
-  add tty0tty at the end
+sudo apt-get install -y socat
+socat -d -d pty,rawer,echo=0,link=/tmp/ttyV0 pty,rawer,echo=0,link=/tmp/ttyV1
+in one terminal
+minicom -D /tmp/ttyV0 -b 115200
+in other terminal
+minicom -D /tmp/ttyV1 -b 115200
 '''
 
 - Windows

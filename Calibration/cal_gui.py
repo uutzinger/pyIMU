@@ -22,11 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 from PyQt5 import uic
-from PyQt5.QtCore import Qt, QObject, pyqtSlot, QThread, QSettings, pyqtSignal
+from PyQt5.QtCore import Qt, QObject, QThread, QSettings, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QFileDialog
 from PyQt5.QtGui import QCursor, QIcon
 
 import pyqtgraph.opengl as gl
+from pyqtgraph import PlotWidget
+from pyqtgraph.opengl import GLViewWidget
 
 import sys, os
 import numpy as np
@@ -80,30 +82,30 @@ class SerialWorker(QThread):
   
   new_data = pyqtSignal(object)
   
-  def __init__(self, ser=None):
+  def __init__(self, ser, ui):
     QThread.__init__(self)
     self.ser = ser
+    self.ui = ui
     self.exiting = False
         
   def run(self):
     print("Setting up sampling...")
-
-    if self.ui.accRecord.checkbox.isChecked():
-      if self.ui.accAppend.checkbox.isChecked():
+    if self.ui.accRecord.isChecked():
+      if self.ui.accAppend.isChecked():
         self.acc_file = open(acc_file_name, 'a')
       else:
         self.acc_file = open(acc_file_name, 'w')
     else:
       self.acc_file = None
-    if self.ui.gyrRecord.checkbox.isChecked():
-      if self.ui.gyrAppend.checkbox.isChecked():
+    if self.ui.gyrRecord.isChecked():
+      if self.ui.gyrAppend.isChecked():
         self.gyr_file = open(gyr_file_name, 'a')
       else:
         self.gyr_file = open(gyr_file_name, 'w')
     else:
       self.gyr_file = None
-    if self.ui.magRecord.checkbox.isChecked():
-      if self.ui.magAppend.checkbox.isChecked():
+    if self.ui.magRecord.isChecked():
+      if self.ui.magAppend.isChecked():
         self.mag_file = open(mag_file_name, 'a')
       else:
         self.mag_file = open(mag_file_name, 'w')
@@ -112,33 +114,33 @@ class SerialWorker(QThread):
     
     count = 100 # read 100 values then pass last one to GUI
     in_values = 9 # 3 values for acc, gyr and mag
-    reading = [0.0 for i in range(in_values)]
+    readings = [0.0 for i in range(in_values)]
 
     print("Start sampling...")    
     while not self.exiting:
-      self.ser.flushInput()                        # clear serial input buffer
-      self.ser.write( 'b{}\r\n'.format(count) )    # request data
+      self.ser.flushInput()                         # clear serial input buffer
+      self.ser.write( ("b{}\r\n".format(count)).encode())    # request data
       for j in range(count):  
         for i in range(in_values):
-          byte_array = self.ser.read(8)            # byte array of 8 bytes for each floating point value (float is 4 bytes and when converted to readable hex is 8 bytes)
-          hex_chars = ''.join(byte_array.decode()) # convert byte array to string
-          reading[i] = hex_to_float(hex_chars)     #
-        self.ser.read(2) # consumes remaining '\r\n'
+          byte_array = self.ser.read(8)             # byte array of 8 bytes for each floating point value (float is 4 bytes and when converted to readable hex is 8 bytes)
+          hex_chars = ''.join(byte_array.decode())  # convert byte array to string
+          readings[i] = hex_to_float(hex_chars)     #
+        self.ser.read(2)                            # consumes remaining '\r\n'
 
         # store readings in files
         if self.acc_file != None: 
-          acc_readings_line = "{:f} {:f} {:f}\r\n".format(reading[0], reading[1], reading[2])
+          acc_readings_line = '{:f} {:f} {:f}\r\n'.format(readings[0], readings[1], readings[2])
           self.acc_file.write(acc_readings_line)
         if self.gyr_file != None: 
-          gyr_readings_line = "{:f} {:f} {:f}\r\n".format(reading[3], reading[4], reading[5])
+          gyr_readings_line = '{:f} {:f} {:f}\r\n'.format(readings[3], readings[4], readings[5])
           self.gyr_file.write(gyr_readings_line)
         if self.mag_file != None: 
-          mag_readings_line = "{:f} {:f} {:f}\r\n".format(reading[6], reading[7], reading[8])
+          mag_readings_line = '{:f} {:f} {:f}\r\n'.format(readings[6], readings[7], readings[8])
           self.mag_file.write(mag_readings_line)
         
       # every count times we pass last reading to the GUI
-      self.new_data.emit(reading)      
-      print(".")
+      self.new_data.emit(readings)      
+      print('.')
 
     # closing acc,gyr and mag files
     if self.acc_file != None: self.acc_file.close()
@@ -149,7 +151,7 @@ class SerialWorker(QThread):
   def __del__(self):
     self.exiting = True
     self.wait()
-    print("SerialWorker exits...")
+    print('SerialWorker exits...')
 
 ######################################################################
 # Main Program
@@ -160,21 +162,21 @@ class FreeIMUCal(QMainWindow):
   def __init__(self):
     super().__init__()
 
-    self.logger = logging.getLogger("Main")
+    self.logger = logging.getLogger('Main')
 
     # Load UI and setup widgets
     self.ui = uic.loadUi('freeimu_cal.ui', self)
     
-    self.setWindowTitle("FreeIMU Cal")
+    self.setWindowTitle('FreeIMU Cal')
     current_directory = str(pathlib.Path(__file__).parent.absolute())
     path = current_directory + '/FreeIMU.png'
     self.setWindowIcon(QIcon(path))
     
     # load user settings
-    self.settings = QSettings("FreeIMU Calibration Application", "Fabio Varesano")
+    self.settings = QSettings('FreeIMU Calibration Application', 'Fabio Varesano')
     # restore previous serial port used
-    # self.ui.serialPortEdit.setText(self.settings.value("calgui/serialPortEdit", "").toString())
-    self.ui.serialPortEdit.setText(self.settings.value("calgui/serialPortEdit", ""))
+    # self.ui.serialPortEdit.setText(self.settings.value('calgui/serialPortEdit', '').toString())
+    self.ui.serialPortEdit.setText(self.settings.value('calgui/serialPortEdit', ''))
     
     # when user hits enter, we generate the clicked signal to the button so that connection starts
     self.ui.serialPortEdit.returnPressed.connect(self.ui.connectButton.click)
@@ -182,7 +184,7 @@ class FreeIMUCal(QMainWindow):
     # Connect up the buttons to their functions
     self.ui.connectButton.clicked.connect(self.serial_connect)
     self.ui.samplingToggleButton.clicked.connect(self.sampling_start)
-    self.set_status("Disconnected")
+    self.set_status('Disconnected')
 
     # Setup graphs
     self.ui.accXY.setXRange(-acc_range, acc_range)
@@ -300,93 +302,109 @@ class FreeIMUCal(QMainWindow):
     self.gyr_data = np.empty([1,3])
       
   def set_status(self, status):
-    self.statusbar.showMessage(self.tr(status))
+    self.ui.statusbar.showMessage(self.tr(status))
 
   def serial_connect(self):
     self.serial_port = str(self.serialPortEdit.text())
     # save serial value to user settings
-    self.settings.setValue("calgui/serialPortEdit", self.serial_port)
+    self.settings.setValue('calgui/serialPortEdit', self.serial_port)
     
     self.connectButton.setEnabled(False)
     # waiting mouse cursor
     QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
-    self.set_status("Connecting to " + self.serial_port + " ...")
-    
-    # TODO: serial port field input validation!
-    
+    self.set_status('Connecting to ' + self.serial_port + ' ...')
+        
     try:
+
+
       self.ser = serial.Serial(
-        port= self.serial_port,
-        baudrate=BAUDRATE,
-        parity=serial.PARITY_NONE,
-        stopbits=serial.STOPBITS_ONE,
-        bytesize=serial.EIGHTBITS
+        port      = self.serial_port,
+        baudrate  = BAUDRATE,
+        parity    = serial.PARITY_NONE,
+        stopbits  = serial.STOPBITS_ONE,
+        bytesize  = serial.EIGHTBITS,
+        timeout   = 5.,
+        write_timeout = 5.
       )
       
       if self.ser.isOpen():
-        print("Serial port opened correctly")
-        self.set_status("Connection Successful. Waiting for device reset...")
+        print('Serial port is open')
+        self.set_status('Serial Port Opened. Waiting for Device Response...')
 
         # wait for device reset on serial open
         time.sleep(3)
         
-        self.ser.write('v') # ask version
-        self.set_status("Connected to: " + self.ser.readline()) # TODO: hangs if a wrong serial protocol has been loaded. To be fixed.
+        is_connected = False      
+        msg_out= b'v\r\n'
+        while is_connected == False:
+          try:
+            err = self.ser.write(msg_out) # ask version
+            time.sleep(0.5)
+            msg_in = self.ser.read_until(b'\n')
+            line_in = msg_in.decode().strip()
+            if len(line_in) > 0:
+              self.set_status('Connected to: ' + line_in)
+              is_connected = True
+            else:
+              time.sleep(1)
+          except: 
+            time.sleep(1)
         
-        self.connectButton.setText("Disconnect")
-        self.connectButton.clicked.connect(self.serial_disconnect)
-        self.serialPortEdit.setEnabled(False)
-        self.serialProtocol.setEnabled(False)
+        self.ui.connectButton.setText('Disconnect')
+        self.ui.connectButton.clicked.connect(self.serial_disconnect)
+        self.ui.serialPortEdit.setEnabled(False)
+        self.ui.serialProtocol.setEnabled(False)
         
-        self.samplingToggleButton.setEnabled(True)
+        self.ui.samplingToggleButton.setEnabled(True)
         
-        self.clearCalibrationEEPROMButton.setEnabled(True)
-        self.clearCalibrationEEPROMButton.clicked.connect(self.clear_calibration_eeprom)
+        # If you have device with EEPROM
+        self.ui.clearCalibrationEEPROMButton.setEnabled(True)
+        self.ui.clearCalibrationEEPROMButton.clicked.connect(self.clear_calibration_eeprom)
         
     except serial.serialutil.SerialException as e:
-      self.connectButton.setEnabled(True)
-      self.set_status("Could not connect: " + str(e))
+      self.ui.connectButton.setEnabled(True)
+      self.ui.set_status('Could not connect: ' + str(e))
       
     # restore mouse cursor
     QApplication.restoreOverrideCursor()
-    self.connectButton.setEnabled(True)
+    self.ui.connectButton.setEnabled(True)
 
   def serial_disconnect(self):
-    print("Disconnecting from " + self.serial_port)
+    print('Disconnecting from ' + self.serial_port)
     self.ser.close()
-    self.set_status("Disconnected")
-    self.serialPortEdit.setEnabled(True)
-    self.serialProtocol.setEnabled(True)
+    self.ui.set_status('Disconnected')
+    self.ui.serialPortEdit.setEnabled(True)
+    self.ui.serialProtocol.setEnabled(True)
     
-    self.connectButton.setText("Connect")
-    self.connectButton.clicked.disconnect(self.serial_disconnect)
-    self.connectButton.clicked.connect(self.serial_connect)
+    self.ui.connectButton.setText('Connect')
+    self.ui.connectButton.clicked.disconnect(self.serial_disconnect)
+    self.ui.connectButton.clicked.connect(self.serial_connect)
     
-    self.samplingToggleButton.setEnabled(False)
+    self.ui.samplingToggleButton.setEnabled(False)
     
-    self.clearCalibrationEEPROMButton.setEnabled(False)
-    self.clearCalibrationEEPROMButton.clicked.disconnect(self.clear_calibration_eeprom)
+    self.ui.clearCalibrationEEPROMButton.setEnabled(False)
+    self.ui.clearCalibrationEEPROMButton.clicked.disconnect(self.clear_calibration_eeprom)
       
   def sampling_start(self):
-    self.serWorker = SerialWorker(ser = self.ser)
+    self.serWorker = SerialWorker(ser = self.ser, ui = self.ui)
     self.serWorker.new_data.connect(self.newData)
     self.serWorker.start()
-    print("Starting SerialWorker")
-    self.samplingToggleButton.setText("Stop Sampling")
-    self.samplingToggleButton.clicked.disconnect(self.sampling_start)
-    self.samplingToggleButton.clicked.connect(self.sampling_end)
+    print('Starting SerialWorker')
+    self.ui.samplingToggleButton.setText('Stop Sampling')
+    self.ui.samplingToggleButton.clicked.disconnect(self.sampling_start)
+    self.ui.samplingToggleButton.clicked.connect(self.sampling_end)
     
   def sampling_end(self):
     self.serWorker.exiting = True
     self.serWorker.quit()
     self.serWorker.wait()
-    self.samplingToggleButton.setText("Start Sampling")
-    self.samplingToggleButton.clicked.disconnect(self.sampling_end)
-    self.samplingToggleButton.clicked.connect(self.sampling_start)
+    self.ui.samplingToggleButton.setText('Start Sampling')
+    self.ui.samplingToggleButton.clicked.disconnect(self.sampling_end)
+    self.ui.samplingToggleButton.clicked.connect(self.sampling_start)
     
-    self.calibrateButton.setEnabled(True)
-    self.calAlgorithmComboBox.setEnabled(True)
-    self.calibrateButton.clicked.connect(self.calibrate)
+    self.ui.calibrateButton.setEnabled(True)
+    self.ui.calAlgorithmComboBox.setEnabled(True)
+    self.ui.calibrateButton.clicked.connect(self.calibrate)
   
   def calibrate(self):
     # read file and run calibration algorithm
@@ -397,34 +415,34 @@ class FreeIMUCal(QMainWindow):
     self.gyr_scale = np.diag(self.gyr_correctionMat)
     self.mag_scale = np.diag(self.mag_correctionMat)
     # show calibrated tab
-    self.tabWidget.setCurrentIndex(1)
+    self.ui.tabWidget.setCurrentIndex(1)
     
     #populate acc calibration output on gui
-    self.calRes_acc_OSx.setText(str(self.acc_offset[0]))
-    self.calRes_acc_OSy.setText(str(self.acc_offset[1]))
-    self.calRes_acc_OSz.setText(str(self.acc_offset[2]))
+    self.ui.calRes_acc_OSx.setText(str(self.acc_offset[0]))
+    self.ui.calRes_acc_OSy.setText(str(self.acc_offset[1]))
+    self.ui.calRes_acc_OSz.setText(str(self.acc_offset[2]))
     
-    self.calRes_acc_SCx.setText(str(self.acc_scale[0]))
-    self.calRes_acc_SCy.setText(str(self.acc_scale[1]))
-    self.calRes_acc_SCz.setText(str(self.acc_scale[2]))
+    self.ui.calRes_acc_SCx.setText(str(self.acc_scale[0]))
+    self.ui.calRes_acc_SCy.setText(str(self.acc_scale[1]))
+    self.ui.calRes_acc_SCz.setText(str(self.acc_scale[2]))
 
     #populate gyr calibration output on gui
-    self.calRes_gyr_OSx.setText(str(self.gyr_offset[0]))
-    self.calRes_gyr_OSy.setText(str(self.gyr_offset[1]))
-    self.calRes_gyr_OSz.setText(str(self.gyr_offset[2]))
+    self.ui.calRes_gyr_OSx.setText(str(self.gyr_offset[0]))
+    self.ui.calRes_gyr_OSy.setText(str(self.gyr_offset[1]))
+    self.ui.calRes_gyr_OSz.setText(str(self.gyr_offset[2]))
     
-    self.calRes_gyr_SCx.setText(str(self.gyr_scale[0]))
-    self.calRes_gyr_SCy.setText(str(self.gyr_scale[1]))
-    self.calRes_gyr_SCz.setText(str(self.gyr_scale[2]))
+    self.ui.calRes_gyr_SCx.setText(str(self.gyr_scale[0]))
+    self.ui.calRes_gyr_SCy.setText(str(self.gyr_scale[1]))
+    self.ui.calRes_gyr_SCz.setText(str(self.gyr_scale[2]))
     
     #populate mag calibration output on gui
-    self.calRes_mag_OSx.setText(str(self.mag_offset[0]))
-    self.calRes_mag_OSy.setText(str(self.mag_offset[1]))
-    self.calRes_mag_OSz.setText(str(self.mag_offset[2]))
+    self.ui.calRes_mag_OSx.setText(str(self.mag_offset[0]))
+    self.ui.calRes_mag_OSy.setText(str(self.mag_offset[1]))
+    self.ui.calRes_mag_OSz.setText(str(self.mag_offset[2]))
     
-    self.calRes_mag_SCx.setText(str(self.mag_scale[0]))
-    self.calRes_mag_SCy.setText(str(self.mag_scale[1]))
-    self.calRes_mag_SCz.setText(str(self.mag_scale[2]))
+    self.ui.calRes_mag_SCx.setText(str(self.mag_scale[0]))
+    self.ui.calRes_mag_SCy.setText(str(self.mag_scale[1]))
+    self.ui.calRes_mag_SCz.setText(str(self.mag_scale[2]))
     
     # compute calibrated data
     self.acc_cal_data = cal_lib.compute_calibrate_data(self.acc_data, self.acc_offset, self.acc_correctionMat)
@@ -432,38 +450,38 @@ class FreeIMUCal(QMainWindow):
     self.mag_cal_data = cal_lib.compute_calibrate_data(self.mag_data, self.mag_offset, self.mag_correctionMat)
     
     # populate 2D graphs with calibrated data
-    self.accXY_cal.plot(x = self.acc_cal_data[:,0], y = self.acc_cal_data[:,1], clear = True, pen='r')
-    self.accYZ_cal.plot(x = self.acc_cal_data[:,1], y = self.acc_cal_data[:,2], clear = True, pen='g')
-    self.accZX_cal.plot(x = self.acc_cal_data[:,2], y = self.acc_cal_data[:,0], clear = True, pen='b')
+    self.ui.accXY_cal.plot(x = self.acc_cal_data[:,0], y = self.acc_cal_data[:,1], clear = True, pen='r')
+    self.ui.accYZ_cal.plot(x = self.acc_cal_data[:,1], y = self.acc_cal_data[:,2], clear = True, pen='g')
+    self.ui.accZX_cal.plot(x = self.acc_cal_data[:,2], y = self.acc_cal_data[:,0], clear = True, pen='b')
 
-    self.gyrXY_cal.plot(x = self.gyr_cal_data[:,0], y = self.gyr_cal_data[:,1], clear = True, pen='r')
-    self.gyrYZ_cal.plot(x = self.gyr_cal_data[:,1], y = self.gyr_cal_data[:,2], clear = True, pen='g')
-    self.gyrZX_cal.plot(x = self.gyr_cal_data[:,2], y = self.gyr_cal_data[:,0], clear = True, pen='b')
+    self.ui.gyrXY_cal.plot(x = self.gyr_cal_data[:,0], y = self.gyr_cal_data[:,1], clear = True, pen='r')
+    self.ui.gyrYZ_cal.plot(x = self.gyr_cal_data[:,1], y = self.gyr_cal_data[:,2], clear = True, pen='g')
+    self.ui.gyrZX_cal.plot(x = self.gyr_cal_data[:,2], y = self.gyr_cal_data[:,0], clear = True, pen='b')
     
-    self.magXY_cal.plot(x = self.mag_cal_data[:,0], y = self.mag_cal_data[:,1], clear = True, pen='r')
-    self.magYZ_cal.plot(x = self.mag_cal_data[:,1], y = self.mag_cal_data[:,2], clear = True, pen='g')
-    self.magZX_cal.plot(x = self.mag_cal_data[:,2], y = self.mag_cal_data[:,0], clear = True, pen='b')
+    self.ui.magXY_cal.plot(x = self.mag_cal_data[:,0], y = self.mag_cal_data[:,1], clear = True, pen='r')
+    self.ui.magYZ_cal.plot(x = self.mag_cal_data[:,1], y = self.mag_cal_data[:,2], clear = True, pen='g')
+    self.ui.magZX_cal.plot(x = self.mag_cal_data[:,2], y = self.mag_cal_data[:,0], clear = True, pen='b')
     
     # populate 3D graphs with calibrated data
     
     sp = gl.GLScatterPlotItem(pos=self.acc_cal_data, color = (1, 1, 1, 1), size=2)
-    self.acc3D_cal.addItem(sp)
+    self.ui.acc3D_cal.addItem(sp)
 
     sp = gl.GLScatterPlotItem(pos=self.gyr_cal_data, color = (1, 1, 1, 1), size=2)
-    self.gyr3D_cal.addItem(sp)
+    self.ui.gyr3D_cal.addItem(sp)
     
     sp = gl.GLScatterPlotItem(pos=self.mag_cal_data, color = (1, 1, 1, 1), size=2)
-    self.mag3D_cal.addItem(sp)
+    self.ui.mag3D_cal.addItem(sp)
     
     #enable calibration buttons to activate calibration storing functions
-    self.saveCalibrationHeaderButton.setEnabled(True)
-    self.saveCalibrationHeaderButton.clicked.connect(self.save_calibration_header)
+    self.ui.saveCalibrationHeaderButton.setEnabled(True)
+    self.ui.saveCalibrationHeaderButton.clicked.connect(self.save_calibration_header)
 
-    self.saveCalibrationJSONButton.setEnabled(True)
-    self.saveCalibrationJSONButton.clicked.connect(self.save_calibration_json)
+    self.ui.saveCalibrationJSONButton.setEnabled(True)
+    self.ui.saveCalibrationJSONButton.clicked.connect(self.save_calibration_json)
     
-    self.saveCalibrationEEPROMButton.setEnabled(True)
-    self.saveCalibrationEEPROMButton.clicked.connect(self.save_calibration_eeprom)
+    self.ui.saveCalibrationEEPROMButton.setEnabled(True)
+    self.ui.saveCalibrationEEPROMButton.clicked.connect(self.save_calibration_eeprom)
     
   def save_calibration_json(self):
     data = {
@@ -517,11 +535,11 @@ class FreeIMUCal(QMainWindow):
       
     }
     
-    calibration_h_folder = QFileDialog.getExistingDirectory(self, "Select the Folder to which save the calibration.json file")
-    with open(os.path.join(str(calibration_h_folder), calibration_json_file_name), "w") as file:
+    calibration_h_folder = QFileDialog.getExistingDirectory(self, 'Select the Folder to which save the calibration.json file')
+    with open(os.path.join(str(calibration_h_folder), calibration_json_file_name), 'w') as file:
       json.dump(data, file)
     
-    self.set_status("Calibration saved to: " + str(calibration_h_folder) + calibration_json_file_name + ".\n")
+    self.ui.set_status('Calibration saved to: ' + str(calibration_h_folder) + calibration_json_file_name + '.\n')
     
     
   def save_calibration_header(self):
@@ -550,56 +568,57 @@ const float mag_scale_z = %f;
 """
     calibration_h_text = text % (self.acc_offset[0], self.acc_offset[1], self.acc_offset[2], self.acc_scale[0], self.acc_scale[1], self.acc_scale[2], self.mag_offset[0], self.mag_offset[1], self.mag_offset[2], self.mag_scale[0], self.mag_scale[1], self.mag_scale[2])
     
-    calibration_h_folder = QFileDialog.getExistingDirectory(self, "Select the Folder to which save the calibration.h file")
-    calibration_h_file = open(os.path.join(str(calibration_h_folder), calibration_h_file_name), "w")
+    calibration_h_folder = QFileDialog.getExistingDirectory(self, 'Select the Folder to which save the calibration.h file')
+    calibration_h_file = open(os.path.join(str(calibration_h_folder), calibration_h_file_name), 'w')
     calibration_h_file.write(calibration_h_text)
     calibration_h_file.close()
     
-    self.set_status("Calibration saved to: " + str(calibration_h_folder) + calibration_h_file_name + " .\nRecompile and upload the program using the FreeIMU library to your microcontroller.")
+    self.ui.set_status('Calibration saved to: ' + str(calibration_h_folder) + calibration_h_file_name + ' .\nRecompile and upload the program using the FreeIMU library to your microcontroller.')
   
   def save_calibration_eeprom(self):
-    self.ser.write("c")
+    self.ser.write('c'.encode())
     # pack data into a string 
     offsets = struct.pack('<hhhhhh', self.acc_offset[0], self.acc_offset[1], self.acc_offset[2], self.mag_offset[0], self.mag_offset[1], self.mag_offset[2])
     scales  = struct.pack('<ffffff', self.acc_scale[0], self.acc_scale[1], self.acc_scale[2], self.mag_scale[0], self.mag_scale[1], self.mag_scale[2])
     # transmit to microcontroller
     self.ser.write(offsets)
     self.ser.write(scales)
-    self.set_status("Calibration saved to microcontroller EEPROM.")
+    self.ser.write('\r\n'.encode())
+    self.ui.set_status('Calibration saved to microcontroller EEPROM.')
     # debug written values to console
-    print("Calibration values read back from EEPROM:")
-    self.ser.write("C")
+    print('Calibration values read back from EEPROM:')
+    self.ser.write('C\r\n'.encode())
     for i in range(4):
-      print(self.ser.readline())
+      print(self.ser.read_until(b'\n'))
       
   def clear_calibration_eeprom(self):
-    self.ser.write("x")
+    self.ser.write('x\r\n'.encode())
     # no feedback expected. we assume success.
-    self.set_status("Calibration cleared from microcontroller EEPROM.")
+    self.ui.set_status('Calibration cleared from microcontroller EEPROM.')
     
   def newData(self, reading):
     
     # only display last reading from burst
-    if self.ui.accDisplay.checkbox.isChecked():
-      np.stack((self.acc_data.stack, np.array([reading[0],reading[1],reading[2]])), axis=0)
+    if self.ui.accDisplay.isChecked():
+      self.acc_data = np.concatenate((self.acc_data, np.array([[reading[0],reading[1],reading[2]]])), axis=0)
 
-    if self.ui.gyrDisplay.checkbox.isChecked():
-      np.stack((self.gyr_data.stack, np.array([reading[3],reading[4],reading[5]])), axis=0)
+    if self.ui.gyrDisplay.isChecked():
+      self.gyr_data = np.concatenate((self.gyr_data, np.array([[reading[3],reading[4],reading[5]]])), axis=0)
     
-    if self.ui.magDisplay.checkbox.isChecked():
-      np.stack((self.mag_data.stack, np.array([reading[6],reading[7],reading[8]])), axis=0)
+    if self.ui.magDisplay.isChecked():
+     self.mag_data = np.concatenate((self.mag_data, np.array([[reading[6],reading[7],reading[8]]])), axis=0)
     
-    self.accXY.plot(x = self.acc_data[:,0], y = self.acc_data[:,1], clear = True, pen='r')
-    self.accYZ.plot(x = self.acc_data[:,1], y = self.acc_data[:,2], clear = True, pen='g')
-    self.accZX.plot(x = self.acc_data[:,2], y = self.acc_data[:,0], clear = True, pen='b')
+    self.ui.accXY.plot(x = self.acc_data[:,0], y = self.acc_data[:,1], clear = True, pen='r')
+    self.ui.accYZ.plot(x = self.acc_data[:,1], y = self.acc_data[:,2], clear = True, pen='g')
+    self.ui.accZX.plot(x = self.acc_data[:,2], y = self.acc_data[:,0], clear = True, pen='b')
 
-    self.gyrXY.plot(x = self.gyr_data[:,0], y = self.gyr_data[:,1], clear = True, pen='r')
-    self.gyrYZ.plot(x = self.gyr_data[:,1], y = self.gyr_data[:,2], clear = True, pen='g')
-    self.gyrZX.plot(x = self.gyr_data[:,2], y = self.gyr_data[:,0], clear = True, pen='b')
+    self.ui.gyrXY.plot(x = self.gyr_data[:,0], y = self.gyr_data[:,1], clear = True, pen='r')
+    self.ui.gyrYZ.plot(x = self.gyr_data[:,1], y = self.gyr_data[:,2], clear = True, pen='g')
+    self.ui.gyrZX.plot(x = self.gyr_data[:,2], y = self.gyr_data[:,0], clear = True, pen='b')
     
-    self.magXY.plot(x = self.mag_data[:,0], y = self.mag_data[:,1], clear = True, pen='r')
-    self.magYZ.plot(x = self.mag_data[:,1], y = self.mag_data[:,2], clear = True, pen='g')
-    self.magZX.plot(x = self.mag_data[:,2], y = self.mag_data[:,0], clear = True, pen='b')
+    self.ui.magXY.plot(x = self.mag_data[:,0], y = self.mag_data[:,1], clear = True, pen='r')
+    self.ui.magYZ.plot(x = self.mag_data[:,1], y = self.mag_data[:,2], clear = True, pen='g')
+    self.ui.magZX.plot(x = self.mag_data[:,2], y = self.mag_data[:,0], clear = True, pen='b')
     
     self.acc3D_sp.setData(pos=self.acc_data, color = (1, 1, 1, 1), size=2)
     self.gyr3D_sp.setData(pos=self.gyr_data, color = (1, 1, 1, 1), size=2)
@@ -612,6 +631,5 @@ const float mag_scale_z = %f;
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = FreeIMUCal()
-
     window.show()
     sys.exit(app.exec_())
