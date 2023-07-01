@@ -172,7 +172,7 @@
        </item>
        <item>
         <property name="text">
-         <string>ZMQ</string>
+         <string>FreeIMU_ZMQ</string>
         </property>
        </item>
       </widget>
@@ -195,7 +195,7 @@
      </sizepolicy>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="uncalibratedTab">
      <property name="enabled">
@@ -284,7 +284,7 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="2">
+         <item row="0" column="2" alignment="Qt::AlignTop">
           <widget class="QGroupBox" name="magPlotSettings">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -293,16 +293,6 @@
             </sizepolicy>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
-            <item>
-             <widget class="GLViewWidget" name="mag3D">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>1</verstretch>
-               </sizepolicy>
-              </property>
-             </widget>
-            </item>
             <item>
              <widget class="QCheckBox" name="magDisplay">
               <property name="enabled">
@@ -335,7 +325,7 @@
               </property>
              </widget>
             </item>
-            <item>
+            <item alignment="Qt::AlignTop">
              <widget class="QCheckBox" name="magAppend">
               <property name="enabled">
                <bool>true</bool>
@@ -388,7 +378,7 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="2">
+         <item row="0" column="2" alignment="Qt::AlignTop">
           <widget class="QGroupBox" name="gyrPlotSettings">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -397,16 +387,6 @@
             </sizepolicy>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
-            <item>
-             <widget class="GLViewWidget" name="gyr3D">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>1</verstretch>
-               </sizepolicy>
-              </property>
-             </widget>
-            </item>
             <item>
              <widget class="QCheckBox" name="gyrDisplay">
               <property name="enabled">
@@ -429,7 +409,7 @@
                <bool>true</bool>
               </property>
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -439,7 +419,7 @@
               </property>
              </widget>
             </item>
-            <item>
+            <item alignment="Qt::AlignTop">
              <widget class="QCheckBox" name="gyrAppend">
               <property name="enabled">
                <bool>true</bool>
@@ -492,7 +472,7 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="2">
+         <item row="0" column="2" alignment="Qt::AlignTop">
           <widget class="QGroupBox" name="accPlotSettings">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -510,16 +490,6 @@
             <property name="rightMargin">
              <number>1</number>
             </property>
-            <item>
-             <widget class="GLViewWidget" name="acc3D">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>1</verstretch>
-               </sizepolicy>
-              </property>
-             </widget>
-            </item>
             <item>
              <widget class="QCheckBox" name="accDisplay">
               <property name="enabled">
@@ -975,7 +945,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>3</number>
+          <number>0</number>
          </property>
          <property name="usesScrollButtons">
           <bool>true</bool>
@@ -1056,22 +1026,6 @@
           <attribute name="title">
            <string>Acc 3D</string>
           </attribute>
-          <widget class="GLViewWidget" name="acc3D_cal">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>351</width>
-             <height>351</height>
-            </rect>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-             <horstretch>1</horstretch>
-             <verstretch>1</verstretch>
-            </sizepolicy>
-           </property>
-          </widget>
          </widget>
         </widget>
        </item>
@@ -1084,7 +1038,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>3</number>
+          <number>0</number>
          </property>
          <property name="usesScrollButtons">
           <bool>true</bool>
@@ -1165,22 +1119,6 @@
           <attribute name="title">
            <string>Gyr 3D</string>
           </attribute>
-          <widget class="GLViewWidget" name="gyr3D_cal">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>351</width>
-             <height>351</height>
-            </rect>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-             <horstretch>1</horstretch>
-             <verstretch>1</verstretch>
-            </sizepolicy>
-           </property>
-          </widget>
          </widget>
         </widget>
        </item>
@@ -1193,7 +1131,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>3</number>
+          <number>0</number>
          </property>
          <property name="usesScrollButtons">
           <bool>true</bool>
@@ -1274,22 +1212,6 @@
           <attribute name="title">
            <string>Mag 3D</string>
           </attribute>
-          <widget class="GLViewWidget" name="mag3D_cal">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>351</width>
-             <height>351</height>
-            </rect>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-             <horstretch>1</horstretch>
-             <verstretch>1</verstretch>
-            </sizepolicy>
-           </property>
-          </widget>
          </widget>
         </widget>
        </item>
@@ -1354,11 +1276,6 @@
    <class>PlotWidget</class>
    <extends>QGraphicsView</extends>
    <header>pyqtgraph</header>
-  </customwidget>
-  <customwidget>
-   <class>GLViewWidget</class>
-   <extends>QGraphicsView</extends>
-   <header>pyqtgraph.opengl</header>
   </customwidget>
  </customwidgets>
  <resources/>

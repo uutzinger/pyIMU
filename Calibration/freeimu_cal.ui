@@ -170,6 +170,11 @@
          <string>FreeIMU_serial</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>FreeIMU_ZMQ</string>
+        </property>
+       </item>
       </widget>
      </item>
     </layout>

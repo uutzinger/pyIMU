@@ -171,7 +171,10 @@ class FreeIMUCal(QMainWindow):
     self.logger = logging.getLogger('Main')
 
     # Load UI and setup widgets
-    self.ui = uic.loadUi('freeimu_cal.ui', self)
+    if USE3DPLOT ==  True:
+      self.ui = uic.loadUi('freeimu_cal.ui', self)
+    else:
+      self.ui = uic.loadUi('freeimu_cal_noGL.ui', self)
     
     self.setWindowTitle('FreeIMU Cal')
     current_directory = str(pathlib.Path(__file__).parent.absolute())
@@ -181,7 +184,7 @@ class FreeIMUCal(QMainWindow):
     # Load user settings
     self.settings = QSettings('FreeIMU Calibration Application', 'Fabio Varesano')
 
-    # Serail Port
+    # Serial Port
     # restore previous serial port used
     # self.ui.serialPortEdit.setText(self.settings.value('calgui/serialPortEdit', '').toString())
     self.ui.serialPortEdit.setText(self.settings.value('calgui/serialPortEdit', ''))
