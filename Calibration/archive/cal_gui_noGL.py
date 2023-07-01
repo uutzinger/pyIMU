@@ -2,6 +2,7 @@
 cal_gui.py - Calibration GUI for IMU devices
 
 Copyright (C) 2012 Fabio Varesano <fabio at varesano dot net>
+Updates by Urs Utzinger 2023
 
 Development of this code has been supported by the Department of Computer Science,
 Universita' degli Studi di Torino, Italy within the Piemonte Project
@@ -19,23 +20,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-Updates 2023 by Urs Utzinger:
+Updates 2023:
 - Qt4 -> Qt5
-- Provided option for No 3D plots (as Raspian has incompatible OpenGL version) 
+- Removed OpenGl dependency (for Raspian) 
 - Added Gyroscope
 - Updated Serial Data Transfer 
 
 """
-
-
 from PyQt5 import uic
 from PyQt5.QtCore import Qt, QObject, QThread, QSettings, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QFileDialog
 from PyQt5.QtGui import QCursor, QIcon
 
-import pyqtgraph.opengl as gl
-from pyqtgraph import PlotWidget
-from pyqtgraph.opengl import GLViewWidget
+import pyqtgraph
 
 import sys, os
 import numpy as np
@@ -49,8 +46,6 @@ import cal_lib
 
 # User Settings
 ######################################################################
-USE3DPLOT = False
-# because on raspian: pyqtgraph.opengl: Requires >= OpenGL 2.0 (not ES); Found b'OpenGL ES 3.1 Mesa 20.3.5'
 
 BAUDRATE = 115200
 
@@ -98,7 +93,6 @@ class SerialWorker(QThread):
     self.exiting = False
         
   def run(self):
-    print("Setting up sampling...")
     if self.ui.accRecord.isChecked():
       if self.ui.accAppend.isChecked():
         self.acc_file = open(acc_file_name, 'a')
@@ -147,7 +141,8 @@ class SerialWorker(QThread):
           self.mag_file.write(mag_readings_line)
         
       # every count times we pass last reading to the GUI
-      self.new_data.emit(readings)      
+      self.new_data.emit(readings)
+      print('.')
 
     # closing acc,gyr and mag files
     if self.acc_file != None: self.acc_file.close()
@@ -160,7 +155,7 @@ class SerialWorker(QThread):
     self.wait()
 
 ######################################################################
-# Main Program
+# Main Program: FreeIMUCal
 ######################################################################
 
 class FreeIMUCal(QMainWindow):
@@ -181,16 +176,16 @@ class FreeIMUCal(QMainWindow):
     # Load user settings
     self.settings = QSettings('FreeIMU Calibration Application', 'Fabio Varesano')
 
-    # Serail Port
+    # Serial Port
     # restore previous serial port used
     # self.ui.serialPortEdit.setText(self.settings.value('calgui/serialPortEdit', '').toString())
-    self.ui.serialPortEdit.setText(self.settings.value('calgui/serialPortEdit', ''))
+    self.ui.serialPortEdit.setText(self.settings.value('calgui/serialPortEdit', ''))    
     # when user hits enter, we generate the clicked signal to the button so that connection starts
     self.ui.serialPortEdit.returnPressed.connect(self.ui.connectButton.click)
 
     # Buttons
     # Connect
-    self.ui.connectButton.clicked.connect(self.serial_connect)
+    self.ui.connectButton.clicked.connect(self.serial_connect) # This toggles between connect and disconnect
     # Sampling
     self.ui.samplingToggleButton.clicked.connect(self.sampling_start)
     # Saving
@@ -202,6 +197,7 @@ class FreeIMUCal(QMainWindow):
 
     self.set_status('Disconnected')
 
+
     # Data storages
     ################
 
@@ -209,12 +205,15 @@ class FreeIMUCal(QMainWindow):
     self.mag_data = np.empty([1,3])
     self.gyr_data = np.empty([1,3])
 
+
     # Graphs for ACC, GYR and MAG
     ##################################################################
 
-    # Setup graphs 2D
+    
+    # ACCELEROMETER
+    # ================================================================
 
-    # ACC
+    # ACC 2D
 
     self.ui.accXY.setXRange(-acc_range, acc_range)
     self.ui.accXY.setYRange(-acc_range, acc_range)
@@ -227,34 +226,8 @@ class FreeIMUCal(QMainWindow):
     self.ui.accYZ.setAspectLocked()
     self.ui.accZX.setAspectLocked()
 
-    # GYR 
-
-    self.ui.gyrXY.setXRange(-gyr_range, gyr_range)
-    self.ui.gyrXY.setYRange(-gyr_range, gyr_range)
-    self.ui.gyrYZ.setXRange(-gyr_range, gyr_range)
-    self.ui.gyrYZ.setYRange(-gyr_range, gyr_range)
-    self.ui.gyrZX.setXRange(-gyr_range, gyr_range)
-    self.ui.gyrZX.setYRange(-gyr_range, gyr_range)
-    
-    self.ui.gyrXY.setAspectLocked()
-    self.ui.gyrYZ.setAspectLocked()
-    self.ui.gyrZX.setAspectLocked()
-    
-    # MAG
-
-    self.ui.magXY.setXRange(-mag_range, mag_range)
-    self.ui.magXY.setYRange(-mag_range, mag_range)
-    self.ui.magYZ.setXRange(-mag_range, mag_range)
-    self.ui.magYZ.setYRange(-mag_range, mag_range)
-    self.ui.magZX.setXRange(-mag_range, mag_range)
-    self.ui.magZX.setYRange(-mag_range, mag_range)
-    
-    self.ui.magXY.setAspectLocked()
-    self.ui.magYZ.setAspectLocked()
-    self.ui.magZX.setAspectLocked()
-    
-    # ACC CALIBRATED
-
+    # ACC CALIBRATED 2D
+        
     self.ui.accXY_cal.setXRange(-1.5, 1.5)
     self.ui.accXY_cal.setYRange(-1.5, 1.5)
     self.ui.accYZ_cal.setXRange(-1.5, 1.5)
@@ -266,7 +239,71 @@ class FreeIMUCal(QMainWindow):
     self.ui.accYZ_cal.setAspectLocked()
     self.ui.accZX_cal.setAspectLocked()
 
-    # GYR CALBRATED
+    # ACC 3D
+
+    self.acc3D_sp = pyqtgraph.ScatterPlotItem()
+    self.ui.acc3D.addItem(self.acc3D_sp)
+
+    ax_x = pyqtgraph.AxisItem('bottom', linkView=self.acc3D_sp)
+    ax_y = pyqtgraph.AxisItem('left',   linkView=self.acc3D_sp)
+    ax_z = pyqtgraph.AxisItem('right',  linkView=self.acc3D_sp)
+   
+    ax_x.setHeight(20000)
+    ax_y.setHeight(20000)
+    ax_z.setHeight(20000)
+
+    self.ui.acc3D.layout.addItem(ax_x,2,1)
+    self.ui.acc3D.layout.addItem(ax_y,1,0)
+    self.ui.acc3D.layout.addItem(ax_z,1,2)
+
+    self.ui.acc3D.showAxis('right')
+    self.ui.acc3D.showAxis('left')
+    self.ui.acc3D.showAxis('bottom')
+
+    self.ui.acc3D.opts['distance'] = 30000
+    self.ui.acc3D.show()
+
+    # ACC CALIBRATED 3D
+
+    self.acc3D_cal_sp = pyqtgraph.ScatterPlotItem()
+    self.ui.acc3D_cal.addItem(self.acc3D_cal_sp)
+
+    ax_cal_x = pyqtgraph.AxisItem('bottom', linkView=self.acc3D_cal_sp)
+    ax_cal_y = pyqtgraph.AxisItem('left',   linkView=self.acc3D_cal_sp)
+    ax_cal_z = pyqtgraph.AxisItem('right',  linkView=self.acc3D_cal_sp)
+   
+    ax_cal_x.setHeight(10000)
+    ax_cal_y.setHeight(10000)
+    ax_cal_z.setHeight(10000)
+
+    self.ui.acc3D_cal.layout.addItem(ax_cal_x,2,1)
+    self.ui.acc3D_cal.layout.addItem(ax_cal_y,1,0)
+    self.ui.acc3D_cal.layout.addItem(ax_cal_z,1,2)
+
+    self.ui.acc3D_cal.showAxis('right')
+    self.ui.acc3D_cal.showAxis('left')
+    self.ui.acc3D_cal.showAxis('bottom')
+
+    self.ui.acc3D_cal.opts['distance'] = 30000
+    self.ui.acc3D_cal.show()
+
+    # GYROSCOPE
+    # ================================================================
+
+    # GYR 2D
+
+    self.ui.gyrXY.setXRange(-gyr_range, gyr_range)
+    self.ui.gyrXY.setYRange(-gyr_range, gyr_range)
+    self.ui.gyrYZ.setXRange(-gyr_range, gyr_range)
+    self.ui.gyrYZ.setYRange(-gyr_range, gyr_range)
+    self.ui.gyrZX.setXRange(-gyr_range, gyr_range)
+    self.ui.gyrZX.setYRange(-gyr_range, gyr_range)
+    
+    self.ui.gyrXY.setAspectLocked()
+    self.ui.gyrYZ.setAspectLocked()
+    self.ui.gyrZX.setAspectLocked()
+
+    # GYR CALIBRATED 2D
 
     self.ui.gyrXY_cal.setXRange(-1.5, 1.5)
     self.ui.gyrXY_cal.setYRange(-1.5, 1.5)
@@ -278,8 +315,72 @@ class FreeIMUCal(QMainWindow):
     self.ui.gyrXY_cal.setAspectLocked()
     self.ui.gyrYZ_cal.setAspectLocked()
     self.ui.gyrZX_cal.setAspectLocked()
+
+    # GYR 3D
+
+    self.gyr3D_sp = pyqtgraph.ScatterPlotItem()
+    self.ui.gyr3D.addItem(self.gyr3D_sp)
+
+    gx_x = pyqtgraph.AxisItem('bottom', linkView=self.gyr3D_sp)
+    gx_y = pyqtgraph.AxisItem('left',   linkView=self.gyr3D_sp)
+    gx_z = pyqtgraph.AxisItem('right',  linkView=self.gyr3D_sp)
+   
+    gx_x.setHeight(20000)
+    gx_y.setHeight(20000)
+    gx_z.setHeight(20000)
+
+    self.ui.gyr3D.layout.addItem(gx_x,2,1)
+    self.ui.gyr3D.layout.addItem(gx_y,1,0)
+    self.ui.gyr3D.layout.addItem(gx_z,1,2)
+
+    self.ui.gyr3D.showAxis('right')
+    self.ui.gyr3D.showAxis('left')
+    self.ui.gyr3D.showAxis('bottom')
+
+    self.ui.gyr3D.opts['distance'] = 30000
+    self.ui.gyr3D.show()
     
-    # MAG CALIBRATED 
+    # GYR CALIBRATED 3D
+
+    self.gyrD_cal_sp = pyqtgraph.ScatterPlotItem()
+    self.ui.gyr3D_cal.addItem(self.gyr3D_cal_sp)
+
+    gx_cal_x = pyqtgraph.AxisItem('bottom', linkView=self.gyr3D_cal_sp)
+    gx_cal_y = pyqtgraph.AxisItem('left',   linkView=self.gyr3D_cal_sp)
+    gx_cal_z = pyqtgraph.AxisItem('right',  linkView=self.gyr3D_cal_sp)
+   
+    gx_cal_x.setHeight(10000)
+    gx_cal_y.setHeight(10000)
+    gx_cal_z.setHeight(10000)
+
+    self.ui.gyr3D_cal.layout.addItem(gx_cal_x,2,1)
+    self.ui.gyr3D_cal.layout.addItem(gx_cal_y,1,0)
+    self.ui.gyr3D_cal.layout.addItem(gx_cal_z,1,2)
+
+    self.ui.gyr3D_cal.showAxis('right')
+    self.ui.gyr3D_cal.showAxis('left')
+    self.ui.gyr3D_cal.showAxis('bottom')
+
+    self.ui.gyr3D_cal.opts['distance'] = 30000
+    self.ui.gyr3D_cal.show()
+
+    # MAGNETOMETER
+    # ================================================================
+
+    # MAG 2D
+
+    self.ui.magXY.setXRange(-mag_range, mag_range)
+    self.ui.magXY.setYRange(-mag_range, mag_range)
+    self.ui.magYZ.setXRange(-mag_range, mag_range)
+    self.ui.magYZ.setYRange(-mag_range, mag_range)
+    self.ui.magZX.setXRange(-mag_range, mag_range)
+    self.ui.magZX.setYRange(-mag_range, mag_range)
+    
+    self.ui.magXY.setAspectLocked()
+    self.ui.magYZ.setAspectLocked()
+    self.ui.magZX.setAspectLocked()
+
+    # MAG CALIBRATED 2D
 
     self.ui.magXY_cal.setXRange(-1.5, 1.5)
     self.ui.magXY_cal.setYRange(-1.5, 1.5)
@@ -291,85 +392,54 @@ class FreeIMUCal(QMainWindow):
     self.ui.magXY_cal.setAspectLocked()
     self.ui.magYZ_cal.setAspectLocked()
     self.ui.magZX_cal.setAspectLocked()
-    
-   # Setup graphs 3D
 
-    if USE3DPLOT is True:
+    # MAG 3D
 
-        # ACC
+    self.mag3D_sp = pyqtgraph.ScatterPlotItem()
+    self.ui.mag3D.addItem(self.mag3D_sp)
 
-        ax = gl.GLAxisItem()
-        ax.setSize(x=20000, y=20000, z=20000)
-        self.ui.acc3D.addItem(ax)
+    mx_x = pyqtgraph.AxisItem('bottom', linkView=self.mag3D_sp)
+    mx_y = pyqtgraph.AxisItem('left',   linkView=self.mag3D_sp)
+    mx_z = pyqtgraph.AxisItem('right',  linkView=self.mag3D_sp)
+   
+    mx_x.setHeight(20000)
+    mx_y.setHeight(20000)
+    mx_z.setHeight(20000)
 
-        self.acc3D_sp = gl.GLScatterPlotItem()
-        self.ui.acc3D.addItem(self.acc3D_sp)
+    self.ui.mag3D.layout.addItem(mx_x,2,1)
+    self.ui.mag3D.layout.addItem(mx_y,1,0)
+    self.ui.mag3D.layout.addItem(mx_z,1,2)
 
-        self.ui.acc3D.opts['distance'] = 30000
-        self.ui.acc3D.show()
+    self.ui.mag3D.showAxis('right')
+    self.ui.mag3D.showAxis('left')
+    self.ui.mag3D.showAxis('bottom')
 
-        # GYR
+    self.ui.mag3D.opts['distance'] = 2000
+    self.ui.mag3D.show()
 
-        gx = gl.GLAxisItem()
-        gx.setSize(x=20000, y=20000, z=20000)
-        self.ui.gyr3D.addItem(gx)
+    # MAG CALIBRATED 3D
 
-        self.gyr3D_sp = gl.GLScatterPlotItem()
-        self.ui.gyr3D.addItem(self.gyr3D_sp)
+    self.magD_cal_sp = pyqtgraph.ScatterPlotItem()
+    self.ui.mag3D_cal.addItem(self.mag3D_cal_sp)
 
-        self.ui.gyr3D.opts['distance'] = 30000
-        self.ui.gyr3D.show()
+    mx_cal_x = pyqtgraph.AxisItem('bottom', linkView=self.mag3D_cal_sp)
+    mx_cal_y = pyqtgraph.AxisItem('left',   linkView=self.mag3D_cal_sp)
+    mx_cal_z = pyqtgraph.AxisItem('right',  linkView=self.mag3D_cal_sp)
+   
+    mx_cal_x.setHeight(1000)
+    mx_cal_y.setHeight(1000)
+    mx_cal_z.setHeight(1000)
 
-        # MAG
+    self.ui.mag3D_cal.layout.addItem(mx_cal_x,2,1)
+    self.ui.mag3D_cal.layout.addItem(mx_cal_y,1,0)
+    self.ui.mag3D_cal.layout.addItem(mx_cal_z,1,2)
 
-        mx = gl.GLAxisItem()
-        mx.setSize(x=1000, y=1000, z=1000)
-        self.ui.mag3D.addItem(ax)
+    self.ui.mag3D_cal.showAxis('right')
+    self.ui.mag3D_cal.showAxis('left')
+    self.ui.mag3D_cal.showAxis('bottom')
 
-        self.mag3D_sp = gl.GLScatterPlotItem()
-        self.ui.mag3D.addItem(self.mag3D_sp)
- 
-        self.ui.mag3D.opts['distance'] = 2000
-        self.ui.mag3D.show()
-        
-        # Axis for the cal 3D graph
-
-        # ACC
-
-        ax_cal = gl.GLAxisItem()
-        ax_cal.setSize(x=10000, y=10000, z=10000)
-        self.ui.acc3D_cal.addItem(ax_cal)
-
-        self.acc3D_cal_sp = gl.GLScatterPlotItem()
-        self.ui.acc3D_cal.addItem(self.acc3D_cal_sp)
-
-        self.ui.acc3D_cal.opts['distance'] = 30000
-        self.ui.acc3D_cal.show()
-
-        # GYR
-
-        gx_cal = gl.GLAxisItem()
-        gx_cal.setSize(x=10000, y=10000, z=10000)
-        self.ui.gyr3D_cal.addItem(gx_cal)
-
-        self.gyr3D_cal_sp = gl.GLScatterPlotItem()
-        self.ui.gyr3D_cal.addItem(self.gyr3D_cal_sp)
-
-        self.ui.gyr3D_cal.opts['distance'] = 20000
-        self.ui.gyr3D_cal.show()
-
-        # MAG
-
-        mx_cal = gl.GLAxisItem()
-        mx_cal.setSize(x=10000, y=10000, z=10000)
-        self.ui.mag3D_cal.addItem(mx_cal)
-
-        self.mag3D_cal_sp = gl.GLScatterPlotItem()
-        self.ui.gyr3D_cal.addItem(self.mag3D_cal_sp)
-
-        self.ui.mag3D_cal.opts['distance'] = 2000
-        self.ui.mag3D_cal.show()
-
+    self.ui.mag3D_cal.opts['distance'] = 2000
+    self.ui.mag3D_cal.show()
       
   def set_status(self, status):
     self.ui.statusbar.showMessage(self.tr(status))
@@ -386,7 +456,6 @@ class FreeIMUCal(QMainWindow):
         
     try:
 
-
       self.ser = serial.Serial(
         port      = self.serial_port,
         baudrate  = BAUDRATE,
@@ -401,7 +470,6 @@ class FreeIMUCal(QMainWindow):
 
         self.set_status('Serial Port Opened. Waiting for Device Response...')
 
-        # wait for device reset on serial open
         time.sleep(3)
         
         is_connected = False      
@@ -421,6 +489,7 @@ class FreeIMUCal(QMainWindow):
             time.sleep(1)
         
         self.ui.connectButton.setText('Disconnect')
+        self.ui.connectButton.clicked.disconnect(self.serial_connect)
         self.ui.connectButton.clicked.connect(self.serial_disconnect)
         self.ui.serialPortEdit.setEnabled(False)
         self.ui.serialProtocol.setEnabled(False)
@@ -429,7 +498,6 @@ class FreeIMUCal(QMainWindow):
         
         # If you have device with EEPROM
         self.ui.clearCalibrationEEPROMButton.setEnabled(True)
-        self.ui.clearCalibrationEEPROMButton.clicked.connect(self.clear_calibration_eeprom)
         
     except serial.serialutil.SerialException as e:
       self.ui.connectButton.setEnabled(True)
@@ -440,9 +508,8 @@ class FreeIMUCal(QMainWindow):
     self.ui.connectButton.setEnabled(True)
 
   def serial_disconnect(self):
-    print('Disconnecting from ' + self.serial_port)
     self.ser.close()
-    self.ui.set_status('Disconnected')
+    self.ui.set_status('Disconnected from ' + self.serial_port)
     self.ui.serialPortEdit.setEnabled(True)
     self.ui.serialProtocol.setEnabled(True)
     
@@ -459,7 +526,7 @@ class FreeIMUCal(QMainWindow):
     self.serWorker = SerialWorker(ser = self.ser, ui = self.ui)
     self.serWorker.new_data.connect(self.newData)
     self.serWorker.start()
-    self.ui.set_status('Starting Sampling Serial Worker')
+    self.ui.set_status('Starting Serial Worker')
     self.ui.samplingToggleButton.setText('Stop Sampling')
     self.ui.samplingToggleButton.clicked.disconnect(self.sampling_start)
     self.ui.samplingToggleButton.clicked.connect(self.sampling_end)
@@ -468,57 +535,23 @@ class FreeIMUCal(QMainWindow):
     self.serWorker.exiting = True
     self.serWorker.quit()
     self.serWorker.wait()
-    self.ui.set_status('Stopping Sampling Serial Worker')
+    self.ui.set_status('Stopped Serial Worker')
     self.ui.samplingToggleButton.setText('Start Sampling')
     self.ui.samplingToggleButton.clicked.disconnect(self.sampling_end)
-    self.ui.samplingToggleButton.clicked.connect(self.sampling_start)
-    
+    self.ui.samplingToggleButton.clicked.connect(self.sampling_start)    
+
     self.ui.calibrateButton.setEnabled(True)
     self.ui.calAlgorithmComboBox.setEnabled(True)
     self.ui.calibrateButton.clicked.connect(self.calibrate)
   
-  def newData(self, reading):
-    
-    # only display last reading from burst
-    if self.ui.accDisplay.isChecked():
-      self.acc_data = np.concatenate((self.acc_data, np.array([[reading[0],reading[1],reading[2]]])), axis=0)
-
-    if self.ui.gyrDisplay.isChecked():
-      self.gyr_data = np.concatenate((self.gyr_data, np.array([[reading[3],reading[4],reading[5]]])), axis=0)
-    
-    if self.ui.magDisplay.isChecked():
-     self.mag_data = np.concatenate((self.mag_data, np.array([[reading[6],reading[7],reading[8]]])), axis=0)
-    
-    self.ui.accXY.plot(x = self.acc_data[:,0], y = self.acc_data[:,1], clear = True, pen='r')
-    self.ui.accYZ.plot(x = self.acc_data[:,1], y = self.acc_data[:,2], clear = True, pen='g')
-    self.ui.accZX.plot(x = self.acc_data[:,2], y = self.acc_data[:,0], clear = True, pen='b')
-
-    self.ui.gyrXY.plot(x = self.gyr_data[:,0], y = self.gyr_data[:,1], clear = True, pen='r')
-    self.ui.gyrYZ.plot(x = self.gyr_data[:,1], y = self.gyr_data[:,2], clear = True, pen='g')
-    self.ui.gyrZX.plot(x = self.gyr_data[:,2], y = self.gyr_data[:,0], clear = True, pen='b')
-    
-    self.ui.magXY.plot(x = self.mag_data[:,0], y = self.mag_data[:,1], clear = True, pen='r')
-    self.ui.magYZ.plot(x = self.mag_data[:,1], y = self.mag_data[:,2], clear = True, pen='g')
-    self.ui.magZX.plot(x = self.mag_data[:,2], y = self.mag_data[:,0], clear = True, pen='b')
-    
-    if USE3DPLOT == True:
-        self.acc3D_sp.setData(pos=self.acc_data, color = (1, 1, 1, 1), size=2)
-        self.gyr3D_sp.setData(pos=self.gyr_data, color = (1, 1, 1, 1), size=2)
-        self.mag3D_sp.setData(pos=self.mag_data, color = (1, 1, 1, 1), size=2)
-
   def calibrate(self):
-
-    self.ui.set_status('Calibrating from stored data')
-
     # read file and run calibration algorithm
     (self.acc_offset, self.acc_correctionMat) = cal_lib.calibrate_from_file(acc_file_name)
     (self.gyr_offset, self.gyr_correctionMat) = cal_lib.calibrate_from_file(gyr_file_name)
     (self.mag_offset, self.mag_correctionMat) = cal_lib.calibrate_from_file(mag_file_name)
-
     self.acc_scale = np.diag(self.acc_correctionMat)
     self.gyr_scale = np.diag(self.gyr_correctionMat)
     self.mag_scale = np.diag(self.mag_correctionMat)
-
     # show calibrated tab
     self.ui.tabWidget.setCurrentIndex(1)
     
@@ -554,35 +587,26 @@ class FreeIMUCal(QMainWindow):
     self.gyr_cal_data = cal_lib.compute_calibrate_data(self.gyr_data, self.gyr_offset, self.gyr_correctionMat)
     self.mag_cal_data = cal_lib.compute_calibrate_data(self.mag_data, self.mag_offset, self.mag_correctionMat)
     
-    # populate 2D graphs with calibrated data
+    # populate 2D and 3D graphs with calibrated data
     self.ui.accXY_cal.plot(x = self.acc_cal_data[:,0], y = self.acc_cal_data[:,1], clear = True, pen='r')
     self.ui.accYZ_cal.plot(x = self.acc_cal_data[:,1], y = self.acc_cal_data[:,2], clear = True, pen='g')
     self.ui.accZX_cal.plot(x = self.acc_cal_data[:,2], y = self.acc_cal_data[:,0], clear = True, pen='b')
+    self.acc3D_cal_sp.setData(pos=self.acc_cal_data, color = (1, 1, 1, 1), size=2)
 
     self.ui.gyrXY_cal.plot(x = self.gyr_cal_data[:,0], y = self.gyr_cal_data[:,1], clear = True, pen='r')
     self.ui.gyrYZ_cal.plot(x = self.gyr_cal_data[:,1], y = self.gyr_cal_data[:,2], clear = True, pen='g')
     self.ui.gyrZX_cal.plot(x = self.gyr_cal_data[:,2], y = self.gyr_cal_data[:,0], clear = True, pen='b')
+    self.gyr3D_cal_sp.setData(pos=self.gyr_cal_data, color = (1, 1, 1, 1), size=2)
     
     self.ui.magXY_cal.plot(x = self.mag_cal_data[:,0], y = self.mag_cal_data[:,1], clear = True, pen='r')
     self.ui.magYZ_cal.plot(x = self.mag_cal_data[:,1], y = self.mag_cal_data[:,2], clear = True, pen='g')
     self.ui.magZX_cal.plot(x = self.mag_cal_data[:,2], y = self.mag_cal_data[:,0], clear = True, pen='b')
-    
-    # populate 3D graphs with calibrated data
-
-    if USE3DPLOT == True:
-        self.acc3D_cal_sp.setData(pos=self.acc_cal_data, color = (1, 1, 1, 1), size=2)
-        self.gyr3D_cal_sp.setData(pos=self.gyr_cal_data, color = (1, 1, 1, 1), size=2)
-        self.mag3D_cal_sp.setData(pos=self.mag_cal_data, color = (1, 1, 1, 1), size=2)
-    
+    self.mag3D_cal_sp.setData(pos=self.mag_cal_data, color = (1, 1, 1, 1), size=2)
+        
     #enable calibration buttons to activate calibration storing functions
     self.ui.saveCalibrationHeaderButton.setEnabled(True)
-    self.ui.saveCalibrationHeaderButton.clicked.connect(self.save_calibration_header)
-
     self.ui.saveCalibrationJSONButton.setEnabled(True)
-    self.ui.saveCalibrationJSONButton.clicked.connect(self.save_calibration_json)
-    
     self.ui.saveCalibrationEEPROMButton.setEnabled(True)
-    self.ui.saveCalibrationEEPROMButton.clicked.connect(self.save_calibration_eeprom)
     
   def save_calibration_json(self):
     data = {
@@ -687,8 +711,8 @@ const float mag_scale_z = %f;
     self.ser.write('\r\n'.encode())
     self.ui.set_status('Calibration saved to microcontroller EEPROM.')
     # debug written values to console
-    print('Calibration values read back from EEPROM:')
     self.ser.write('C\r\n'.encode())
+    print('Calibration values read from EEPROM:')
     for i in range(4):
       print(self.ser.read_until(b'\n'))
       
@@ -697,6 +721,33 @@ const float mag_scale_z = %f;
     # no feedback expected. we assume success.
     self.ui.set_status('Calibration cleared from microcontroller EEPROM.')
     
+  def newData(self, reading):
+    
+    # only display last reading from burst
+    if self.ui.accDisplay.isChecked():
+      self.acc_data = np.concatenate((self.acc_data, np.array([[reading[0],reading[1],reading[2]]])), axis=0)
+
+    if self.ui.gyrDisplay.isChecked():
+      self.gyr_data = np.concatenate((self.gyr_data, np.array([[reading[3],reading[4],reading[5]]])), axis=0)
+    
+    if self.ui.magDisplay.isChecked():
+     self.mag_data = np.concatenate((self.mag_data, np.array([[reading[6],reading[7],reading[8]]])), axis=0)
+    
+    self.ui.accXY.plot(x = self.acc_data[:,0], y = self.acc_data[:,1], clear = True, pen='r')
+    self.ui.accYZ.plot(x = self.acc_data[:,1], y = self.acc_data[:,2], clear = True, pen='g')
+    self.ui.accZX.plot(x = self.acc_data[:,2], y = self.acc_data[:,0], clear = True, pen='b')
+    self.acc3D_sp.setData(pos=self.acc_data, color = (1, 1, 1, 1), size=2)
+
+    self.ui.gyrXY.plot(x = self.gyr_data[:,0], y = self.gyr_data[:,1], clear = True, pen='r')
+    self.ui.gyrYZ.plot(x = self.gyr_data[:,1], y = self.gyr_data[:,2], clear = True, pen='g')
+    self.ui.gyrZX.plot(x = self.gyr_data[:,2], y = self.gyr_data[:,0], clear = True, pen='b')
+    self.gyr3D_sp.setData(pos=self.gyr_data, color = (1, 1, 1, 1), size=2)
+    
+    self.ui.magXY.plot(x = self.mag_data[:,0], y = self.mag_data[:,1], clear = True, pen='r')
+    self.ui.magYZ.plot(x = self.mag_data[:,1], y = self.mag_data[:,2], clear = True, pen='g')
+    self.ui.magZX.plot(x = self.mag_data[:,2], y = self.mag_data[:,0], clear = True, pen='b')    
+    self.mag3D_sp.setData(pos=self.mag_data, color = (1, 1, 1, 1), size=2)
+
 ######################################################################
 # Main Program
 ######################################################################
