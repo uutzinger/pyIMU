@@ -33,6 +33,7 @@ from PyQt5.QtCore import Qt, QObject, QThread, QSettings, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QFileDialog
 from PyQt5.QtGui import QCursor, QIcon
 
+import pyqtgraph as pg
 import pyqtgraph.opengl as gl
 from pyqtgraph import PlotWidget
 from pyqtgraph.opengl import GLViewWidget
@@ -61,8 +62,8 @@ gyr_file_name = "gyr.txt"
 calibration_h_file_name     = "calibration.h"
 calibration_json_file_name  = "calibration.JSON"
 
-acc_range = 15   # +/- Display Range is around 10 m/s^2
-mag_range = 100  # +/- Display Range is around60 micro Tesla
+acc_range = 20   # +/- Display Range is around 10 m/s^2
+mag_range = 300  # +/- Display Range is around60 micro Tesla
 gyr_range = 10   # +/- Display Range 33rpm = 33*60rps = 33*60*2pi rad/s = 3.49 rad/s
 
 # QT Settings
@@ -218,94 +219,142 @@ class FreeIMUCal(QMainWindow):
     # Setup graphs 2D
 
     # ACC
-
+    
     self.ui.accXY.setXRange(-acc_range, acc_range)
-    self.ui.accXY.setYRange(-acc_range, acc_range)
     self.ui.accYZ.setXRange(-acc_range, acc_range)
-    self.ui.accYZ.setYRange(-acc_range, acc_range)
     self.ui.accZX.setXRange(-acc_range, acc_range)
-    self.ui.accZX.setYRange(-acc_range, acc_range)
     
     self.ui.accXY.setAspectLocked()
     self.ui.accYZ.setAspectLocked()
     self.ui.accZX.setAspectLocked()
 
+    self.ui.accXY.setBackground('w')
+    self.ui.accYZ.setBackground('w')
+    self.ui.accZX.setBackground('w')
+
+    self.accXY_sp = pg.PlotDataItem([],[], symbol='o', symbolSize=8, symbolPen=None, symbolBrush='r')
+    self.ui.accXY.addItem(self.accXY_sp)
+    self.accYZ_sp = pg.PlotDataItem([],[], symbol='o', symbolSize=8, symbolPen=None, symbolBrush='g')
+    self.ui.accYZ.addItem(self.accYZ_sp)
+    self.accZX_sp = pg.PlotDataItem([],[], symbol='o', symbolSize=8, symbolPen=None, symbolBrush='b')
+    self.ui.accZX.addItem(self.accZX_sp)
+
     # GYR 
 
     self.ui.gyrXY.setXRange(-gyr_range, gyr_range)
-    self.ui.gyrXY.setYRange(-gyr_range, gyr_range)
     self.ui.gyrYZ.setXRange(-gyr_range, gyr_range)
-    self.ui.gyrYZ.setYRange(-gyr_range, gyr_range)
     self.ui.gyrZX.setXRange(-gyr_range, gyr_range)
-    self.ui.gyrZX.setYRange(-gyr_range, gyr_range)
     
     self.ui.gyrXY.setAspectLocked()
     self.ui.gyrYZ.setAspectLocked()
     self.ui.gyrZX.setAspectLocked()
-    
+
+    self.ui.gyrXY.setBackground('w')
+    self.ui.gyrYZ.setBackground('w')
+    self.ui.gyrZX.setBackground('w')
+
+    self.gyrXY_sp = pg.PlotDataItem([],[], symbol='o', symbolSize=8, symbolPen=None, symbolBrush='r')
+    self.ui.gyrXY.addItem(self.gyrXY_sp)
+    self.gyrYZ_sp = pg.PlotDataItem([],[], symbol='o', symbolSize=8, symbolPen=None, symbolBrush='g')
+    self.ui.gyrYZ.addItem(self.gyrYZ_sp)
+    self.gyrZX_sp = pg.PlotDataItem([],[], symbol='o', symbolSize=8, symbolPen=None, symbolBrush='b')
+    self.ui.gyrZX.addItem(self.gyrZX_sp)
+
     # MAG
 
     self.ui.magXY.setXRange(-mag_range, mag_range)
-    self.ui.magXY.setYRange(-mag_range, mag_range)
     self.ui.magYZ.setXRange(-mag_range, mag_range)
-    self.ui.magYZ.setYRange(-mag_range, mag_range)
     self.ui.magZX.setXRange(-mag_range, mag_range)
-    self.ui.magZX.setYRange(-mag_range, mag_range)
     
     self.ui.magXY.setAspectLocked()
     self.ui.magYZ.setAspectLocked()
     self.ui.magZX.setAspectLocked()
-    
+
+    self.ui.magXY.setBackground('w')
+    self.ui.magYZ.setBackground('w')
+    self.ui.magZX.setBackground('w')
+
+    self.magXY_sp = pg.PlotDataItem([],[], symbol='o', symbolSize=8, symbolPen=None, symbolBrush='r')
+    self.ui.magXY.addItem(self.magXY_sp)
+    self.magYZ_sp = pg.PlotDataItem([],[], symbol='o', symbolSize=8, symbolPen=None, symbolBrush='g')
+    self.ui.magYZ.addItem(self.magYZ_sp)
+    self.magZX_sp = pg.PlotDataItem([],[], symbol='o', symbolSize=8, symbolPen=None, symbolBrush='b')
+    self.ui.magZX.addItem(self.magZX_sp)
+
     # ACC CALIBRATED
 
     self.ui.accXY_cal.setXRange(-1.5, 1.5)
-    self.ui.accXY_cal.setYRange(-1.5, 1.5)
     self.ui.accYZ_cal.setXRange(-1.5, 1.5)
-    self.ui.accYZ_cal.setYRange(-1.5, 1.5)
     self.ui.accZX_cal.setXRange(-1.5, 1.5)
-    self.ui.accZX_cal.setYRange(-1.5, 1.5)
     
     self.ui.accXY_cal.setAspectLocked()
     self.ui.accYZ_cal.setAspectLocked()
     self.ui.accZX_cal.setAspectLocked()
 
+    self.ui.accXY_cal.setBackground('w')
+    self.ui.accYZ_cal.setBackground('w')
+    self.ui.accZX_cal.setBackground('w')
+
+    self.accXY_cal_sp = pg.PlotDataItem([],[], symbol='o', symbolSize=8, symbolPen=None, symbolBrush='r')
+    self.ui.accXY_cal.addItem(self.accXY_cal_sp)
+    self.accYZ_cal_sp = pg.PlotDataItem([],[], symbol='o', symbolSize=8, symbolPen=None, symbolBrush='g')
+    self.ui.accYZ_cal.addItem(self.accYZ_cal_sp)
+    self.accZX_cal_sp = pg.PlotDataItem([],[], symbol='o', symbolSize=8, symbolPen=None, symbolBrush='b')
+    self.ui.accZX_cal.addItem(self.accZX_cal_sp)
+
     # GYR CALBRATED
 
     self.ui.gyrXY_cal.setXRange(-1.5, 1.5)
-    self.ui.gyrXY_cal.setYRange(-1.5, 1.5)
     self.ui.gyrYZ_cal.setXRange(-1.5, 1.5)
-    self.ui.gyrYZ_cal.setYRange(-1.5, 1.5)
     self.ui.gyrZX_cal.setXRange(-1.5, 1.5)
-    self.ui.gyrZX_cal.setYRange(-1.5, 1.5)
     
     self.ui.gyrXY_cal.setAspectLocked()
     self.ui.gyrYZ_cal.setAspectLocked()
     self.ui.gyrZX_cal.setAspectLocked()
-    
+
+    self.ui.gyrXY_cal.setBackground('w')
+    self.ui.gyrYZ_cal.setBackground('w')
+    self.ui.gyrZX_cal.setBackground('w')
+
+    self.gyrXY_cal_sp = pg.PlotDataItem([],[], symbol='o', symbolSize=8, symbolPen=None, symbolBrush='r')
+    self.ui.gyrXY_cal.addItem(self.gyrXY_cal_sp)
+    self.gyrYZ_cal_sp = pg.PlotDataItem([],[], symbol='o', symbolSize=8, symbolPen=None, symbolBrush='g')
+    self.ui.gyrYZ_cal.addItem(self.gyrYZ_cal_sp)
+    self.gyrZX_cal_sp = pg.PlotDataItem([],[], symbol='o', symbolSize=8, symbolPen=None, symbolBrush='b')
+    self.ui.gyrZX_cal.addItem(self.gyrZX_cal_sp)
+
     # MAG CALIBRATED 
 
     self.ui.magXY_cal.setXRange(-1.5, 1.5)
-    self.ui.magXY_cal.setYRange(-1.5, 1.5)
     self.ui.magYZ_cal.setXRange(-1.5, 1.5)
-    self.ui.magYZ_cal.setYRange(-1.5, 1.5)
     self.ui.magZX_cal.setXRange(-1.5, 1.5)
-    self.ui.magZX_cal.setYRange(-1.5, 1.5)
     
     self.ui.magXY_cal.setAspectLocked()
     self.ui.magYZ_cal.setAspectLocked()
     self.ui.magZX_cal.setAspectLocked()
-    
+
+    self.ui.magXY_cal.setBackground('w')
+    self.ui.magYZ_cal.setBackground('w')
+    self.ui.magZX_cal.setBackground('w')
+
+    self.magXY_cal_sp = pg.PlotDataItem([],[], symbol='o', symbolSize=8, symbolPen=None, symbolBrush='r')
+    self.ui.magXY_cal.addItem(self.magXY_cal_sp)
+    self.magYZ_cal_sp = pg.PlotDataItem([],[], symbol='o', symbolSize=8, symbolPen=None, symbolBrush='g')
+    self.ui.magYZ_cal.addItem(self.magYZ_cal_sp)
+    self.magZX_cal_sp = pg.PlotDataItem([],[], symbol='o', symbolSize=8, symbolPen=None, symbolBrush='b')
+    self.ui.magZX_cal.addItem(self.magZX_cal_sp)
+
    # Setup graphs 3D
 
     if USE3DPLOT is True:
 
         # ACC
 
-        ax = gl.GLAxisItem()
+        ax = pg.opengl.GLAxisItem()
         ax.setSize(x=20000, y=20000, z=20000)
         self.ui.acc3D.addItem(ax)
 
-        self.acc3D_sp = gl.GLScatterPlotItem()
+        self.acc3D_sp = pg.opengl.GLScatterPlotItem()
         self.ui.acc3D.addItem(self.acc3D_sp)
 
         self.ui.acc3D.opts['distance'] = 30000
@@ -313,11 +362,11 @@ class FreeIMUCal(QMainWindow):
 
         # GYR
 
-        gx = gl.GLAxisItem()
+        gx = pg.opengl.GLAxisItem()
         gx.setSize(x=20000, y=20000, z=20000)
         self.ui.gyr3D.addItem(gx)
 
-        self.gyr3D_sp = gl.GLScatterPlotItem()
+        self.gyr3D_sp = pg.opengl.GLScatterPlotItem()
         self.ui.gyr3D.addItem(self.gyr3D_sp)
 
         self.ui.gyr3D.opts['distance'] = 30000
@@ -325,11 +374,11 @@ class FreeIMUCal(QMainWindow):
 
         # MAG
 
-        mx = gl.GLAxisItem()
+        mx = pg.opengl.GLAxisItem()
         mx.setSize(x=1000, y=1000, z=1000)
         self.ui.mag3D.addItem(ax)
 
-        self.mag3D_sp = gl.GLScatterPlotItem()
+        self.mag3D_sp = pg.opengl.GLScatterPlotItem()
         self.ui.mag3D.addItem(self.mag3D_sp)
  
         self.ui.mag3D.opts['distance'] = 2000
@@ -339,11 +388,11 @@ class FreeIMUCal(QMainWindow):
 
         # ACC
 
-        ax_cal = gl.GLAxisItem()
+        ax_cal = pg.opengl.GLAxisItem()
         ax_cal.setSize(x=10000, y=10000, z=10000)
         self.ui.acc3D_cal.addItem(ax_cal)
 
-        self.acc3D_cal_sp = gl.GLScatterPlotItem()
+        self.acc3D_cal_sp = pg.opengl.GLScatterPlotItem()
         self.ui.acc3D_cal.addItem(self.acc3D_cal_sp)
 
         self.ui.acc3D_cal.opts['distance'] = 30000
@@ -351,11 +400,11 @@ class FreeIMUCal(QMainWindow):
 
         # GYR
 
-        gx_cal = gl.GLAxisItem()
+        gx_cal = pg.opengl.GLAxisItem()
         gx_cal.setSize(x=10000, y=10000, z=10000)
         self.ui.gyr3D_cal.addItem(gx_cal)
 
-        self.gyr3D_cal_sp = gl.GLScatterPlotItem()
+        self.gyr3D_cal_sp = pg.opengl.GLScatterPlotItem()
         self.ui.gyr3D_cal.addItem(self.gyr3D_cal_sp)
 
         self.ui.gyr3D_cal.opts['distance'] = 20000
@@ -363,11 +412,11 @@ class FreeIMUCal(QMainWindow):
 
         # MAG
 
-        mx_cal = gl.GLAxisItem()
+        mx_cal = pg.opengl.GLAxisItem()
         mx_cal.setSize(x=10000, y=10000, z=10000)
         self.ui.mag3D_cal.addItem(mx_cal)
 
-        self.mag3D_cal_sp = gl.GLScatterPlotItem()
+        self.mag3D_cal_sp = pg.opengl.GLScatterPlotItem()
         self.ui.gyr3D_cal.addItem(self.mag3D_cal_sp)
 
         self.ui.mag3D_cal.opts['distance'] = 2000
@@ -492,17 +541,17 @@ class FreeIMUCal(QMainWindow):
     if self.ui.magDisplay.isChecked():
      self.mag_data = np.concatenate((self.mag_data, np.array([[reading[6],reading[7],reading[8]]])), axis=0)
     
-    self.ui.accXY.plot(x = self.acc_data[:,0], y = self.acc_data[:,1], clear = True, pen='r')
-    self.ui.accYZ.plot(x = self.acc_data[:,1], y = self.acc_data[:,2], clear = True, pen='g')
-    self.ui.accZX.plot(x = self.acc_data[:,2], y = self.acc_data[:,0], clear = True, pen='b')
+    self.accXY_sp.setData(x=self.acc_data[:,0], y=self.acc_data[:,1])
+    self.accYZ_sp.setData(x=self.acc_data[:,1], y=self.acc_data[:,2])
+    self.accZX_sp.setData(x=self.acc_data[:,2], y=self.acc_data[:,0])
 
-    self.ui.gyrXY.plot(x = self.gyr_data[:,0], y = self.gyr_data[:,1], clear = True, pen='r')
-    self.ui.gyrYZ.plot(x = self.gyr_data[:,1], y = self.gyr_data[:,2], clear = True, pen='g')
-    self.ui.gyrZX.plot(x = self.gyr_data[:,2], y = self.gyr_data[:,0], clear = True, pen='b')
-    
-    self.ui.magXY.plot(x = self.mag_data[:,0], y = self.mag_data[:,1], clear = True, pen='r')
-    self.ui.magYZ.plot(x = self.mag_data[:,1], y = self.mag_data[:,2], clear = True, pen='g')
-    self.ui.magZX.plot(x = self.mag_data[:,2], y = self.mag_data[:,0], clear = True, pen='b')
+    self.gyrXY_sp.setData(x=self.gyr_data[:,0], y=self.gyr_data[:,1])
+    self.gyrYZ_sp.setData(x=self.gyr_data[:,1], y=self.gyr_data[:,2])
+    self.gyrZX_sp.setData(x=self.gyr_data[:,2], y=self.gyr_data[:,0])
+
+    self.magXY_sp.setData(x=self.mag_data[:,0], y=self.mag_data[:,1])
+    self.magYZ_sp.setData(x=self.mag_data[:,1], y=self.mag_data[:,2])
+    self.magZX_sp.setData(x=self.mag_data[:,2], y=self.mag_data[:,0])
     
     if USE3DPLOT == True:
         self.acc3D_sp.setData(pos=self.acc_data, color = (1, 1, 1, 1), size=2)
@@ -558,17 +607,18 @@ class FreeIMUCal(QMainWindow):
     self.mag_cal_data = cal_lib.compute_calibrate_data(self.mag_data, self.mag_offset, self.mag_correctionMat)
     
     # populate 2D graphs with calibrated data
-    self.ui.accXY_cal.plot(x = self.acc_cal_data[:,0], y = self.acc_cal_data[:,1], clear = True, pen='r')
-    self.ui.accYZ_cal.plot(x = self.acc_cal_data[:,1], y = self.acc_cal_data[:,2], clear = True, pen='g')
-    self.ui.accZX_cal.plot(x = self.acc_cal_data[:,2], y = self.acc_cal_data[:,0], clear = True, pen='b')
 
-    self.ui.gyrXY_cal.plot(x = self.gyr_cal_data[:,0], y = self.gyr_cal_data[:,1], clear = True, pen='r')
-    self.ui.gyrYZ_cal.plot(x = self.gyr_cal_data[:,1], y = self.gyr_cal_data[:,2], clear = True, pen='g')
-    self.ui.gyrZX_cal.plot(x = self.gyr_cal_data[:,2], y = self.gyr_cal_data[:,0], clear = True, pen='b')
-    
-    self.ui.magXY_cal.plot(x = self.mag_cal_data[:,0], y = self.mag_cal_data[:,1], clear = True, pen='r')
-    self.ui.magYZ_cal.plot(x = self.mag_cal_data[:,1], y = self.mag_cal_data[:,2], clear = True, pen='g')
-    self.ui.magZX_cal.plot(x = self.mag_cal_data[:,2], y = self.mag_cal_data[:,0], clear = True, pen='b')
+    self.accXY_cal_sp.setData(x=self.acc_cal_data[:,0], y=self.acc_cal_data[:,1])
+    self.accYZ_cal_sp.setData(x=self.acc_cal_data[:,1], y=self.acc_cal_data[:,2])
+    self.accZX_cal_sp.setData(x=self.acc_cal_data[:,2], y=self.acc_cal_data[:,0])
+
+    self.gyrXY_cal_sp.setData(x=self.gyr_cal_data[:,0], y=self.gyr_cal_data[:,1])
+    self.gyrYZ_cal_sp.setData(x=self.gyr_cal_data[:,1], y=self.gyr_cal_data[:,2])
+    self.gyrZX_cal_sp.setData(x=self.gyr_cal_data[:,2], y=self.gyr_cal_data[:,0])
+
+    self.magXY_cal_sp.setData(x=self.mag_cal_data[:,0], y=self.mag_cal_data[:,1])
+    self.magYZ_cal_sp.setData(x=self.mag_cal_data[:,1], y=self.mag_cal_data[:,2])
+    self.magZX_cal_sp.setData(x=self.mag_cal_data[:,2], y=self.mag_cal_data[:,0])
     
     # populate 3D graphs with calibrated data
 
