@@ -122,7 +122,7 @@ class SerialWorker(QThread):
     else:
       self.mag_file = None
     
-    count = 100 # read 100 values then pass last one to GUI
+    count = 25 # read 20 values then pass last one to GUI
     in_values = 9 # 3 values for acc, gyr and mag
     readings = [0.0 for i in range(in_values)]
 
@@ -133,7 +133,8 @@ class SerialWorker(QThread):
         for i in range(in_values):
           byte_array = self.ser.read(8)             # byte array of 8 bytes for each floating point value (float is 4 bytes and when converted to readable hex is 8 bytes)
           hex_chars = ''.join(byte_array.decode())  # convert byte array to string
-          readings[i] = hex_to_float(hex_chars)     #
+          if len(hex_chars) == 8:                   # 
+            readings[i] = hex_to_float(hex_chars)   #
         self.ser.read(2)                            # consumes remaining '\r\n'
 
         # store readings in files
@@ -149,6 +150,89 @@ class SerialWorker(QThread):
         
       # every count times we pass last reading to the GUI
       self.new_data.emit(readings)      
+
+      if self.acc_file != None: self.acc_file.flush()
+      if self.gyr_file != None: self.gyr_file.flush()
+      if self.mag_file != None: self.mag_file.flush()
+
+    # closing acc,gyr and mag files
+    if self.acc_file != None: self.acc_file.close()
+    if self.gyr_file != None: self.gyr_file.close()
+    if self.mag_file != None: self.mag_file.close()
+    return 
+  
+  def __del__(self):
+    self.exiting = True
+    self.wait()
+
+
+#######################
+
+class ZMQlWorker(QThread):
+  
+  new_data = pyqtSignal(object)
+  
+  def __init__(self, zmq, ui):
+    QThread.__init__(self)
+    self.ser = zmq
+    self.ui = ui
+    self.exiting = False
+        
+  def run(self):
+    print("Setting up sampling...")
+    if self.ui.accRecord.isChecked():
+      if self.ui.accAppend.isChecked():
+        self.acc_file = open(acc_file_name, 'a')
+      else:
+        self.acc_file = open(acc_file_name, 'w')
+    else:
+      self.acc_file = None
+    if self.ui.gyrRecord.isChecked():
+      if self.ui.gyrAppend.isChecked():
+        self.gyr_file = open(gyr_file_name, 'a')
+      else:
+        self.gyr_file = open(gyr_file_name, 'w')
+    else:
+      self.gyr_file = None
+    if self.ui.magRecord.isChecked():
+      if self.ui.magAppend.isChecked():
+        self.mag_file = open(mag_file_name, 'a')
+      else:
+        self.mag_file = open(mag_file_name, 'w')
+    else:
+      self.mag_file = None
+    
+    count = 25 # read 20 values then pass last one to GUI
+    in_values = 9 # 3 values for acc, gyr and mag
+    readings = [0.0 for i in range(in_values)]
+
+    while not self.exiting:
+      # self.ser.flushInput()                         # clear serial input buffer
+      # self.ser.write( ("b{}\r\n".format(count)).encode())    # request data
+      # for j in range(count):  
+      #   for i in range(in_values):
+      #     byte_array = self.ser.read(8)             # byte array of 8 bytes for each floating point value (float is 4 bytes and when converted to readable hex is 8 bytes)
+      #     hex_chars = ''.join(byte_array.decode())  # convert byte array to string
+      #     readings[i] = hex_to_float(hex_chars)     #
+      #   self.ser.read(2)                            # consumes remaining '\r\n'
+
+      #   # store readings in files
+      #   if self.acc_file != None: 
+      #     acc_readings_line = '{:f} {:f} {:f}\r\n'.format(readings[0], readings[1], readings[2])
+      #     self.acc_file.write(acc_readings_line)
+      #   if self.gyr_file != None: 
+      #     gyr_readings_line = '{:f} {:f} {:f}\r\n'.format(readings[3], readings[4], readings[5])
+      #     self.gyr_file.write(gyr_readings_line)
+      #   if self.mag_file != None: 
+      #     mag_readings_line = '{:f} {:f} {:f}\r\n'.format(readings[6], readings[7], readings[8])
+      #     self.mag_file.write(mag_readings_line)
+        
+      # every count times we pass last reading to the GUI
+      self.new_data.emit(readings)      
+
+      if self.acc_file != None: self.acc_file.flush()
+      if self.gyr_file != None: self.gyr_file.flush()
+      if self.mag_file != None: self.mag_file.flush()
 
     # closing acc,gyr and mag files
     if self.acc_file != None: self.acc_file.close()
@@ -518,7 +602,7 @@ class FreeIMUCal(QMainWindow):
     
   def sampling_end(self):
     self.serWorker.exiting = True
-    self.serWorker.quit()
+    # self.serWorker.quit()
     self.serWorker.wait()
     self.ui.set_status('Stopping Sampling Serial Worker')
     self.ui.samplingToggleButton.setText('Start Sampling')
