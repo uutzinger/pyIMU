@@ -228,7 +228,7 @@ class ZMQlWorker(QThread):
       #     self.mag_file.write(mag_readings_line)
         
       # every count times we pass last reading to the GUI
-      self.new_data.emit(readings)      
+      # self.new_data.emit(readings)      
 
       if self.acc_file != None: self.acc_file.flush()
       if self.gyr_file != None: self.gyr_file.flush()
