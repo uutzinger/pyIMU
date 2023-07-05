@@ -130,19 +130,3 @@ See freeIMUCal repo
 
 ### Dependencies
 
-### Installing Virtual Serial Port
-- Linux
-
-https://www.baeldung.com/linux/make-virtual-serial-port
-
-'''
-sudo apt-get install -y socat
-socat -d -d pty,rawer,echo=0,link=/tmp/ttyV0 pty,rawer,echo=0,link=/tmp/ttyV1
-in one terminal
-minicom -D /tmp/ttyV0 -b 115200
-in other terminal
-minicom -D /tmp/ttyV1 -b 115200
-'''
-
-- Windows
-[com0com](https://sourceforge.net/projects/com0com/)
