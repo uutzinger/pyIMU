@@ -126,21 +126,9 @@ Heading
 - heading: tilt compensated heading from quaternion and magnetometer (not tested)
 
 ## Calibration
-This work is based on Fabio Varesano's [implementation](https://www.researchgate.net/publication/258817923_FreeIMU_An_Open_Hardware_Framework_for_Orientation_and_Motion_Sensing) of [FreeIMU](https://github.com/Fabio-Varesano-Association/freeimu)
-
-Calibration
-- ellipsoid_fit: fits ellipsoid to [x,y,z] data, needed for IMU calibration
+See freeIMUCal repo
 
 ### Dependencies
-- PyOpenGL
-- PyQt5
-- wxPython
-- scipy
-- pyqtgraph
-
-Perhaps
-- pyserial
-- comtypes
 
 ### Installing Virtual Serial Port
 - Linux
