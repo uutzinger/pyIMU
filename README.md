@@ -128,9 +128,33 @@ Heading
 ## Calibration
 This work is based on Fabio Varesano's [implementation](https://www.researchgate.net/publication/258817923_FreeIMU_An_Open_Hardware_Framework_for_Orientation_and_Motion_Sensing) of [FreeIMU](https://github.com/Fabio-Varesano-Association/freeimu)
 
+Calibration
+- ellipsoid_fit: fits ellipsoid to [x,y,z] data, needed for IMU calibration
+
 ### Dependencies
 - PyOpenGL
 - PyQt5
+- wxPython
 - scipy
 - pyqtgraph
 
+Perhaps
+- pyserial
+- comtypes
+
+### Installing Virtual Serial Port
+- Linux
+
+https://www.baeldung.com/linux/make-virtual-serial-port
+
+'''
+sudo apt-get install -y socat
+socat -d -d pty,rawer,echo=0,link=/tmp/ttyV0 pty,rawer,echo=0,link=/tmp/ttyV1
+in one terminal
+minicom -D /tmp/ttyV0 -b 115200
+in other terminal
+minicom -D /tmp/ttyV1 -b 115200
+'''
+
+- Windows
+[com0com](https://sourceforge.net/projects/com0com/)
