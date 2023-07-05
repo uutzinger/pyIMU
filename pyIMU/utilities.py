@@ -274,7 +274,7 @@ def heading(pose:Quaternion, mag, declination=0.0) -> float:
     _mag.normalize()
 
     _mag_conjugate = pose * _mag * pose.conjugate
-    heading = math.atan2(_mag_conjugate.y,_mag_conjugate.x) - declination
+    heading = math.atan2(_mag_conjugate.y,_mag_conjugate.x) + declination
 
     # # Convert pose quaternion to RPY
     # rpy = q2rpy(pose)
