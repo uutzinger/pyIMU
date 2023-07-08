@@ -69,7 +69,6 @@ def updateMARG(q: Quaternion, gyr: Vector3D, acc: Vector3D, mag: Vector3D, dt: f
     Returns
     q : Estimated quaternion.
     """
-
     acc.normalize()
     mag.normalize()
     # q.normalize() its normalized at the end
@@ -78,7 +77,7 @@ def updateMARG(q: Quaternion, gyr: Vector3D, acc: Vector3D, mag: Vector3D, dt: f
     qDot = 0.5 * (q * gyr)                                     # (eq. 12)
     
     # Rotate normalized magnetometer measurements
-    h = q * mag * q.conj                                       # (eq. 45)
+    h = q * mag * q.conjugate                                  # (eq. 45)
     bx = math.sqrt(h.x**2 + h.y**2)                            # (eq. 46)
     bz = h.z
 
