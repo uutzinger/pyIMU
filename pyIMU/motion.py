@@ -133,11 +133,13 @@ class Motion:
         # Pose Estimation
         q = self.madgwick.update(acc=acc, gyr=gyr, mag=mag, dt=dt)
     
-        # Acceleration residuals
+        # Acceleration residuals on the sensor
         self.residuals      = sensorAcc(acc=acc, q=q, g=self.gravity)
-        self.residuals     -= self.residuals_bias
+        self.residuals      = self.residuals - self.residuals_bias
+        
         # Acceleration residuals in world coordinate system
-        self.worldResiduals = self.residuals.rot(q.r33.T)
+        self.worldResiduals = q * self.residuals * q.conjugate
+        q * mag * q.conjugate
     
         # Motion Status, ongoing, no motion, ended?
         self.motion = self.detectMotion(self, acc=acc.norm, gyr=gyr.norm)   
@@ -161,7 +163,7 @@ class Motion:
             self.worldVelocity = self.worldVelocity_previous + ((self.worldResiduals + self.worldResiduals_previous)*0.5 * dt)
 
             # Update Velocity
-            self.worldVelocity -= self.worldVelocity_drift * dt
+            self.worldVelocity = self.worldVelocity - self.worldVelocity_drift * dt
 
             # Integrate velocity and add to position
             self.worldPosition += ((self.worldVelocity + self.worldVelocity_previous)*0.5) * dt

@@ -36,9 +36,10 @@ def updateIMU(q: Quaternion, gyr: Vector3D, acc: Vector3D, dt: float, gain: floa
     # Objective function                                       # (eq. 25)
     f = np.array([2.0*(q.x*q.z - q.w*q.y) - acc.x,
                   2.0*(q.w*q.x + q.y*q.z) - acc.y,
-                  2.0*(0.5-q.x**2-q.y**2) - acc.z])
+                  2.0*(0.5-q.x*q.x-q.y*q.y) - acc.z])
 
-    if np.linalg.norm(f) > 0:
+    # if np.linalg.norm(f) > 0:                                
+    if math.sqrt(f[0]*f[0] + f[1]*f[1] + f[2]*f[2]) > 0:       
         # Jacobian                                             # (eq. 26)
         J = np.array([[-2.0*q.y,  2.0*q.z, -2.0*q.w, 2.0*q.x],
                       [ 2.0*q.x,  2.0*q.w,  2.0*q.z, 2.0*q.y],
@@ -47,13 +48,14 @@ def updateIMU(q: Quaternion, gyr: Vector3D, acc: Vector3D, dt: float, gain: floa
         # Sensitivity Matrix                                   # (eq. 34)
         gradient = J.T@f
 
-        gradient = gradient / np.linalg.norm(gradient)         #           // 184-188
+        # gradient = gradient / np.linalg.norm(gradient)         #           // 184-188 
+        gradient = gradient / math.sqrt(gradient[0]*gradient[0] + gradient[1]*gradient[1] + gradient[2]*gradient[2])
 
         # Update orientation change
         qDot = qDot - gain*gradient                            # (eq. 33) // 191-194
     
     # Update orientation
-    q += qDot*dt                                               # (eq. 13) // 198-201
+    q = q+ qDot*dt                                               # (eq. 13) // 198-201
     q.normalize()                                              #          // 204-208 
 
     return q
@@ -77,19 +79,21 @@ def updateMARG(q: Quaternion, gyr: Vector3D, acc: Vector3D, mag: Vector3D, dt: f
     qDot = 0.5 * (q * gyr)                                     # (eq. 12)
     
     # Rotate normalized magnetometer measurements
-    h = q * mag * q.conjugate                                  # (eq. 45)
-    bx = math.sqrt(h.x**2 + h.y**2)                            # (eq. 46)
+    # h = mag.rotate(q.r33.T)                                  # (eq. 45) , 19 microseconds
+    h = q * mag * q.conjugate                                  # (eq. 45) , 14 microseconds
+    bx = math.sqrt(h.x*h.x + h.y*h.y)                          # (eq. 46)
     bz = h.z
 
     # Objective function                                       # (eq. 31)
-    f = np.array([2.0*(q.x*q.z - q.w*q.y)                                         - acc.x,
-                  2.0*(q.w*q.x + q.y*q.z)                                         - acc.y,
-                  2.0*(0.5-q.x**2-q.y**2)                                         - acc.z,
-                  2.0*bx*(0.5 - q.y**2 - q.z**2) + 2.0*bz*(q.x*q.z - q.w*q.y)     - mag.x,
-                  2.0*bx*(q.x*q.y - q.w*q.z)     + 2.0*bz*(q.w*q.x + q.y*q.z)     - mag.y,
-                  2.0*bx*(q.w*q.y + q.x*q.z)     + 2.0*bz*(0.5 - q.x**2 - q.y**2) - mag.z])
+    f = np.array([2.0*(q.x*q.z - q.w*q.y)                                             - acc.x,
+                  2.0*(q.w*q.x + q.y*q.z)                                             - acc.y,
+                  2.0*(0.5-q.x*q.x-q.y*q.y)                                           - acc.z,
+                  2.0*bx*(0.5 - q.y*q.y - q.z*q.z) + 2.0*bz*(q.x*q.z - q.w*q.y)       - mag.x,
+                  2.0*bx*(q.x*q.y - q.w*q.z)       + 2.0*bz*(q.w*q.x + q.y*q.z)       - mag.y,
+                  2.0*bx*(q.w*q.y + q.x*q.z)       + 2.0*bz*(0.5 - q.x*q.x - q.y*q.y) - mag.z])
 
-    if np.linalg.norm(f) > 0:
+    # if np.linalg.norm(f) > 0:                                  # math.sqrt(f[0]*f[0] + f[1]*f[1] + ... ) is faster
+    if math.sqrt(f[0]*f[0] + f[1]*f[1] + f[2]*f[2] + f[3]*f[3] + f[4]*f[4] + f[5]*f[5]) > 0:
         # Jacobian                                             # eq. 32)
         J = np.array([[-2.0*q.y,               2.0*q.z,              -2.0*q.w,                2.0*q.x              ],
                       [ 2.0*q.x,               2.0*q.w,               2.0*q.z,                2.0*q.y              ],
@@ -100,13 +104,13 @@ def updateMARG(q: Quaternion, gyr: Vector3D, acc: Vector3D, mag: Vector3D, dt: f
 
         # Sensitivity Matrix
         gradient = J.T@f                                      # (eq. 34)
-        gradient = gradient / np.linalg.norm(gradient)
-
+        # gradient = gradient / np.linalg.norm(gradient)
+        gradient = gradient / math.sqrt(gradient[0]*gradient[0] + gradient[1]*gradient[1] + gradient[2]*gradient[2] + gradient[3]*gradient[3])
         # Updated orientation change            
-        qDot -= gain*gradient                                # (eq. 33)
+        qDot = qDot - gain*gradient                                # (eq. 33)
 
     # Update orientation
-    q += qDot*dt                                             # (eq. 13)
+    q = q + qDot*dt                                             # (eq. 13)
     q.normalize()
     return q
 

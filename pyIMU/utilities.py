@@ -1,9 +1,14 @@
 from collections import deque
-from pyIMU.quaternion import Vector3D, Quaternion, TWOPI, DEG2RAD
+from pyIMU.quaternion import Vector3D, Quaternion, r33toq
+from pyIMU.quaternion import TWOPI, DEG2RAD, EPSILON
 import numpy as np
 import math
 import struct
+import numbers
 from copy import copy
+
+IDENTITY_QUATERNION = Quaternion(1.0, 0.0, 0.0, 0.0)
+VECTOR_ZERO         = Vector3D(0.0, 0.0, 0.0)
 
 ###########################################################
 # Utility Functions
@@ -71,12 +76,12 @@ class RunningAverage:
             self.window.append(value)
             self.sum = self.sum + value
             # self.avg = self.sum / len(self.window)
-            self.squared_sum = self.squared_sum + (value ** 2)
+            self.squared_sum = self.squared_sum + (value * value)
         else:
             old_value = self.window.popleft()
             self.window.append(value)
             self.sum = self.sum + value - old_value
-            self.squared_sum = self.squared_sum + (value ** 2) - (old_value ** 2)
+            self.squared_sum = self.squared_sum + (value * value) - (old_value * old_value)
             
     @property
     def avg(self) -> float:
@@ -84,67 +89,94 @@ class RunningAverage:
 
     @property
     def var(self) -> float:
-        return (self.squared_sum - (self.sum ** 2) / self.len) / self.len
+        return (self.squared_sum - (self.sum * self.sum) / self.len) / self.len
 
 
 def vector_angle2q(vec: Vector3D, angle: float = 0.0) -> Quaternion:
     '''Create quaternion based on rotation around vector'''
-    sinHalfTheta = math.sin(angle * 0.5)
+    _vec = copy(vec)
+    _vec.normalize()
+    halfAngle = angle * 0.5
+    sinHalfAngle = math.sin(halfAngle)
     return Quaternion(
-        w = math.cos(angle * 0.5), 
-        x = vec.x * sinHalfTheta, 
-        y = vec.y * sinHalfTheta, 
-        z = vec.z * sinHalfTheta)
+        w = math.cos(halfAngle), 
+        x = vec.x * sinHalfAngle, 
+        y = vec.y * sinHalfAngle, 
+        z = vec.z * sinHalfAngle)
 
-def q2rpy(pose: Quaternion) -> Vector3D:
-    '''quaternion to roll pitch yaw'''
+def q2rpy(q: Quaternion) -> Vector3D:
+    '''
+    quaternion to roll pitch yaw
+    chat.openai.com
+    '''
+    
+    wx = q.w * q.x
+    yz = q.y * q.z
+    xx = q.x * q.x
+    yy = q.y * q.y
+    zz = q.z * q.z
+    wy = q.w * q.y
+    xz = q.x * q.z
+    wz = q.w * q.z
+    xy = q.x * q.y
 
     # roll (x-axis rotation)
-    sinr_cosp =       2.0 * (pose.w * pose.x + pose.y * pose.z)
-    cosr_cosp = 1.0 - 2.0 * (pose.x**2 + pose.y**2)
+    sinr_cosp =       2.*(wx + yz)
+    cosr_cosp = 1.0 - 2.*(xx + yy)
     roll = math.atan2(sinr_cosp, cosr_cosp)
+            
     # pitch (y-axis rotation)
-    sinp      =       2.0 * (pose.w * pose.y - pose.x * pose.z)
-    if abs(sinp) >= 1:
+    sinp      =       2.*(wy - xz)
+    if abs(sinp) >= 1.:
         pitch = math.copysign(math.pi / 2.0, sinp)  # use 90 degrees if out of range
     else:
         pitch = math.asin(sinp)
+        
     # yaw (z-axis rotation)
-    siny_cosp =       2.0 * (pose.w * pose.z + pose.x * pose.y)
-    cosy_cosp = 1.0 - 2.0 * (pose.y**2 + pose.z**2)
+    siny_cosp =       2.*(wz + xy)
+    cosy_cosp = 1.0 - 2.*(yy + zz)
     yaw = math.atan2(siny_cosp, cosy_cosp)
 
     return Vector3D(x=roll, y=pitch, z=yaw)
 
-def rpy2q(rpy) -> Quaternion:
-    '''assume vector contains roll, pitch, yaw and convert to quaternion'''
+def rpy2q(r, p:float = 0., y: float = 0.) -> Quaternion:
+    '''
+    assume vector contains roll, pitch, yaw and convert to quaternion
+    chat.openai.com 
+    accel2q is q.y and q.z have wrong sign
+    '''
     
-    if isinstance(rpy, Vector3D):
-        roll  = rpy.x 
-        pitch = rpy.y
-        yaw   = rpy.z
+    if isinstance(r, Vector3D):
+        roll  = r.x 
+        pitch = r.y
+        yaw   = r.z
     elif isinstance(r, np.ndarray):
-        if len(rpy) == 3:
+        if len(r) == 3:
             roll, pitch, yaw = r
+    elif isinstance(r, numbers.Number):
+        roll  = r
+        pitch = p
+        yaw   = y    
     else:
         raise TypeError("Unsupported operand type for rpy2q: {}".format(type(r)))
     
-    cosY2 = math.cos(yaw   * 0.5)
-    sinY2 = math.sin(yaw   * 0.5)
-    cosP2 = math.cos(pitch * 0.5)
-    sinP2 = math.sin(pitch * 0.5)
-    cosR2 = math.cos(roll  * 0.5)
-    sinR2 = math.sin(roll  * 0.5)
+    cy2 = math.cos(yaw   * 0.5)
+    sy2 = math.sin(yaw   * 0.5)
+    cp2 = math.cos(pitch * 0.5)
+    sp2 = math.sin(pitch * 0.5)
+    cr2 = math.cos(roll  * 0.5)
+    sr2 = math.sin(roll  * 0.5)
 
-    w = cosY2 * cosP2 * cosR2 + sinY2 * sinP2 * sinR2
-    x = cosY2 * cosP2 * sinR2 - sinY2 * sinP2 * cosR2
-    y = sinY2 * cosP2 * sinR2 + cosY2 * sinP2 * cosR2
-    z = sinY2 * cosP2 * cosR2 - cosY2 * sinP2 * sinR2
+    w = cy2 * cp2 * cr2 + sy2 * sp2 * sr2
+    x = cy2 * cp2 * sr2 - sy2 * sp2 * cr2
+    y = sy2 * cp2 * sr2 + cy2 * sp2 * cr2
+    z = sy2 * cp2 * cr2 - cy2 * sp2 * sr2
 
     return Quaternion(w, x, y, z)
 
 def accel2rpy(acc) -> Vector3D:
-
+    # When X forward, Y right, Z down
+    # Updated 7/8/23
     if isinstance(acc, Vector3D):
         _acc = copy(acc)
     elif isinstance(acc, np.ndarray):
@@ -155,23 +187,16 @@ def accel2rpy(acc) -> Vector3D:
 
     _acc.normalize()
 
-    roll  =  math.atan2(_acc.y, _acc.z)
-    pitch = -math.atan2(_acc.x, math.sqrt(_acc.y * _acc.y + _acc.z * _acc.z))
+    roll  = math.atan2(_acc.y, _acc.z)
+    pitch = math.atan2(-_acc.x, math.sqrt(_acc.y*_acc.y + _acc.z* _acc.z))
     yaw   =  0.0
     return(Vector3D(roll, pitch, yaw))
 
 def accel2q(acc) -> Quaternion:
     '''
     Converts Accelerometer to Quaternion assuming no motion
-    Input accelerometer reading x,y,z
-    Output quaternion w,x,y,z
     '''
-    # # vec_z = Vector3D(0, 0, 1.0)
-    # # angle = math.acos(z.dot(normAccel)) simplified to
-    # angle = math.acos(_acc.z)
-    # # vec = _acc.cross(vec_z) simplified to
-    # vec = Vector3D(x=_acc.y, y=-_acc.x, z=0.)
-    # return vec.angle2q(angle)
+
     if isinstance(acc, Vector3D):
         _acc = copy(acc) 
     elif isinstance(acc, np.ndarray):
@@ -181,29 +206,36 @@ def accel2q(acc) -> Quaternion:
         raise TypeError("Unsupported operand type for accel2rpy: {}".format(type(acc)))
 
     _acc.normalize()
+    # Calculate roll and pitch angles
     roll  =  math.atan2(_acc.y, _acc.z)
-    pitch = -math.atan2(_acc.x, math.sqrt(_acc.y * _acc.y + _acc.z * _acc.z))
+    # verify the negative sign on the pitch
+    pitch = -math.atan2(-_acc.x, math.sqrt(_acc.y*_acc.y + _acc.z*_acc.z))
     # yaw   =  0.0
 
-    cosY2 = math.cos(pitch * 0.5)
-    sinY2 = math.sin(pitch * 0.5)
-    cosX2 = math.cos(roll  * 0.5)
-    sinX2 = math.sin(roll  * 0.5)
+    cp2 = math.cos(pitch * 0.5)
+    sp2 = math.sin(pitch * 0.5)
+    cr2 = math.cos(roll  * 0.5)
+    sr2 = math.sin(roll  * 0.5)
+    # cy2 = 1.
+    # sy2 = 0.
 
-    w =  cosY2 * cosX2 
-    x =  cosY2 * sinX2
-    y =  sinY2 * cosX2
-    z = -sinY2 * sinX2
+    w =  cr2 * cp2
+    x =  sr2 * cp2
+    y = -cr2 * sp2
+    z =  sr2 * sp2
 
-    return Quaternion(w=w, x=x, y=y, z=z)
-    
-def accelmag2q(acc, mag) -> Quaternion:
+    q = Quaternion(w, x, y, z)
+    q.normalize()
+
+    return q
+
+def accelmag2rpy(acc, mag) -> Quaternion:
     '''
     Estimate Pose Vector from Accelerometer and Compass
+    Assuming X forward, Y right, Z down
     1) Acceleration to Roll Pitch Yaw=0.0
-    2) Convert RPY to estimated Pose Quaternion
-    3) Rotate Compass to World from estimated Pose
-    4) Update estimated Yaw in Euler and return result
+    2) Update estimated Yaw in Euler and return result
+
     '''
 
     if isinstance(acc, Vector3D):
@@ -221,39 +253,134 @@ def accelmag2q(acc, mag) -> Quaternion:
             _mag = Vector3D(mag)
     else:
         raise TypeError("Unsupported operand type for accel2rpy: {}".format(type(mag)))
-            
-    rpy = accel2rpy(_acc) # resutls rpy.z = 0
-
-    # rpy to quaternion, simplified because rpy.z is zero
-    cosP2 = math.cos(rpy.y * 0.5) # P
-    sinP2 = math.sin(rpy.y * 0.5) # P
-    cosR2 = math.cos(rpy.x * 0.5) # R
-    sinR2 = math.sin(rpy.x * 0.5) # R
-    q = Quaternion(
-        w =  cosP2 * cosR2,
-        x =  cosP2 * sinR2, 
-        y =  sinP2 * cosR2,
-        z = -sinP2 * sinR2
-    )
     
-    # rotate Magnetometer to Q pose
-    m = Quaternion(
-        w = 0.,
-        x = _mag.x,
-        y = _mag.y,
-        z = _mag.z
-    )
-    m = q * m * q.conjugate # conversion from sensor frame to world frame
+    rpy = accel2rpy(_acc) # results rpy.z = 0
+
+    # Calculate the yaw angle (rotation around z-axis)
+    roll  = rpy.x
+    pitch = rpy.y
+    _mag.normalize()
+    mag_x = _mag.x * math.cos(pitch) + _mag.y * math.sin(pitch) * math.sin(roll) + _mag.z * math.sin(pitch) * math.cos(roll)
+    mag_y = _mag.y * math.cos(roll)  - _mag.z * math.sin(roll)
 
     # Update Yaw in RPY from Magnetometer
-    rpy.z = -math.atan2(m.y, m.x)
+    rpy.z = math.atan2(-mag_y, mag_x)
     
-    # Convert RPY to Quaternion
-    q = rpy2q(rpy)
+    return rpy
 
+def accelmag2q(acc, mag) -> Quaternion:
+    '''
+    Estimate Pose Vector from Accelerometer and Compass
+    Assuming X forward, Y right, Z down
+
+    pypi AHRS
+      R = am2DCM(a, m, frame=NED)
+      q = dcm2quat(R)
+    
+        if frame.upper() not in ['ENU', 'NED']:
+            raise ValueError("Wrong coordinate frame. Try 'ENU' or 'NED'")
+            a = np.array(a)
+            m = np.array(m)
+            H = np.cross(m, a)
+            H /= np.linalg.norm(H)
+            a /= np.linalg.norm(a)
+            M = np.cross(a, H)
+            if frame.upper() == 'ENU':
+                return np.array([[H[0], M[0], a[0]],
+                                [H[1], M[1], a[1]],
+                                [H[2], M[2], a[2]]])
+                                
+            return np.array([[M[0], H[0], -a[0]],
+                            [M[1], H[1], -a[1]],
+                            [M[2], H[2], -a[2]]])
+    
+        if R.shape[0] != R.shape[1]:
+            raise ValueError('Input is not a square matrix')
+        if R.shape[0] != 3:
+            raise ValueError('Input needs to be a 3x3 array or matrix')
+        q = np.array([1., 0., 0., 0.])
+        q[0] = 0.5*np.sqrt(1.0 + R.trace())
+        q[1] = (R[1, 2] - R[2, 1]) / q[0]
+        q[2] = (R[2, 0] - R[0, 2]) / q[0]
+        q[3] = (R[0, 1] - R[1, 0]) / q[0]
+        q[1:] /= 4.0
+        return q / np.linalg.norm(q)    
+
+    chat.openai.com    
+    
+    1) accel mag to rpy
+    2) rpy to quaternion
+    
+    '''
+    # updated 7/8/23
+
+    if isinstance(acc, Vector3D):
+        _acc = copy(acc)
+    elif isinstance(acc, np.ndarray):
+        if len(acc) == 3:
+            _acc = Vector3D(acc)
+    else:
+        raise TypeError("Unsupported operand type for accel2rpy: {}".format(type(acc)))
+
+    if isinstance(mag, Vector3D):
+        _mag = copy(mag) 
+    elif isinstance(mag, np.ndarray):
+        if len(mag) == 3:
+            _mag = Vector3D(mag)
+    else:
+        raise TypeError("Unsupported operand type for accel2rpy: {}".format(type(mag)))
+
+    # 1) calculate roll and pitch from acceleration (gravity) vector
+    _acc.normalize()
+    roll  = math.atan2(_acc.y, _acc.z)
+    pitch = math.atan2(-_acc.x, math.sqrt(_acc.y*_acc.y + _acc.z*_acc.z))
+
+    # 2) calculate yaw from magnetometer (rotation around z-axis)
+    _mag.normalize()
+    mag_x = _mag.x * math.cos(pitch) + _mag.y * math.sin(pitch) * math.sin(roll) + _mag.z * math.sin(pitch) * math.cos(roll)
+    mag_y = _mag.y * math.cos(roll)  - _mag.z * math.sin(roll)
+    yaw = math.atan2(-mag_y, mag_x)
+
+    # 3) convert roll pitch yaw to quaternion
+    cy2 = math.cos(yaw   * 0.5)
+    sy2 = math.sin(yaw   * 0.5)
+    cp2 = math.cos(pitch * 0.5)
+    sp2 = math.sin(pitch * 0.5)
+    cr2 = math.cos(roll  * 0.5)
+    sr2 = math.sin(roll  * 0.5)
+
+    w = cy2 * cp2 * cr2 + sy2 * sp2 * sr2
+    x = cy2 * cp2 * sr2 - sy2 * sp2 * cr2
+    y = sy2 * cp2 * sr2 + cy2 * sp2 * cr2
+    z = sy2 * cp2 * cr2 - cy2 * sp2 * sr2
+
+    q = Quaternion(w=w, x=x, y=y, z=z)
+
+    # Method of using North, East, Down
+    # to create rotation matrix and then
+    # converting rotation matrix to quaternion.
+    # Not working at this time.
+    #    
+    # # Calculate the auxiliary vectors
+    # # East is cross product of gravity and magnetic field
+    # east  = _acc.cross(_mag)
+    # east.normalize()
+
+    # # North is cross product of east and gravity
+    # _acc.normalize()        
+    # north = east.cross(_acc)
+    
+    # # Assign the rotation matrix
+    # # "Each column or row gives the direction of one of the transformed axes."
+    # r33 = np.empty((3,3))
+    # r33[:, 0] = north.v
+    # r33[:, 1] = east.v
+    # r33[:, 2] = acc.v
+    # q = r33toq(r33, check=True)
+            
     return q
 
-def heading(pose:Quaternion, mag, declination=0.0) -> float:
+def heading(q:Quaternion, mag, declination=0.0) -> float:
     '''
     Tilt compensated heading from compass
     Corrected for local magnetic declination
@@ -273,25 +400,12 @@ def heading(pose:Quaternion, mag, declination=0.0) -> float:
 
     _mag.normalize()
 
-    _mag_conjugate = pose * _mag * pose.conjugate
-    heading = math.atan2(_mag_conjugate.y,_mag_conjugate.x) + declination
+    # _mag_rot = pose * _mag * pose.conjugate
+    _mag_rot = q * _mag * q.conjugate
 
-    # # Convert pose quaternion to RPY
-    # rpy = q2rpy(pose)
+    heading = math.atan2(_mag_rot.y,_mag_rot.x) + declination
 
-    # cos_roll  = math.cos(rpy.x)
-    # sin_roll  = math.sin(rpy.x)
-    # cos_pitch = math.cos(rpy.y)
-    # sin_pitch = math.sin(rpy.y)
-
-    # # Tilt compensated magnetic field X component:
-    # head_x = _mag.x*cos_pitch + _mag.y*sin_roll*sin_pitch + _mag.z*cos_roll*sin_pitch
-    # # Tilt compensated magnetic field Y component:
-    # head_y = _mag.y*cos_roll - _mag.z*sin_roll;
-    # # Magnetic Heading
-    # heading = -math.atan2(head_y,head_x) - declination
-
-    return heading if heading > 0 else TWOPI + heading
+    return heading if heading > -EPSILON else TWOPI + heading
 
 def q2gravity(pose: Quaternion) -> Vector3D:
     '''
@@ -322,7 +436,7 @@ def q2gravity(pose: Quaternion) -> Vector3D:
     '''
     x =  2.0 * (pose.x * pose.z - pose.w * pose.y)
     y =  2.0 * (pose.y * pose.z + pose.w * pose.x)
-    z =  1 - 2.0 * (pose.x**2 + pose.y**2) 
+    z =  1 - 2.0 * (pose.x*pose.x + pose.y*pose.y) 
     
     return Vector3D(x, y, z)
 
@@ -336,8 +450,8 @@ def earthAcc(acc: Vector3D, q: Quaternion, g: float) -> Vector3D:
     """
     compute residual acceleration in earth frame
     """
-    acc_r = acc.rot(q.r33.T)
-    acc_r.z -= g # subtract gravity
+    acc_r = q * acc * q.conjugate
+    acc_r.z = acc_r.z - g # subtract gravity
     return (acc_r)
 
 def gravity(latitude: float, altitude: float) -> float:

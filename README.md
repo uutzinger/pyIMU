@@ -17,6 +17,8 @@ Contains pose sensor fusion based on Sebastian Madgwick [dissertation work](http
 
 There is newer [implementation](https://pypi.org/project/imufusion/) based on an alternative approach in the Madgwick [thesis](https://ethos.bl.uk/OrderDetails.do?uin=uk.bl.ethos.681552) which is implemented in C with a Python API.
 
+Original Code can be found here: https://x-io.co.uk/open-source-imu-and-ahrs-algorithms/
+
 ### Magdwick Class
 Incremental sensor fusion to compute pose quaternion from accelerometer, gyroscope and optional magnetometer.
 
