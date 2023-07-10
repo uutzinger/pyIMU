@@ -175,8 +175,10 @@ def rpy2q(r, p:float = 0., y: float = 0.) -> Quaternion:
     return Quaternion(w, x, y, z)
 
 def accel2rpy(acc) -> Vector3D:
-    # When X forward, Y right, Z down
-    # Updated 7/8/23
+    ''' 
+    gravity to roll pitch yaw
+    when X forward, Y right, Z down
+    '''
     if isinstance(acc, Vector3D):
         _acc = copy(acc)
     elif isinstance(acc, np.ndarray):
@@ -254,26 +256,32 @@ def accelmag2rpy(acc, mag) -> Quaternion:
     else:
         raise TypeError("Unsupported operand type for accel2rpy: {}".format(type(mag)))
     
-    rpy = accel2rpy(_acc) # results rpy.z = 0
+    
+    # 1) calculate roll and pitch from acceleration (gravity) vector
+    _acc.normalize()
+    roll  = math.atan2(_acc.y, _acc.z)
+    pitch = math.atan2(-_acc.x, math.sqrt(_acc.y*_acc.y + _acc.z*_acc.z))
 
-    # Calculate the yaw angle (rotation around z-axis)
-    roll  = rpy.x
-    pitch = rpy.y
+    # 2) calculate yaw from magnetometer (rotation around z-axis)
     _mag.normalize()
     mag_x = _mag.x * math.cos(pitch) + _mag.y * math.sin(pitch) * math.sin(roll) + _mag.z * math.sin(pitch) * math.cos(roll)
     mag_y = _mag.y * math.cos(roll)  - _mag.z * math.sin(roll)
-
-    # Update Yaw in RPY from Magnetometer
-    rpy.z = math.atan2(-mag_y, mag_x)
+    yaw = math.atan2(-mag_y, mag_x)
     
-    return rpy
+    return Vector3D(roll, pitch, yaw)
 
 def accelmag2q(acc, mag) -> Quaternion:
     '''
     Estimate Pose Vector from Accelerometer and Compass
     Assuming X forward, Y right, Z down
 
-    pypi AHRS
+    Using following approach:
+    1) accel mag to rpy
+    2) rpy to quaternion
+
+    Compared to other approaches:
+
+    - pypi AHRS
       R = am2DCM(a, m, frame=NED)
       q = dcm2quat(R)
     
@@ -306,13 +314,9 @@ def accelmag2q(acc, mag) -> Quaternion:
         q[1:] /= 4.0
         return q / np.linalg.norm(q)    
 
-    chat.openai.com    
-    
-    1) accel mag to rpy
-    2) rpy to quaternion
-    
+    - chat.openai.com
+        Could not make work
     '''
-    # updated 7/8/23
 
     if isinstance(acc, Vector3D):
         _acc = copy(acc)
