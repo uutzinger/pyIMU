@@ -263,7 +263,8 @@ def r33toq(r33, check= False) -> Quaternion:
     Rotation Matrix to Quaternion
     chat.openai.com
     https://github.com/blender/blender/blob/756538b4a117cb51a15e848fa6170143b6aafcd8/source/blender/blenlib/intern/math_rotation.c#L272
-    pypi.org quaternionic
+
+    pypi.org quaternionic:
         
     Assuming an orthogonal 3x3 matrix ℛ rotates a vector v such that
 
