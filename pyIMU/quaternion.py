@@ -88,7 +88,22 @@ class Quaternion():
                 self.x=v.x
                 self.y=v.y
                 self.z=v.z
-                                       
+    
+    def __copy__(self):
+        return Quaternion(self.w, self.x, self.y, self.z)
+    
+    def __bool__(self):
+        return not self.isZero
+    
+    def __abs__(self):
+        return Quaternion(abs(self.w), abs(self.x), abs(self.y), abs(self.z))
+    
+    def __neg__(self):
+        return Quaternion(-self.w, -self.x, -self.y, -self.z)
+
+    def __len__(self):
+        return 4
+                     
     def __str__(self):
         return f"Quaternion({self.w}, {self.x}, {self.y}, {self.z})"
     
@@ -384,6 +399,21 @@ class Vector3D():
             self.y = x.y
             self.z = x.z
  
+    def __copy__(self):
+        return Vector3D(self.x, self.y, self.z)
+    
+    def __bool__(self):
+        return not self.isZero
+    
+    def __abs__(self):
+        return Vector3D(abs(self.x), abs(self.y), abs(self.z))
+    
+    def __neg__(self):
+        return Vector3D(-self.x, -self.y, -self.z)
+    
+    def __len__(self):
+        return 3
+            
     def __str__(self):
         return f"Vector3D({self.x}, {self.y}, {self.z})"
 

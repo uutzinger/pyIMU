@@ -6,7 +6,7 @@ Urs Utzinger, 2023
 import numpy as np
 from   pyIMU.quaternion import Quaternion, Vector3D 
 from   pyIMU.utilities import accelmag2q, accel2q
-from   copy import copy, deepcopy
+from   copy import copy
 import math
 
 TWOPI               = 2.0 * math.pi
@@ -173,8 +173,8 @@ class Madgwick:
         mag : Vector3D of tri-axial Magnetometer in nT, optional
         dt  : float, default: None, Time step, in seconds, between consecutive function calls.
         """
-        self.gyr = deepcopy(gyr)
-        self.acc = deepcopy(acc)
+        self.gyr = copy(gyr)
+        self.acc = copy(acc)
              
         if mag is None:
             # Compute with IMU architecture
@@ -186,7 +186,7 @@ class Madgwick:
 
         else:
             # Compute with MARG architecture
-            self.mag = deepcopy(mag)
+            self.mag = copy(mag)
             if (self.q is None) or (dt < 0):
                 self.q = accelmag2q(self.acc, self.mag)
                 self.q.normalize()

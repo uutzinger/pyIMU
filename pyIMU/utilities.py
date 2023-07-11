@@ -5,7 +5,7 @@ import numpy as np
 import math
 import struct
 import numbers
-from copy import copy, deepcopy
+from copy import copy
 
 IDENTITY_QUATERNION = Quaternion(1.0, 0.0, 0.0, 0.0)
 VECTOR_ZERO         = Vector3D(0.0, 0.0, 0.0)
@@ -94,7 +94,7 @@ class RunningAverage:
 
 def vector_angle2q(vec: Vector3D, angle: float = 0.0) -> Quaternion:
     '''Create quaternion based on rotation around vector'''
-    _vec = deepcopy(vec)
+    _vec = copy(vec)
     _vec.normalize()
     halfAngle = angle * 0.5
     sinHalfAngle = math.sin(halfAngle)
@@ -180,7 +180,7 @@ def accel2rpy(acc) -> Vector3D:
     when X forward, Y right, Z down
     '''
     if isinstance(acc, Vector3D):
-        _acc = deepcopy(acc)
+        _acc = copy(acc)
     elif isinstance(acc, np.ndarray):
         if len(acc) == 3:
             _acc = Vector3D(acc)
@@ -200,7 +200,7 @@ def accel2q(acc) -> Quaternion:
     '''
 
     if isinstance(acc, Vector3D):
-        _acc = deepcopy(acc) 
+        _acc = copy(acc) 
     elif isinstance(acc, np.ndarray):
         if len(acc) == 3:
             _acc = Vector3D(acc)
@@ -241,7 +241,7 @@ def accelmag2rpy(acc, mag) -> Quaternion:
     '''
 
     if isinstance(acc, Vector3D):
-        _acc = deepcopy(acc)
+        _acc = copy(acc)
     elif isinstance(acc, np.ndarray):
         if len(acc) == 3:
             _acc = Vector3D(acc)
@@ -249,7 +249,7 @@ def accelmag2rpy(acc, mag) -> Quaternion:
         raise TypeError("Unsupported operand type for accel2rpy: {}".format(type(acc)))
 
     if isinstance(mag, Vector3D):
-        _mag = deepcopy(mag) 
+        _mag = copy(mag) 
     elif isinstance(mag, np.ndarray):
         if len(mag) == 3:
             _mag = Vector3D(mag)
@@ -319,7 +319,7 @@ def accelmag2q(acc, mag) -> Quaternion:
     '''
 
     if isinstance(acc, Vector3D):
-        _acc = deepcopy(acc)
+        _acc = copy(acc)
     elif isinstance(acc, np.ndarray):
         if len(acc) == 3:
             _acc = Vector3D(acc)
@@ -327,7 +327,7 @@ def accelmag2q(acc, mag) -> Quaternion:
         raise TypeError("Unsupported operand type for accel2rpy: {}".format(type(acc)))
 
     if isinstance(mag, Vector3D):
-        _mag = deepcopy(mag) 
+        _mag = copy(mag) 
     elif isinstance(mag, np.ndarray):
         if len(mag) == 3:
             _mag = Vector3D(mag)
@@ -398,7 +398,7 @@ def heading(q:Quaternion, mag, declination=0.0) -> float:
     if isinstance(mag, np.ndarray):
         _mag = Vector3D(mag)
     elif isinstance(mag, Vector3D):
-        _mag = deepcopy(mag)
+        _mag = copy(mag)
     else:
         raise TypeError("Unsupported operand type for mag: {}".format(type(mag)))
 
