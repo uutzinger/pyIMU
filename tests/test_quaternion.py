@@ -1,6 +1,6 @@
 import time
 from pyIMU.quaternion import Quaternion, Vector3D, DEG2RAD, EPSILON, RAD2DEG, r33toq
-from pyIMU.utilities  import invSqrt, accel2rpy, accel2q, q2rpy, rpy2q, q2gravity, sensorAcc, accelmag2q, accelmag2rpy, heading
+from pyIMU.utilities  import invSqrt, accel2rpy, accel2q, q2rpy, rpy2q, q2gravity, sensorAcc, accelmag2q, accelmag2rpy, qmag2h
 from scipy.spatial.transform import Rotation
 import random
 import math
@@ -332,7 +332,7 @@ if __name__ == '__main__':
     print("  RPY should be:               0, 0, 0")
     print("  RPY from acc,mag is:        " + str(q2rpy(accelmag2q(g, mag))*RAD2DEG)) 
     print("  RPY from acc,mag is direct: " + str(accelmag2rpy(g, mag)*RAD2DEG))
-    print("  Heading is: " + str(heading(q=q, mag=mag, declination=0.0)*RAD2DEG))
+    print("  Heading is: " + str(qmag2h(q=q, mag=mag, declination=0.0)*RAD2DEG))
 
     print(' Testing 90, 0, 0')
     q = rpy2q(30*DEG2RAD,60*DEG2RAD,0*DEG2RAD) # make plane point straight forward
@@ -353,7 +353,7 @@ if __name__ == '__main__':
     print("  RPY should be:               90, 0, 0")
     print("  RPY from acc,mag is:        " + str(q2rpy(accelmag2q(g, mag))*RAD2DEG)) # this now include accmag2rpy and rpy2q
     print("  RPY from acc,mag is direct: " + str(accelmag2rpy(g, mag)*RAD2DEG))
-    print("  Heading is: " + str(heading(q=q, mag=mag, declination=0.0)*RAD2DEG))
+    print("  Heading is: " + str(qmag2h(q=q, mag=mag, declination=0.0)*RAD2DEG))
  
     print(' Testing 30, 60, 0')
     q = rpy2q(30*DEG2RAD,60*DEG2RAD,0*DEG2RAD) # make plane point straight forward
@@ -374,7 +374,7 @@ if __name__ == '__main__':
     print("  RPY should be:               30, 60, 0")                 # passed
     print("  RPY from acc,mag is:        " + str(q2rpy(accelmag2q(g, mag))*RAD2DEG)) # passed
     print("  RPY from acc,mag is direct: " + str(accelmag2rpy(g, mag)*RAD2DEG))   # passed
-    print("  Heading is: " + str(heading(q=q, mag=mag, declination=0.0)*RAD2DEG)) # passed
+    print("  Heading is: " + str(qmag2h(q=q, mag=mag, declination=0.0)*RAD2DEG)) # passed
 
     print(' Testing 30, 60, -30')
     q = rpy2q(30*DEG2RAD,60*DEG2RAD,-30*DEG2RAD) # make plane point straight forward
@@ -396,7 +396,7 @@ if __name__ == '__main__':
     print("  RPY should be:               30, 60, -30")                #
     print("  RPY from acc,mag is:        " + str(q2rpy(accelmag2q(g, mag))*RAD2DEG)) # this now include accmag2rpy and rpy2q
     print("  RPY from acc,mag is direct: " + str(accelmag2rpy(g, mag)*RAD2DEG))
-    print("  Heading is: " + str(heading(q=q, mag=mag, declination=0.0)*RAD2DEG)) #
+    print("  Heading is: " + str(qmag2h(q=q, mag=mag, declination=0.0)*RAD2DEG)) #
     
     print('===========================================================================================')
     print('=================Motion====================================================================')

@@ -384,7 +384,7 @@ def accelmag2q(acc, mag) -> Quaternion:
             
     return q
 
-def heading(q:Quaternion, mag, declination=0.0) -> float:
+def qmag2h(q:Quaternion, mag, declination=0.0) -> float:
     '''
     Tilt compensated heading from compass
     Corrected for local magnetic declination
@@ -404,10 +404,9 @@ def heading(q:Quaternion, mag, declination=0.0) -> float:
 
     _mag.normalize()
 
-    # _mag_rot = pose * _mag * pose.conjugate
     _mag_rot = q * _mag * q.conjugate
 
-    heading = math.atan2(_mag_rot.y,_mag_rot.x) + declination
+    heading = math.atan2(_mag_rot.x,-_mag_rot.y) + declination
 
     return heading if heading > -EPSILON else TWOPI + heading
 

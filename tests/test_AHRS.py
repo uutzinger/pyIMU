@@ -9,7 +9,7 @@ import random
 from pyIMU.madgwick import Madgwick
 from pyIMU.motion import Motion
 from pyIMU.quaternion import Quaternion, Vector3D
-from pyIMU.utilities import q2rpy, heading
+from pyIMU.utilities import q2rpy, qmag2h
 
 FUZZY_ACCEL_ZERO        = 10.0
 FUZZY_DELTA_ACCEL_ZERO  = 0.04
@@ -71,5 +71,5 @@ for i in range(1000):
         gyr_offset_updated = True
 
     q = AHRS.update(acc=acc,gyr=gyr,mag=mag,dt=dt)
-    h = heading(q=q, mag=mag, declination=DECLINATION)
+    h = qmag2h(q=q, mag=mag, declination=DECLINATION)
     rpy=q2rpy(q=q)
