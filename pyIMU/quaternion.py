@@ -15,6 +15,7 @@ import numbers
 ###########################################################
 
 TWOPI   = 2.0 * math.pi
+PIHALF  = math.pi / 2.0
 DEG2RAD = math.pi / 180.0
 RAD2DEG = 180.0 / math.pi
 EPSILON = 2.0*math.ldexp(1.0, -53)
@@ -192,7 +193,7 @@ class Quaternion():
 
     @property
     def q(self) -> np.ndarray:
-        '''extract the vector component of the quaternion'''
+        '''convert the quaternion to np.array'''
         # return np.array([self.x,self.y,self.z])
         return np.array([self.w,self.x,self.y,self.z])
 

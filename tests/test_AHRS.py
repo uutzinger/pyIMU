@@ -5,6 +5,8 @@
 ###################################
 import numpy as np
 import random
+import ahrs
+import datetime
 
 from pyIMU.madgwick import Madgwick
 from pyIMU.motion import Motion
@@ -15,9 +17,16 @@ FUZZY_ACCEL_ZERO        = 10.0
 FUZZY_DELTA_ACCEL_ZERO  = 0.04
 FUZZY_GYRO_ZERO         = 0.08
 FUZZY_DELTA_GYRO_ZERO   = 0.003
-DECLINATION             = 9.27
+DECLINATION             = 8.124973426113137
 
-AHRS = Madgwick(frequency=150.0, gain=0.033)
+LATITUDE     = 32.253460   # [degrees] Tucson
+LONGITUDE    = -110.911789 # [degrees] Tucson
+ALTITUDE     = 730         # [m], Tucson
+
+tucson_wmm = ahrs.utils.WMM(datetime.date(2023, 7, 20), latitude=LATITUDE, longitude=LONGITUDE, height=ALTITUDE)
+tucson_wmm.magnetic_elements
+
+FUSER = Madgwick(frequency=150.0, gain=0.033)
 
 acc_offset          = Vector3D(0.,0.,0.)
 gyr_offset          = Vector3D(0.,0.,0.)
@@ -70,6 +79,6 @@ for i in range(1000):
         gyr_offset = 0.99*gyr_offset + 0.01*gyr
         gyr_offset_updated = True
 
-    q = AHRS.update(acc=acc,gyr=gyr,mag=mag,dt=dt)
+    q = FUSER.update(acc=acc,gyr=gyr,mag=mag,dt=dt)
     h = qmag2h(q=q, mag=mag, declination=DECLINATION)
     rpy=q2rpy(q=q)
