@@ -404,8 +404,42 @@ def rpymag2h(rpy:Vector3D, mag, declination=0.0) -> float:
 
     _mag.normalize()
 
-    tilted_mag_x = _mag.x * math.cos(rpy.y) + _mag.z * math.sin(rpy.y)
-    tilted_mag_y = _mag.x * math.sin(rpy.x) * math.sin(rpy.y) + _mag.y * math.cos(rpy.x) - _mag.z* math.sin(rpy.x) * math.cos(rpy.y)
+    roll = rpy.x
+    pitch = rpy.y
+
+    tilted_mag_x = _mag.x * math.cos(pitch) + _mag.z * math.sin(pitch)
+    tilted_mag_y = _mag.x * math.sin(roll) * math.sin(pitch) + _mag.y * math.cos(roll) - _mag.z* math.sin(roll) * math.cos(pitch)
+
+    heading = math.atan2(-tilted_mag_y,tilted_mag_x) + declination
+
+    return heading if heading > 0.0 else TWOPI + heading
+
+def qmag2h(q:Quaternion, mag, declination=0.0) -> float:
+    '''
+    Tilt compensated heading from compass
+    Corrected for local magnetic declination
+    Input:
+      pose:       Quaternion
+      mag:        Vector3D
+      declination float
+    Output:
+      heading:    float
+    '''
+    if isinstance(mag, Vector3D):
+        _mag = copy(mag)
+    elif isinstance(mag, np.ndarray):
+        _mag = Vector3D(mag)
+    else:
+        raise TypeError("Unsupported operand type for mag: {}".format(type(mag)))
+
+    # Extract pitch and roll angles from "rotation matrix"
+    pitch = math.asin(-2 * (q.x*q.z - q.w*q.x))
+    roll  = math.atan2(2 * (q.x*q.z + q.w*q.y), 1 - 2 * (q.x*q.x + q.y*q.y))
+            
+    _mag.normalize()
+
+    tilted_mag_x = _mag.x * math.cos(pitch) + _mag.z * math.sin(pitch)
+    tilted_mag_y = _mag.x * math.sin(roll) * math.sin(pitch) + _mag.y * math.cos(roll) - _mag.z* math.sin(roll) * math.cos(pitch)
 
     heading = math.atan2(-tilted_mag_y,tilted_mag_x) + declination
 
