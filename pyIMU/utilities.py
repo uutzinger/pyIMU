@@ -432,9 +432,24 @@ def qmag2h(q:Quaternion, mag, declination=0.0) -> float:
     else:
         raise TypeError("Unsupported operand type for mag: {}".format(type(mag)))
 
-    # Extract pitch and roll angles from "rotation matrix"
-    pitch = math.asin(-2 * (q.x*q.z - q.w*q.x))
-    roll  = math.atan2(2 * (q.x*q.z + q.w*q.y), 1 - 2 * (q.x*q.x + q.y*q.y))
+    wx = q.w * q.x
+    yz = q.y * q.z
+    xx = q.x * q.x
+    yy = q.y * q.y
+    wy = q.w * q.y
+    xz = q.x * q.z
+
+    # roll 
+    sinr_cosp =       2.*(wx + yz)
+    cosr_cosp = 1.0 - 2.*(xx + yy)
+    roll = math.atan2(sinr_cosp, cosr_cosp)
+    
+    # pitch
+    sinp      =       2.*(wy - xz)
+    if abs(sinp) >= 1.:
+        pitch = math.copysign(math.pi / 2.0, sinp)  # use 90 degrees if out of range
+    else:
+        pitch = math.asin(sinp)
             
     _mag.normalize()
 
