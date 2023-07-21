@@ -16,6 +16,7 @@
 from pyIMU.quaternion import Quaternion, Vector3D, TWOPI
 from pyIMU.utilities import gravity, RunningAverage, sensorAcc
 import math, time
+from copy import copy
 
 MINMOTIONTIME               = 0.5 # seconds, need to have had at least half of second motion to update velocity bias
 HEADING_AVG_HISTORY         =  5 
@@ -58,7 +59,7 @@ class Motion:
         self.motion_previous        = False
         self.motionStart_time       = time.perf_counter()
           
-        self.timestamp_previous     = time.perf_counter()   # provided by caller
+        self.timestamp_previous     = -1.                   
         self.dtmotion               = 0.0                   # no motion has occurred yet, length of motion period in seconds
     
         self.gravity = gravity(latitude=self.latitude, altitude=self.altitude)    # Gravity on Earth's (ellipsoid) Surface
@@ -83,7 +84,7 @@ class Motion:
         if (self.m_heading < 0) : self.m_heading += TWOPI
         return self.m_heading
 	
-    def update(self, q:Quaternion, acc:Vector3D, motion: bool, timestamp: float):
+    def update(self, q:Quaternion, acc:Vector3D, moving: bool, timestamp: float):
         # Input:
         #  Quaternion
         #  Timestamp
@@ -96,46 +97,50 @@ class Motion:
         #  Velocity bias is updated
 
         # Integration Time Step
-        dt = timestamp - self.timestamp_previous
-        self.timestamp_previous = timestamp
+        if self.timestamp_previous < 0.0:
+            dt = 0.
+        else:
+            dt = timestamp - self.timestamp_previous
+        self.timestamp_previous = copy(timestamp)
     
         # Acceleration residuals on the sensor
         self.residuals      = sensorAcc(acc=acc, q=q, g=self.gravity)
         self.residuals      = self.residuals - self.residuals_bias
         
         # Acceleration residuals in world coordinate system
-        self.worldResiduals = q * self.residuals * q.conjugate
+        # self.worldResiduals = (q * self.residuals * q.conjugate).v
+        self.worldResiduals = self.residuals.rotate(q.r33) 
     
         # Motion Status, ongoing, no motion, ended?
-        self.motion = motion
+        self.moving = copy(moving)
         motion_ended = False 
         if (self.motion_previous == False):
-            if (self.motion == True):
+            if (self.moving == True):
                 # Motion Started
-                self.motionStart_time = timestamp
+                self.motionStart_time = copy(timestamp)
         else:
-            if (self.motion == False):
+            if (self.moving == False):
                 # Motion Ended
                 self.dtmotion = timestamp - self.motionStart_time
                 motion_ended = True       
         # Keep track of previous status
-        self.motion_previous = self.motion
+        self.motion_previous = copy(self.motion)
 
         # Update Velocity and Position when moving
-        if self.motion: 
+        if self.moving: 
             # Integrate acceleration and add to velocity (uses trapezoidal integration technique
             self.worldVelocity = self.worldVelocity_previous + ((self.worldResiduals + self.worldResiduals_previous)*0.5 * dt)
 
             # Update Velocity
-            self.worldVelocity = self.worldVelocity - self.worldVelocity_drift * dt
+            self.worldVelocity = self.worldVelocity - (self.worldVelocity_drift * dt)
 
             # Integrate velocity and add to position
             self.worldPosition = self.worldPosition_previous + (self.worldVelocity + self.worldVelocity_previous) * 0.5 * dt
 
             # keep history of previous values
-            self.worldResiduals_previous = self.worldResiduals
-            self.worldVelocity_previous  = self.worldVelocity
-            self.worldPosition_previous  = self.worldPosition
+            self.worldResiduals_previous = copy(self.worldResiduals)
+            self.worldVelocity_previous  = copy(self.worldVelocity)
+            self.worldPosition_previous  = copy(self.worldPosition)
 
         else: # no Motion
             # Estimate Velocity Bias when not moving

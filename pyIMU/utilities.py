@@ -504,7 +504,7 @@ def earthAcc(acc: Vector3D, q: Quaternion, g: float) -> Vector3D:
     """
     compute residual acceleration in earth frame
     """
-    acc_r = q * acc * q.conjugate
+    acc_r = (q * acc * q.conjugate).v
     acc_r.z = acc_r.z - g # subtract gravity
     return (acc_r)
 

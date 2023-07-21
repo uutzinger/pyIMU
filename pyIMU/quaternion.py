@@ -433,7 +433,7 @@ class Vector3D():
     def __sub__(self, other):
         if isinstance(other, Vector3D):
             return Vector3D(self.x - other.x, self.y - other.y, self.z - other.z)
-        elif isinstance(other, (int, float)):
+        elif isinstance(other, numbers.Number):
             return Vector3D(self.x - other, self.y - other, self.z - other)
         else:
             raise TypeError("Unsupported operand type for -: Vector3D and {}".format(type(other)))
@@ -462,7 +462,8 @@ class Vector3D():
                     return Quaternion(w, x, y, z)
             elif shape == (3,3):
                 '''Matrix Multiplication'''
-                rotated_vector = np.dot(np.array([self.x,self.y,self.z]),other)
+                rotated_vector = np.dot(other, np.array([self.x,self.y,self.z]))
+                # rotated_vector = np.dot(np.array([self.x,self.y,self.z]),other)
                 return(Vector3D(x=rotated_vector[0], y=rotated_vector[1], z=rotated_vector[2]))
                 
         elif isinstance(other, Quaternion):
@@ -581,8 +582,8 @@ class Vector3D():
     def rotate(self, other):
         if isinstance(other, np.ndarray):
             if other.shape == (3,3):
-                # rotated_vector = np.dot(other.T, np.array([self.x,self.y,self.z]))
-                rotated_vector = np.dot(np.array([self.x,self.y,self.z]),other)
+                rotated_vector = np.dot(other, np.array([self.x,self.y,self.z]))
+                # rotated_vector = np.dot(np.array([self.x,self.y,self.z]),other)
                 return(Vector3D(x=rotated_vector[0], y=rotated_vector[1], z=rotated_vector[2]))
             else:
                 raise TypeError("Unsupported operand type for cross product: Vector3D and nd.array of shape {}".format(other.shape))
