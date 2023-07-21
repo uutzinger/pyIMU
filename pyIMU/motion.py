@@ -49,7 +49,7 @@ class Motion:
         self.worldPosition          = Vector3D(0,0,0)
         self.worldPosition_previous = Vector3D(0,0,0)
 
-        self.driftLearningAlpha     = 0.2                   # Poorman's low pass filter
+        self.driftLearningAlpha     = 0.01                  # Poorman's low pass filter
         
         self.heading_X_avg          = 0.
         self.heading_Y_avg          = 0.
@@ -61,6 +61,7 @@ class Motion:
           
         self.timestamp_previous     = -1.                   
         self.dtmotion               = 0.0                   # no motion has occurred yet, length of motion period in seconds
+        self.dt                     = 0.0
     
         self.gravity = gravity(latitude=self.latitude, altitude=self.altitude)    # Gravity on Earth's (ellipsoid) Surface
         
@@ -104,30 +105,28 @@ class Motion:
         self.timestamp_previous = copy(timestamp)
     
         # Acceleration residuals on the sensor
-        self.residuals      = sensorAcc(acc=acc, q=q, g=self.gravity)
-        self.residuals      = self.residuals - self.residuals_bias
+        self.residuals      = sensorAcc(acc=acc, q=q, g=self.gravity) - self.residuals_bias
         
         # Acceleration residuals in world coordinate system
         # self.worldResiduals = (q * self.residuals * q.conjugate).v
         self.worldResiduals = self.residuals.rotate(q.r33) 
     
         # Motion Status, ongoing, no motion, ended?
-        self.moving = copy(moving)
         motion_ended = False 
         if (self.motion_previous == False):
-            if (self.moving == True):
+            if (moving == True):
                 # Motion Started
                 self.motionStart_time = copy(timestamp)
         else:
-            if (self.moving == False):
+            if (moving == False):
                 # Motion Ended
                 self.dtmotion = timestamp - self.motionStart_time
                 motion_ended = True       
         # Keep track of previous status
-        self.motion_previous = copy(self.motion)
+        self.motion_previous = copy(motion)
 
         # Update Velocity and Position when moving
-        if self.moving: 
+        if moving: 
             # Integrate acceleration and add to velocity (uses trapezoidal integration technique
             self.worldVelocity = self.worldVelocity_previous + ((self.worldResiduals + self.worldResiduals_previous)*0.5 * dt)
 
@@ -146,11 +145,18 @@ class Motion:
             # Estimate Velocity Bias when not moving
             # When motion ends, velocity should be zero
             if ((motion_ended == True) and (self.dtmotion > MINMOTIONTIME)): # update velocity bias if we had at least half of second motion
-                self.worldVelocity_drift = ( (self.worldVelocity_drift * (1.0 - self.driftLearningAlpha)) + ((self.worldVelocity / self.dtmotion) * self.driftLearningAlpha ) )
+                self.worldVelocity_drift = ( ( self.worldVelocity_drift * (1.0 - self.driftLearningAlpha)) + \
+                                             ((self.worldVelocity / self.dtmotion) * self.driftLearningAlpha ) )
 
-            # Reset Velocity
-            self.worldVelocity = Vector3D(x=0.,y=0.,z=0.)    # minimize error propagation
+                # Reset Residuals
+                self.worldResiduals          = Vector3D(x=0.,y=0.,z=0.)
+                self.worldResiduals_previous = Vector3D(x=0.,y=0.,z=0.)
+                # Reset Velocity
+                self.worldVelocity           = Vector3D(x=0.,y=0.,z=0.)    # minimize error propagation
+                self.worldVelocity_previous  = Vector3D(x=0.,y=0.,z=0.)
 
             # Update acceleration bias, when not moving residuals should be zero
             # If accelerometer is not calibrated properly, subtracting bias will cause drift
             self.residuals_bias = ( (self.residuals_bias * (1.0 - self.driftLearningAlpha)) + (self.residuals * self.driftLearningAlpha ) )
+
+        self.dt = dt
