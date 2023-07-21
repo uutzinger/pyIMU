@@ -1,30 +1,38 @@
-from pyIMU.quaternion import Quaternion, Vector3D, TWOPI
-from pyIMU.utilities import gravity, RunningAverage, sensorAcc
-from pyIMU.madgwick import Madgwick
-import math
-import time
-
+###########################################################
+# Motion calculation from IMU data
+# After sensor fusion, the acceleration residuals can be
+#  calculated in the world coordinate system
+# Integrating acceleration residuals gives velocity and
+# integrating velocity gives position
+# Velocity and position are sensitive to drift and usually
+#  not very accurate
+#
+# Urs Utzinger, Spring 2023
+###########################################################
 # https://www.researchgate.net/publication/258817923_FreeIMU_An_Open_Hardware_Framework_for_Orientation_and_Motion_Sensing
 # https://web.archive.org/web/20210308200933/https://launchpad.net/freeimu/
+###########################################################
+
+from pyIMU.quaternion import Quaternion, Vector3D, TWOPI
+from pyIMU.utilities import gravity, RunningAverage, sensorAcc
+import math, time
+
+MINMOTIONTIME               = 0.5 # seconds, need to have had at least half of second motion to update velocity bias
+HEADING_AVG_HISTORY         =  5 
 
 class Motion:
     '''
     IMU Motion Estimation
     '''
+    
     def __init__(self, **kwargs):
 
         # Default values are for Tucson, Arizona, USA
-        self.declination      = kwargs.get('declination', 9.27)    # decimal degrees 
+        # This will is needed to compute magnitude of gravity 
+        #   which is subtracted from measured acceleration
         self.latitude         = kwargs.get('latitude', 32.253460)  # decimal degrees
         self.altitude         = kwargs.get('altitude', 730)        # meter
-        self.magfield         = kwargs.get('magfield', 47392.3)    # nT
 
-        ACCEL_AVG_HISTORY           =  5                      # size of moving average filter
-        GYR_AVG_HISTORY             =  5                      # size of moving average filter
-        HEADING_AVG_HISTORY         =  5 
-
-        self.m_acc                  = RunningAverage(ACCEL_AVG_HISTORY)
-        self.m_gyr                  = RunningAverage(GYR_AVG_HISTORY)
         self.m_heading_X            = RunningAverage(HEADING_AVG_HISTORY)
         self.m_heading_Y            = RunningAverage(HEADING_AVG_HISTORY)
         
@@ -40,18 +48,18 @@ class Motion:
         self.worldPosition          = Vector3D(0,0,0)
         self.worldPosition_previous = Vector3D(0,0,0)
 
-        self.driftLearningAlpha     = 0.2 # Poorman's low pass filter
+        self.driftLearningAlpha     = 0.2                   # Poorman's low pass filter
         
         self.heading_X_avg          = 0.
         self.heading_Y_avg          = 0.
-        self.heading                = 0.
+        self.m_heading              = 0.                    # average heading in radians    
 
-        self.motion                 = False
+        self.motion                 = False                 # is device moving?
         self.motion_previous        = False
         self.motionStart_time       = time.perf_counter()
           
-        self.timestamp_previous = time.perf_counter()   # provided by caller
-        self.dtmotion           = 0.0                   # no motion has occurred yet
+        self.timestamp_previous     = time.perf_counter()   # provided by caller
+        self.dtmotion               = 0.0                   # no motion has occurred yet, length of motion period in seconds
     
         self.gravity = gravity(latitude=self.latitude, altitude=self.altitude)    # Gravity on Earth's (ellipsoid) Surface
         
@@ -71,9 +79,9 @@ class Motion:
         ## this needs two component because of 0 - 360 jump at North 
         self.m_heading_X.update(math.cos(heading))
         self.m_heading_y.update(math.sin(heading))
-        self.heading = math.atan2(self.m_heading_Y.avg,self.m_heading_X.avg)
-        if (self.heading < 0) : self.heading += TWOPI
-        return self.heading
+        self.m_heading = math.atan2(self.m_heading_Y.avg,self.m_heading_X.avg)
+        if (self.m_heading < 0) : self.m_heading += TWOPI
+        return self.m_heading
 	
     def update(self, q:Quaternion, acc:Vector3D, motion: bool, timestamp: float):
         # Input:
@@ -83,6 +91,9 @@ class Motion:
         #  Acceleration in world coordinate system
         #  Velocity in world coordinate system
         #  Position in world coordinate system
+        # If there is no motion
+        #  Acceleration bias is updated
+        #  Velocity bias is updated
 
         # Integration Time Step
         dt = timestamp - self.timestamp_previous
@@ -129,11 +140,12 @@ class Motion:
         else: # no Motion
             # Estimate Velocity Bias when not moving
             # When motion ends, velocity should be zero
-            if ((motion_ended == True) and (self.dtmotion > 0.5)): # update velocity bias if we had at least half of second motion
+            if ((motion_ended == True) and (self.dtmotion > MINMOTIONTIME)): # update velocity bias if we had at least half of second motion
                 self.worldVelocity_drift = ( (self.worldVelocity_drift * (1.0 - self.driftLearningAlpha)) + ((self.worldVelocity / self.dtmotion) * self.driftLearningAlpha ) )
 
             # Reset Velocity
             self.worldVelocity = Vector3D(x=0.,y=0.,z=0.)    # minimize error propagation
 
-            #  Update acceleration bias
+            # Update acceleration bias, when not moving residuals should be zero
+            # If accelerometer is not calibrated properly, subtracting bias will cause drift
             self.residuals_bias = ( (self.residuals_bias * (1.0 - self.driftLearningAlpha)) + (self.residuals * self.driftLearningAlpha ) )
