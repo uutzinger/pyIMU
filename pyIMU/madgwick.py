@@ -179,9 +179,12 @@ class Madgwick:
         if mag is None:
             # Compute with IMU architecture
             if (self.q is None) or (dt < 0):
+                # We run this the first time. Estimate initial quaternion.
+                #   Nake sure that you have stable readings from the senor before
+                #   calling this function, otherwise it takes a while for the sensor to orient.
                 self.q = accel2q(self.acc) # estimate initial orientation
-                self.q.normalize()
-                print('Init with acc only: ', q2rpy(self.q))
+                # self.q.normalize()
+                # print('Init with acc only: ', q2rpy(self.q))
             else:
                 self.q = updateIMU(self.q, self.gyr, self.acc, dt=dt, gain=self.gain_imu)
 
@@ -189,9 +192,12 @@ class Madgwick:
             # Compute with MARG architecture
             self.mag = copy(mag)
             if (self.q is None) or (dt < 0):
+                # We run this the first time. Estimate initial quaternion.
+                #   Nake sure that you have stable readings from the senor before
+                #   calling this function, otherwise it will take a while for sensor to orient.        
                 self.q = accelmag2q(self.acc, self.mag)
-                self.q.normalize()
-                print('Init with acc and mag: ', q2rpy(self.q))
+                # self.q.normalize()
+                # print('Init with acc and mag: ', q2rpy(self.q))
             else:    
                 self.q = updateMARG(self.q, self.gyr, self.acc, self.mag, dt=dt, gain=self.gain_marg)
 
