@@ -99,9 +99,12 @@ class Motion:
 
         # Integration Time Step
         if self.timestamp_previous < 0.0:
-            dt = 0.
+            dt = 0.0
         else:
             dt = timestamp - self.timestamp_previous
+            if dt > 1.0:
+                # we had reconnection, avoid updating with large dt
+                dt = 0.0
         self.timestamp_previous = copy(timestamp)
     
         # Acceleration residuals on the sensor

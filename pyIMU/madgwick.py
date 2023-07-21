@@ -5,7 +5,7 @@ Urs Utzinger, 2023
 
 import numpy as np
 from   pyIMU.quaternion import Quaternion, Vector3D 
-from   pyIMU.utilities import accelmag2q, accel2q
+from   pyIMU.utilities import accelmag2q, accel2q, q2rpy
 from   copy import copy
 import math
 
@@ -156,7 +156,7 @@ class Madgwick:
     """
     
     def __init__(self, **kwargs):        
-        self.q: Quaternion         = IDENTITY_QUATERNION
+        self.q                     = None
         self.acc                   = None
         self.gyr                   = None
         self.mag                   = None
@@ -181,6 +181,7 @@ class Madgwick:
             if (self.q is None) or (dt < 0):
                 self.q = accel2q(self.acc) # estimate initial orientation
                 self.q.normalize()
+                print('Init with acc only: ', q2rpy(self.q))
             else:
                 self.q = updateIMU(self.q, self.gyr, self.acc, dt=dt, gain=self.gain_imu)
 
@@ -190,6 +191,7 @@ class Madgwick:
             if (self.q is None) or (dt < 0):
                 self.q = accelmag2q(self.acc, self.mag)
                 self.q.normalize()
+                print('Init with acc and mag: ', q2rpy(self.q))
             else:    
                 self.q = updateMARG(self.q, self.gyr, self.acc, self.mag, dt=dt, gain=self.gain_marg)
 
