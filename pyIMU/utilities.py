@@ -470,27 +470,20 @@ def q2gravity(pose: Quaternion) -> Vector3D:
     3x3 rotation matrix from quaternion
     multiply with dot product
     
-    Usually its Matrix times Vector
+    ([
+        [1.0 - 2.*(yy + zz),          2.*(xy - zw),          2.*(xz + yw)],
+        [      2.*(xy + zw),    1.0 - 2.*(xx + zz),          2.*(yz - xw)],
+        [      2.*(xz - yw),          2.*(yz + xw),    1.0 - 2.*(xx + yy)]
+    ])  
 
-    dot (
-        np.array([
-            [1 - 2 * (yy + zz),     2 * (xy - zw),     2 * (xz + yw)],
-            [    2 * (xy + zw), 1 - 2 * (xx + zz),     2 * (yz - xw)],
-            [    2 * (xz - yw),     2 * (yz + xw), 1 - 2 * (xx + yy)]
-        ]).T,
-        np.array([0,0,1])
-    )
+    we rotate from world to frame, therefore the rotation matrix is transposed
     
-    Results in the bottom row of the rotation matrix.
-
-    gx =  2*(xz - wy)
-    gy =  2*(yz + wx) 
-    gz =  1 - 2(xx + yy) 
+    rotated_vector = np.dot(r33.T, np.array([0,0,1]))
     
     '''
-    x =  2.0 * (pose.x * pose.z - pose.w * pose.y)
-    y =  2.0 * (pose.y * pose.z + pose.w * pose.x)
-    z =  1 - 2.0 * (pose.x*pose.x + pose.y*pose.y) 
+    x =       2.0 * (pose.x * pose.z - pose.w * pose.y)
+    y =       2.0 * (pose.y * pose.z + pose.w * pose.x)
+    z = 1.0 - 2.0 * (pose.x * pose.x + pose.y * pose.y) 
     
     return Vector3D(x, y, z)
 
@@ -504,7 +497,8 @@ def earthAcc(acc: Vector3D, q: Quaternion, g: float) -> Vector3D:
     """
     compute residual acceleration in earth frame
     """
-    acc_r = (q * acc * q.conjugate).v
+    # acc_r = (q * acc * q.conjugate).v
+    acc_r = acc.rotate(q.r33)
     acc_r.z = acc_r.z - g # subtract gravity
     return (acc_r)
 
