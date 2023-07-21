@@ -129,7 +129,7 @@ class Motion:
         if moving: 
             # Integrate acceleration and add to velocity (uses trapezoidal integration technique
             self.worldVelocity = self.worldVelocity_previous + ((self.worldResiduals + self.worldResiduals_previous)*0.5 * dt)
-            self.dtmotion + = dt
+            self.dtmotion += dt
 
             # Update Velocity
             self.worldVelocity = self.worldVelocity - (self.worldVelocity_drift * dt)
