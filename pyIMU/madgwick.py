@@ -5,7 +5,7 @@ GPT 5.2, 2026 speed optimizations
 """
 
 from   pyIMU.quaternion import Quaternion, Vector3D
-from   pyIMU.utilities import accelmag2q, accel2q, q2rpy
+from   pyIMU.utilities import accelmag2q, accel2q
 from   copy import copy
 import math
 
@@ -22,6 +22,7 @@ VECTOR_ZERO         = Vector3D(0.0, 0.0, 0.0)
 DEG2RAD             = math.pi / 180.0
 RAD2DEG             = 180.0 / math.pi
 EPSILON             = math.ldexp(1.0, -53)
+GRAVITY             = 9.80665
 
 def updateIMU(q: Quaternion, gyr: Vector3D, acc: Vector3D, dt: float, gain: float) -> Quaternion:
     """
@@ -288,23 +289,42 @@ class Madgwick:
         self.mag                   = None
         self.frequency: float      = kwargs.get('frequency', 100.0)
         self.dt: float             = kwargs.get('dt', (1.0/self.frequency) if self.frequency else 0.01)
-        self.gain_imu              = kwargs.get('gain_imu', 0.033)
-        self.gain_marg             = kwargs.get('gain_marg', 0.041)
+        gain                       = kwargs.get('gain', None)
+        self.gain_imu              = kwargs.get('gain_imu', gain if gain is not None else 0.033)
+        self.gain_marg             = kwargs.get('gain_marg', gain if gain is not None else 0.041)
+        self.acc_in_g              = kwargs.get('acc_in_g', True)
+        self.gyr_in_dps            = kwargs.get('gyr_in_dps', False)
+        self.convention            = str(kwargs.get('convention', 'NED')).upper()
+        if self.convention != 'NED':
+            raise ValueError("Madgwick currently supports only NED convention.")
+
+    def _to_acc_g(self, acc: Vector3D) -> Vector3D:
+        if self.acc_in_g:
+            return Vector3D(acc)
+        return Vector3D(acc.x / GRAVITY, acc.y / GRAVITY, acc.z / GRAVITY)
+
+    def _to_gyr_rads(self, gyr: Vector3D) -> Vector3D:
+        if self.gyr_in_dps:
+            return Vector3D(gyr.x * DEG2RAD, gyr.y * DEG2RAD, gyr.z * DEG2RAD)
+        return Vector3D(gyr)
         
     def update(self, gyr: Vector3D, acc: Vector3D, mag: Vector3D = None, dt: float = -1) -> Quaternion:        
         """
         Estimate the pose quaternion.
-        gyr : Vector3D of tri-axial Gyroscope in rad/s
-        acc : Vector3D of tri-axial Accelerometer in m/s^2
+        gyr : Vector3D of tri-axial Gyroscope in rad/s (or deg/s if gyr_in_dps=True)
+        acc : Vector3D of tri-axial Accelerometer in g (or m/s^2 if acc_in_g=False)
         mag : Vector3D of tri-axial Magnetometer in nT, optional
         dt  : float, default: None, Time step, in seconds, between consecutive function calls.
         """
-        self.gyr = copy(gyr)
-        self.acc = copy(acc)
+        if dt <= 0:
+            dt = self.dt
+
+        self.gyr = self._to_gyr_rads(gyr)
+        self.acc = self._to_acc_g(acc)
              
         if mag is None:
             # Compute with IMU architecture
-            if (self.q is None) or (dt < 0):
+            if self.q is None:
                 # We run this the first time. Estimate initial quaternion.
                 #   Nake sure that you have stable readings from the senor before
                 #   calling this function, otherwise it takes a while for the sensor to orient.
@@ -317,7 +337,7 @@ class Madgwick:
         else:
             # Compute with MARG architecture
             self.mag = copy(mag)
-            if (self.q is None) or (dt < 0):
+            if self.q is None:
                 # We run this the first time. Estimate initial quaternion.
                 #   Nake sure that you have stable readings from the senor before
                 #   calling this function, otherwise it will take a while for sensor to orient.        

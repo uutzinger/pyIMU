@@ -84,7 +84,7 @@ WHEEL_PATH="$(ls -t dist/*.whl | head -n1)"
 echo "Built wheel: ${WHEEL_PATH}"
 
 if [[ "${DO_INSTALL}" -eq 1 ]]; then
-  python3 -m pip install --force-reinstall "${WHEEL_PATH}"
+  python3 -m pip install --no-deps --force-reinstall "${WHEEL_PATH}"
 fi
 
 if [[ "${DO_UPLOAD_TESTPYPI}" -eq 1 || "${DO_UPLOAD_PYPI}" -eq 1 ]]; then

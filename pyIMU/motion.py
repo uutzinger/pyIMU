@@ -34,6 +34,9 @@ class Motion:
     '''
 
     def __init__(self, **kwargs):
+        self.convention = str(kwargs.get('convention', 'NED')).upper()
+        if self.convention != 'NED':
+            raise ValueError("Motion currently supports only NED convention.")
 
         # Default values are for Tucson, Arizona, USA
         # This will is needed to compute magnitude of gravity

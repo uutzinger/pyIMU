@@ -36,6 +36,16 @@ There is newer [implementation](https://pypi.org/project/imufusion/) based on an
 
 Original Code can be found here: https://x-io.co.uk/open-source-imu-and-ahrs-algorithms/
 
+## pyIMU.fusion
+Contains a revised AHRS `Fusion` class inspired by Chapter 7 of Madgwick's PhD thesis:
+- complementary filter using cross-product error terms
+- gain ramp initialisation
+- gyroscope bias compensation with stationary gating
+- magnetic distortion rejection
+- linear acceleration rejection
+- zero-g and global acceleration outputs
+- NED orientation convention (x: North, y: East, z: Down)
+
 ### Magdwick Class
 Incremental sensor fusion to compute pose quaternion from accelerometer, gyroscope and optional magnetometer.
 
