@@ -15,12 +15,12 @@ VECTOR_ZERO         = Vector3D(0.0, 0.0, 0.0)
 ###########################################################
 
 def clip(val, largest):
-    ''' 
+    '''
     Clip val to [0,largest]
     '''
-    return 0  if val < 0 else largest if val > largest else val 
+    return 0  if val < 0 else largest if val > largest else val
 
-def clamp(val, smallest, largest): 
+def clamp(val, smallest, largest):
     '''
     Clip val to [smallest, largest]
     '''
@@ -47,13 +47,13 @@ def invSqrt(value: float) -> float:
     threehalfs = float(1.5)
     x2 = value * float(0.5)
     y = value
-    
-    packed_y = struct.pack('f', y)       
-    i = struct.unpack('i', packed_y)[0]  # treat float's bytes as int 
+
+    packed_y = struct.pack('f', y)
+    i = struct.unpack('i', packed_y)[0]  # treat float's bytes as int
     i = 0x5f3759df - (i >> 1)            # arithmetic with magic number
     packed_i = struct.pack('i', i)
     y = struct.unpack('f', packed_i)[0]  # treat int's bytes as float
-    
+
     y = y * (threehalfs - (x2 * y * y))  # Newton's method
     return y
 
@@ -62,34 +62,47 @@ class RunningAverage:
     Running Average with Variance
     with help form chat.openai.com
     '''
-    
+
     def __init__(self, window_size):
         self.window_size = window_size
         if self.window_size <= 0: raise ValueError("Window size must be greater than zero.")
         self.window = deque(maxlen=window_size)
-        self.sum = Vector3D(x=0.,y=0.,z=0.)
-        self.squared_sum = Vector3D(x=0.,y=0.,z=0.)
+        self.sum = None
+        self.squared_sum = None
 
     def update(self,value):
-        self.len = len(self.window)
-        if self.len < self.window_size:
-            self.window.append(value)
-            self.sum = self.sum + value
-            # self.avg = self.sum / len(self.window)
-            self.squared_sum = self.squared_sum + (value * value)
-        else:
+        if self.sum is None:
+            if isinstance(value, Vector3D):
+                self.sum = Vector3D(x=0.0, y=0.0, z=0.0)
+                self.squared_sum = Vector3D(x=0.0, y=0.0, z=0.0)
+            elif isinstance(value, numbers.Number):
+                self.sum = 0.0
+                self.squared_sum = 0.0
+            else:
+                raise TypeError("Unsupported value type for RunningAverage: {}".format(type(value)))
+
+        if len(self.window) >= self.window_size:
             old_value = self.window.popleft()
-            self.window.append(value)
-            self.sum = self.sum + value - old_value
-            self.squared_sum = self.squared_sum + (value * value) - (old_value * old_value)
-            
+            self.sum = self.sum - old_value
+            self.squared_sum = self.squared_sum - (old_value * old_value)
+
+        self.window.append(value)
+        self.sum = self.sum + value
+        self.squared_sum = self.squared_sum + (value * value)
+
     @property
     def avg(self) -> float:
-        return self.sum / self.len
+        length = len(self.window)
+        if length == 0:
+            raise ValueError("RunningAverage has no samples.")
+        return self.sum / length
 
     @property
     def var(self) -> float:
-        return (self.squared_sum - (self.sum * self.sum) / self.len) / self.len
+        length = len(self.window)
+        if length == 0:
+            raise ValueError("RunningAverage has no samples.")
+        return (self.squared_sum - (self.sum * self.sum) / length) / length
 
 
 def vector_angle2q(vec: Vector3D, angle: float = 0.0) -> Quaternion:
@@ -99,9 +112,9 @@ def vector_angle2q(vec: Vector3D, angle: float = 0.0) -> Quaternion:
     halfAngle = angle * 0.5
     sinHalfAngle = math.sin(halfAngle)
     return Quaternion(
-        w = math.cos(halfAngle), 
-        x = vec.x * sinHalfAngle, 
-        y = vec.y * sinHalfAngle, 
+        w = math.cos(halfAngle),
+        x = vec.x * sinHalfAngle,
+        y = vec.y * sinHalfAngle,
         z = vec.z * sinHalfAngle)
 
 def q2rpy(q: Quaternion) -> Vector3D:
@@ -109,7 +122,7 @@ def q2rpy(q: Quaternion) -> Vector3D:
     quaternion to roll pitch yaw
     chat.openai.com
     '''
-    
+
     wx = q.w * q.x
     yz = q.y * q.z
     xx = q.x * q.x
@@ -124,14 +137,14 @@ def q2rpy(q: Quaternion) -> Vector3D:
     sinr_cosp =       2.*(wx + yz)
     cosr_cosp = 1.0 - 2.*(xx + yy)
     roll = math.atan2(sinr_cosp, cosr_cosp)
-            
+
     # pitch (y-axis rotation)
     sinp      =       2.*(wy - xz)
     if abs(sinp) >= 1.:
         pitch = math.copysign(math.pi / 2.0, sinp)  # use 90 degrees if out of range
     else:
         pitch = math.asin(sinp)
-        
+
     # yaw (z-axis rotation)
     siny_cosp =       2.*(wz + xy)
     cosy_cosp = 1.0 - 2.*(yy + zz)
@@ -142,24 +155,26 @@ def q2rpy(q: Quaternion) -> Vector3D:
 def rpy2q(r, p:float = 0., y: float = 0.) -> Quaternion:
     '''
     assume vector contains roll, pitch, yaw and convert to quaternion
-    chat.openai.com 
+    chat.openai.com
     accel2q is q.y and q.z have wrong sign
     '''
-    
+
     if isinstance(r, Vector3D):
-        roll  = r.x 
+        roll  = r.x
         pitch = r.y
         yaw   = r.z
     elif isinstance(r, np.ndarray):
         if len(r) == 3:
             roll, pitch, yaw = r
+        else:
+            raise ValueError("Input array for rpy2q must have length 3.")
     elif isinstance(r, numbers.Number):
         roll  = r
         pitch = p
-        yaw   = y    
+        yaw   = y
     else:
         raise TypeError("Unsupported operand type for rpy2q: {}".format(type(r)))
-    
+
     cy2 = math.cos(yaw   * 0.5)
     sy2 = math.sin(yaw   * 0.5)
     cp2 = math.cos(pitch * 0.5)
@@ -175,7 +190,7 @@ def rpy2q(r, p:float = 0., y: float = 0.) -> Quaternion:
     return Quaternion(w, x, y, z)
 
 def accel2rpy(acc) -> Vector3D:
-    ''' 
+    '''
     gravity to roll pitch yaw
     when X forward, Y right, Z down
     '''
@@ -184,8 +199,10 @@ def accel2rpy(acc) -> Vector3D:
     elif isinstance(acc, np.ndarray):
         if len(acc) == 3:
             _acc = Vector3D(acc)
+        else:
+            raise ValueError("Input array for accel2rpy must have length 3.")
     else:
-        raise TypeError("Unsupported operand type for accel2rpy: {}".format(type(x)))
+        raise TypeError("Unsupported operand type for accel2rpy: {}".format(type(acc)))
 
     _acc.normalize()
 
@@ -200,10 +217,12 @@ def accel2q(acc) -> Quaternion:
     '''
 
     if isinstance(acc, Vector3D):
-        _acc = copy(acc) 
+        _acc = copy(acc)
     elif isinstance(acc, np.ndarray):
         if len(acc) == 3:
             _acc = Vector3D(acc)
+        else:
+            raise ValueError("Input array for accel2q must have length 3.")
     else:
         raise TypeError("Unsupported operand type for accel2rpy: {}".format(type(acc)))
 
@@ -245,18 +264,22 @@ def accelmag2rpy(acc, mag) -> Quaternion:
     elif isinstance(acc, np.ndarray):
         if len(acc) == 3:
             _acc = Vector3D(acc)
+        else:
+            raise ValueError("Input array for accelmag2rpy(acc) must have length 3.")
     else:
         raise TypeError("Unsupported operand type for accel2rpy: {}".format(type(acc)))
 
     if isinstance(mag, Vector3D):
-        _mag = copy(mag) 
+        _mag = copy(mag)
     elif isinstance(mag, np.ndarray):
         if len(mag) == 3:
             _mag = Vector3D(mag)
+        else:
+            raise ValueError("Input array for accelmag2rpy(mag) must have length 3.")
     else:
         raise TypeError("Unsupported operand type for accel2rpy: {}".format(type(mag)))
-    
-    
+
+
     # 1) calculate roll and pitch from acceleration (gravity) vector
     _acc.normalize()
     roll  = math.atan2(_acc.y, _acc.z)
@@ -267,7 +290,7 @@ def accelmag2rpy(acc, mag) -> Quaternion:
     mag_x = _mag.x * math.cos(pitch) + _mag.y * math.sin(pitch) * math.sin(roll) + _mag.z * math.sin(pitch) * math.cos(roll)
     mag_y = _mag.y * math.cos(roll)  - _mag.z * math.sin(roll)
     yaw = math.atan2(-mag_y, mag_x)
-    
+
     return Vector3D(roll, pitch, yaw)
 
 def accelmag2q(acc, mag) -> Quaternion:
@@ -284,7 +307,7 @@ def accelmag2q(acc, mag) -> Quaternion:
     - pypi AHRS
       R = am2DCM(a, m, frame=NED)
       q = dcm2quat(R)
-    
+
         if frame.upper() not in ['ENU', 'NED']:
             raise ValueError("Wrong coordinate frame. Try 'ENU' or 'NED'")
             a = np.array(a)
@@ -297,11 +320,11 @@ def accelmag2q(acc, mag) -> Quaternion:
                 return np.array([[H[0], M[0], a[0]],
                                 [H[1], M[1], a[1]],
                                 [H[2], M[2], a[2]]])
-                                
+
             return np.array([[M[0], H[0], -a[0]],
                             [M[1], H[1], -a[1]],
                             [M[2], H[2], -a[2]]])
-    
+
         if R.shape[0] != R.shape[1]:
             raise ValueError('Input is not a square matrix')
         if R.shape[0] != 3:
@@ -312,7 +335,7 @@ def accelmag2q(acc, mag) -> Quaternion:
         q[2] = (R[2, 0] - R[0, 2]) / q[0]
         q[3] = (R[0, 1] - R[1, 0]) / q[0]
         q[1:] /= 4.0
-        return q / np.linalg.norm(q)    
+        return q / np.linalg.norm(q)
 
     - chat.openai.com
         Could not make work
@@ -323,14 +346,18 @@ def accelmag2q(acc, mag) -> Quaternion:
     elif isinstance(acc, np.ndarray):
         if len(acc) == 3:
             _acc = Vector3D(acc)
+        else:
+            raise ValueError("Input array for accelmag2q(acc) must have length 3.")
     else:
         raise TypeError("Unsupported operand type for accel2rpy: {}".format(type(acc)))
 
     if isinstance(mag, Vector3D):
-        _mag = copy(mag) 
+        _mag = copy(mag)
     elif isinstance(mag, np.ndarray):
         if len(mag) == 3:
             _mag = Vector3D(mag)
+        else:
+            raise ValueError("Input array for accelmag2q(mag) must have length 3.")
     else:
         raise TypeError("Unsupported operand type for accel2rpy: {}".format(type(mag)))
 
@@ -364,16 +391,16 @@ def accelmag2q(acc, mag) -> Quaternion:
     # to create rotation matrix and then
     # converting rotation matrix to quaternion.
     # Not working at this time.
-    #    
+    #
     # # Calculate the auxiliary vectors
     # # East is cross product of gravity and magnetic field
     # east  = _acc.cross(_mag)
     # east.normalize()
 
     # # North is cross product of east and gravity
-    # _acc.normalize()        
+    # _acc.normalize()
     # north = east.cross(_acc)
-    
+
     # # Assign the rotation matrix
     # # "Each column or row gives the direction of one of the transformed axes."
     # r33 = np.empty((3,3))
@@ -381,7 +408,7 @@ def accelmag2q(acc, mag) -> Quaternion:
     # r33[:, 1] = east.v
     # r33[:, 2] = acc.v
     # q = r33toq(r33, check=True)
-            
+
     return q
 
 def rpymag2h(rpy:Vector3D, mag, declination=0.0) -> float:
@@ -439,18 +466,18 @@ def qmag2h(q:Quaternion, mag, declination=0.0) -> float:
     wy = q.w * q.y
     xz = q.x * q.z
 
-    # roll 
+    # roll
     sinr_cosp =       2.*(wx + yz)
     cosr_cosp = 1.0 - 2.*(xx + yy)
     roll = math.atan2(sinr_cosp, cosr_cosp)
-    
+
     # pitch
     sinp      =       2.*(wy - xz)
     if abs(sinp) >= 1.:
         pitch = math.copysign(math.pi / 2.0, sinp)  # use 90 degrees if out of range
     else:
         pitch = math.asin(sinp)
-            
+
     _mag.normalize()
 
     tilted_mag_x = _mag.x * math.cos(pitch) + _mag.z * math.sin(pitch)
@@ -466,25 +493,25 @@ def q2gravity(pose: Quaternion) -> Vector3D:
     Creates unit Gravity vector from pose quaternion.
 
     North East Down (Gravity is positive in Z direction pointing down)
-    
+
     3x3 rotation matrix from quaternion
     multiply with dot product
-    
+
     ([
         [1.0 - 2.*(yy + zz),          2.*(xy - zw),          2.*(xz + yw)],
         [      2.*(xy + zw),    1.0 - 2.*(xx + zz),          2.*(yz - xw)],
         [      2.*(xz - yw),          2.*(yz + xw),    1.0 - 2.*(xx + yy)]
-    ])  
+    ])
 
     we rotate from world to frame, therefore the rotation matrix is transposed
-    
+
     rotated_vector = np.dot(r33.T, np.array([0,0,1]))
-    
+
     '''
     x =       2.0 * (pose.x * pose.z - pose.w * pose.y)
     y =       2.0 * (pose.y * pose.z + pose.w * pose.x)
-    z = 1.0 - 2.0 * (pose.x * pose.x + pose.y * pose.y) 
-    
+    z = 1.0 - 2.0 * (pose.x * pose.x + pose.y * pose.y)
+
     return Vector3D(x, y, z)
 
 def sensorAcc(acc: Vector3D, q: Quaternion, g: float) -> Vector3D:
@@ -505,12 +532,12 @@ def earthAcc(acc: Vector3D, q: Quaternion, g: float) -> Vector3D:
 def gravity(latitude: float, altitude: float) -> float:
     '''
     Gravity on Ellipsoid Surface
-    
+
     from https://github.com/Mayitzin/ahrs/blob/master/ahrs/utils/wgs84.py
     '''
     a  = 6_378_137.0                        # EARTH_EQUATOR_RADIUS
     f  = 1./298.257223563                   # EARTH_FLATTENING
-    gm = 3.986004418e14                     # EARTH_GM  
+    gm = 3.986004418e14                     # EARTH_GM
     w  = 7.292115e-5                        # EARTH_ROTATION
     b  = a*(1-f)                            # EARTH_POLE_RADIUS
     ge = 9.78032533590406                   # EARTH_EQUATOR_GRAVITY
@@ -525,4 +552,3 @@ def gravity(latitude: float, altitude: float) -> float:
         gravity *= 1.-2.*altitude*(1.+f+m-2*f*sin2)/a + 3.*altitude**2/a**2   # Gravity Above Ellipsoid
 
     return gravity
-

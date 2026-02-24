@@ -1,0 +1,9 @@
+include LICENSE
+include README.md
+include pyproject.toml
+include setup.py
+
+recursive-include pyIMU *.py *.pyx *.c
+recursive-include examples *.py
+recursive-include tests *.py
+

@@ -12,6 +12,23 @@ The motion class has not yet been tested with hardware.
 ## Install
 Download the library and ```pip3 install -e .``` or omit the -e switch to install into python's site packages.
 
+### Optional Cython acceleration
+`pyIMU` can build optional Cython extensions (`pyIMU._qcore`, `pyIMU._vcore`, `pyIMU._mcore`, `pyIMU._motion_core`) for quaternion/vector/Madgwick/motion hot paths.
+
+- Build in place: `python3 setup.py build_ext --inplace`
+- Editable install with build: `pip3 install -e .`
+
+If compilation is not available, `pyIMU` automatically falls back to pure Python behavior.
+
+### Release Helper Script
+Use `scripts/release.sh` to build artifacts and optionally install/upload/commit/tag.
+
+Examples:
+- Build only: `scripts/release.sh --clean`
+- Build + install wheel: `scripts/release.sh --clean --install`
+- Build + commit + tag: `scripts/release.sh --clean --version 1.0.1 --commit --tag`
+- Build + upload TestPyPI: `scripts/release.sh --clean --upload-testpypi`
+
 ## pyIMU.madgwick
 Contains pose sensor fusion based on Sebastian Madgwick [dissertation work](https://x-io.co.uk/downloads/madgwick_internal_report.pdf) and work by [Mario Garcia](https://pypi.org/project/AHRS/) as well as work by Richardson Tech (RTIMU).
 

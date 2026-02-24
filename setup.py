@@ -12,19 +12,65 @@
 
 import io
 import os
-from setuptools import setup, find_packages
-# from distutils.core import setup
-# from Cython.Build import cythonize
+from setuptools import setup, find_packages, Extension
+import numpy as np
 
 here = os.path.abspath(os.path.dirname(__file__))
 
 with io.open(os.path.join(here, "README.md"), encoding="utf-8") as f:
     long_description = f.read()
 
-# Get the list of Cython module files in the subfolder
-cython_modules_path = "pyIMU"
-module_files = [os.path.join(cython_modules_path, f) for f in os.listdir(cython_modules_path) if f.endswith(".py")]
-excluded_files = [os.path.join(cython_modules_path, "__init__.py") ]
+def build_extensions():
+    """
+    Build optional Cython extensions when Cython is available.
+    If Cython is not installed, fall back to pre-generated C sources when present.
+    """
+    module_names = ["_qcore", "_vcore", "_mcore", "_motion_core"]
+
+    def extension_for(module_name: str, use_pyx: bool):
+        suffix = ".pyx" if use_pyx else ".c"
+        source_path = os.path.join("pyIMU", f"{module_name}{suffix}")
+        return Extension(
+            name=f"pyIMU.{module_name}",
+            sources=[source_path],
+            include_dirs=[np.get_include()],
+        )
+
+    try:
+        from Cython.Build import cythonize
+        cython_available = True
+    except Exception:
+        cython_available = False
+
+    extensions = []
+    if cython_available:
+        pyx_extensions = []
+        c_extensions = []
+        for module_name in module_names:
+            pyx_path = os.path.join(here, "pyIMU", f"{module_name}.pyx")
+            if os.path.exists(pyx_path):
+                pyx_extensions.append(extension_for(module_name, use_pyx=True))
+            else:
+                c_path = os.path.join(here, "pyIMU", f"{module_name}.c")
+                if os.path.exists(c_path):
+                    c_extensions.append(extension_for(module_name, use_pyx=False))
+        extensions.extend(c_extensions)
+        if pyx_extensions:
+            extensions.extend(
+                cythonize(
+                    pyx_extensions,
+                    compiler_directives={"language_level": "3"},
+                    annotate=False,
+                )
+            )
+        return extensions
+
+    for module_name in module_names:
+        c_path = os.path.join(here, "pyIMU", f"{module_name}.c")
+        if os.path.exists(c_path):
+            extensions.append(extension_for(module_name, use_pyx=False))
+
+    return extensions
 
 setup(
     name='pyIMU',
@@ -33,7 +79,7 @@ setup(
     url='https://github.com/uutzinger/pyIMU',
     author='Urs Utzinger',
     author_email='uutzinger@gmail.com',
-    # ext_modules = cythonize(module_files, exclude=excluded_files, compiler_directives=dict(language_level = "3")),
+    ext_modules=build_extensions(),
     long_description=long_description,
     long_description_content_type='text/markdown',
     license='MIT',
