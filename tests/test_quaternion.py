@@ -54,7 +54,7 @@ if __name__ == '__main__':
     print("  The following 3 lines should be: 0,1,0")
     print("   q.T * Gravity * q: " + str((q.conjugate * Quaternion(g) * q).v)) # ok
     print("   q2gravity        : " + str(q2gravity(q)))                        # ok
-    print("   R33 * gravity    : " + str(g.rotate(q.r33)))                     # ok
+    print("   R33.T * gravity    : " + str(g.rotate(q.r33.T)))                     # ok
 
     # Roll -90 degrees, points y axis downward, 
     # gravity (0,0,1) should now be on y axis 0,-1,0
@@ -63,7 +63,7 @@ if __name__ == '__main__':
     print("  The following 3 lines should be: 0, -1, 0")
     print("   q.T * Gravity * q" + str((q.conjugate * Quaternion(g) * q).v)) # ok
     print("   q2gravity        " + str(q2gravity(q)))                              # ok
-    print("   R33 * gravity    " + str(g.rotate(q.r33)))                     # ok
+    print("   R33.T * gravity    " + str(g.rotate(q.r33.T)))                     # ok
 
     # Pitch 90 degrees, points x upwards
     # gravity (0,0,1) should now be on x axis backwards -1,0,0
@@ -73,7 +73,7 @@ if __name__ == '__main__':
     q = rpy2q(r=0.0,p=90*DEG2RAD,y=0.0)
     print("   q.T * Gravity * q" + str((q.conjugate * Quaternion(g) * q).v)) # ok
     print("   q2gravity        " + str(q2gravity(q)))                              # ok
-    print("   R33 * Gravity    " + str(g.rotate(q.r33)))                     # ok
+    print("   R33.T * Gravity    " + str(g.rotate(q.r33.T)))                     # ok
 
     # Pitch 90 degrees, points x upwards
     # gravity (0,0,1) should now be on x axis backwards -1,0,0
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     q = rpy2q(r=0.0,p=-90*DEG2RAD,y=0.0)
     print("   q.T * Gravity * q" + str((q.conjugate * Quaternion(g) * q).v)) # ok
     print("   q2gravity        " + str(q2gravity(q)))                              # ok
-    print("   R33 * Gravity    " + str(g.rotate(q.r33)))                     # ok
+    print("   R33.T * Gravity    " + str(g.rotate(q.r33.T)))                     # ok
 
     # Yaw 90 degrees, x becomes y and y becomes -x,
     # gravity (0,0,1) should remain same 0,0,1
@@ -91,7 +91,7 @@ if __name__ == '__main__':
     q = rpy2q(r=0.0,p=0.0,y=90*DEG2RAD)
     print("   q.T * Gravity * q" + str((q.conjugate * Quaternion(g) * q).v)) # ok
     print("   q2gravity        " + str(q2gravity(q)))                              # ok
-    print("   R33 * Gravity    " + str(g.rotate(q.r33)))                     # ok
+    print("   R33.T * Gravity    " + str(g.rotate(q.r33.T)))                     # ok
 
     # Yaw 90 degrees, x becomes y and y becomes -x,
     # gravity (0,0,1) should remain same 0,0,1
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     q = rpy2q(r=0.0,p=0.0,y=-90*DEG2RAD)
     print("   q.T * Gravity * q" + str((q.conjugate * Quaternion(g) * q).v)) # ok
     print("   q2gravity        " + str(q2gravity(q)))                              # ok
-    print("   R33 * Gravity    " + str(g.rotate(q.r33)))                     # ok
+    print("   R33.T * Gravity    " + str(g.rotate(q.r33.T)))                     # ok
 
     # No rotation
     # gravity (0,0,1) should remain same 0,0,1
@@ -109,7 +109,7 @@ if __name__ == '__main__':
     q = rpy2q(r=0.0,p=0.0,y=0.0)
     print("   q.T * Gravity * q" + str((q.conjugate * Quaternion(g) * q).v)) # ok
     print("   q2gravity        " + str(q2gravity(q)))                       # ok
-    print("   R33 * Gravity    " + str(g.rotate(q.r33)))              # ok
+    print("   R33.T * Gravity    " + str(g.rotate(q.r33.T)))              # ok
 
     # Yaw 90 degrees, x becomes y and y becomes -x,
     # Flying east making right turn
@@ -118,7 +118,7 @@ if __name__ == '__main__':
     q = rpy2q(r=45*DEG2RAD,p=0.0,y=90*DEG2RAD)
     print("   q.T * Gravity * q" + str((q.conjugate * Quaternion(g) * q).v)) # ok
     print("   q2gravity        " + str(q2gravity(q)))                        # ok
-    print("   R33 * Gravity    " + str(g.rotate(q.r33)))                     # ok
+    print("   R33.T * Gravity    " + str(g.rotate(q.r33.T)))                     # ok
     
     # Converting gravity to rpy should result in 0,0,0 
     # rpy of 0,0,0 converted to quaternion should result in ?
@@ -147,8 +147,8 @@ if __name__ == '__main__':
     print("   Rotated Gravity should be -0.707, 0.5, 0.5 and is: ")
     print("    q.T * Gravity * q" + str((q.conjugate * Quaternion(g) * q).v)) # ok
     print("    q2gravity        " + str(q2gravity(q)))                        # ok
-    print("    R33 * Gravity    " + str(g.rotate(q.r33)))                     # ok
-    g_rot = g.rotate(q.r33)
+    print("    R33.T * Gravity    " + str(g.rotate(q.r33.T)))                     # ok
+    g_rot = g.rotate(q.r33.T)
 
     print(" Rotated Gravity to rpy and rpy to q is: ", rpy2q(accel2rpy(g_rot))) # ok
     print(" This should be the same as:             ", str(q))                  # ok
@@ -170,8 +170,8 @@ if __name__ == '__main__':
     print("   Rotated Gravity should be -0.866, -0.25, 0.43 and is: ")
     print("    q.T * Gravity * q" + str((q.conjugate * Quaternion(g) * q).v)) # ok
     print("    q2gravity        " + str(q2gravity(q)))                        # ok
-    print("    R33 * Gravity    " + str(g.rotate(q.r33)))                     # ok
-    g_rot = g.rotate(q.r33)
+    print("    R33.T * Gravity    " + str(g.rotate(q.r33.T)))                     # ok
+    g_rot = g.rotate(q.r33.T)
 
     print("Rotated Gravity to rpy and rpy to q is: ", rpy2q(accel2rpy(g_rot))) # ok
     print("This should be the same as:             ", str(q))                  # ok
@@ -193,8 +193,8 @@ if __name__ == '__main__':
     print("   Rotated Gravity should be 0.5, -0.75, 0.43 and is: ")
     print("    q.T * Gravity * q" + str((q.conjugate * Quaternion(g) * q).v)) # ok
     print("    q2gravity        " + str(q2gravity(q)))                        # ok
-    print("    R33 * Gravity    " + str(g.rotate(q.r33)))                     # ok
-    g_rot = g.rotate(q.r33)
+    print("    R33.T * Gravity    " + str(g.rotate(q.r33.T)))                     # ok
+    g_rot = g.rotate(q.r33.T)
 
     print("Rotated Gravity to rpy and rpy to q is: ", rpy2q(accel2rpy(g_rot))) # ok
     print("This should be the same as:             ", str(q))                  # ok
@@ -338,11 +338,11 @@ if __name__ == '__main__':
     q = rpy2q(30*DEG2RAD,60*DEG2RAD,0*DEG2RAD) # make plane point straight forward
     mag = Vector3D(1,0,1)                      # make magnetic field point forward and down
     print("  Unrotated magnetic field is: " + str(mag))
-    mag = mag.rotate(q.r33)
+    mag = mag.rotate(q.r33.T)
     print("  Rotated magnetic field is:   " + str(mag))
     g = Vector3D(0,0,1)
     print("  Gravity is:                  " + str(g))
-    g = g.rotate(q.r33)
+    g = g.rotate(q.r33.T)
     print("  Rotated Gravity is:          " + str(g))
     g = q2gravity(q)
     print("  Gravity from q is:           " + str(g))
@@ -359,11 +359,11 @@ if __name__ == '__main__':
     q = rpy2q(30*DEG2RAD,60*DEG2RAD,0*DEG2RAD) # make plane point straight forward
     mag = Vector3D(1,0,1)                      # make magnetic field point forward and down
     print("  Unrotated magnetic field is: " + str(mag))
-    mag = mag.rotate(q.r33)
+    mag = mag.rotate(q.r33.T)
     print("  Rotated magnetic field is:   " + str(mag))
     g = Vector3D(0,0,1)
     print("  Gravity is:                  " + str(g))
-    g = g.rotate(q.r33)
+    g = g.rotate(q.r33.T)
     print("  Rotated Gravity is:          " + str(g))
     g = q2gravity(q)
     print("  Gravity from q is:           " + str(g))
@@ -380,11 +380,11 @@ if __name__ == '__main__':
     q = rpy2q(30*DEG2RAD,60*DEG2RAD,-30*DEG2RAD) # make plane point straight forward
     mag = Vector3D(1,0,1)                      # make magnetic field point forward and down
     print("  Unrotated magnetic field is: " + str(mag))
-    mag = mag.rotate(q.r33)
+    mag = mag.rotate(q.r33.T)
     print("  Rotated magnetic field is:   " + str(mag))
     g = Vector3D(0,0,1)
     print("  Gravity is:                  " + str(g))
-    g = g.rotate(q.r33)
+    g = g.rotate(q.r33.T)
     print("  Rotated Gravity is:          " + str(g))
     g = q2gravity(q)
     print("  Gravity from q is:           " + str(g))
@@ -721,9 +721,9 @@ if __name__ == '__main__':
 
     tic = time.perf_counter()
     for i in range(repeat):
-        g.rotate(q.r33)
+        g.rotate(q.r33.T)
     toc = time.perf_counter()
-    print(f"g.rotate(q.r33) took {(toc-tic)/repeat*1000000:0.4f} micro seconds")  
+    print(f"g.rotate(q.r33.T) took {(toc-tic)/repeat*1000000:0.4f} micro seconds")  
 
     tic = time.perf_counter()
     g=g.v

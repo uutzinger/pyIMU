@@ -6,12 +6,12 @@
         "include_dirs": [
             "/usr/local/lib/python3.10/dist-packages/numpy/_core/include"
         ],
-        "name": "pyIMU._motion_core",
+        "name": "pyIMU._ucore",
         "sources": [
-            "pyIMU/_motion_core.pyx"
+            "pyIMU/_ucore.pyx"
         ]
     },
-    "module_name": "pyIMU._motion_core"
+    "module_name": "pyIMU._ucore"
 }
 END: Cython Metadata */
 
@@ -1119,8 +1119,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__pyIMU___motion_core
-#define __PYX_HAVE_API__pyIMU___motion_core
+#define __PYX_HAVE__pyIMU___ucore
+#define __PYX_HAVE_API__pyIMU___ucore
 /* Early includes */
 #ifdef _OPENMP
 #include <omp.h>
@@ -1327,7 +1327,7 @@ static const char *__pyx_filename;
 /* #### Code section: filename_table ### */
 
 static const char* const __pyx_f[] = {
-  "pyIMU/_motion_core.pyx",
+  "pyIMU/_ucore.pyx",
 };
 /* #### Code section: utility_code_proto_before_types ### */
 /* Atomics.proto */
@@ -2106,79 +2106,38 @@ static int __Pyx_State_RemoveModule(void*);
 #define __PYX_TYPE_MODULE_PREFIX __PYX_ABI_MODULE_NAME "."
 
 
-/* Module declarations from "pyIMU._motion_core" */
-static PyObject *__pyx_f_5pyIMU_12_motion_core_motion_step(double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, int, int, double, int __pyx_skip_dispatch); /*proto*/
-static PyObject *__pyx_f_5pyIMU_12_motion_core_motion_step_quat(double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, int, int, double, int __pyx_skip_dispatch); /*proto*/
+/* Module declarations from "pyIMU._ucore" */
+static PyObject *__pyx_f_5pyIMU_6_ucore_q2gravity_components(double, double, double, double, int __pyx_skip_dispatch); /*proto*/
 /* #### Code section: typeinfo ### */
 /* #### Code section: before_global_var ### */
-#define __Pyx_MODULE_NAME "pyIMU._motion_core"
-extern int __pyx_module_is_main_pyIMU___motion_core;
-int __pyx_module_is_main_pyIMU___motion_core = 0;
+#define __Pyx_MODULE_NAME "pyIMU._ucore"
+extern int __pyx_module_is_main_pyIMU___ucore;
+int __pyx_module_is_main_pyIMU___ucore = 0;
 
-/* Implementation of "pyIMU._motion_core" */
+/* Implementation of "pyIMU._ucore" */
 /* #### Code section: global_var ### */
 /* #### Code section: string_decls ### */
 static const char __pyx_k_[] = "?";
-static const char __pyx_k_dt[] = "dt";
 static const char __pyx_k_qw[] = "qw";
 static const char __pyx_k_qx[] = "qx";
 static const char __pyx_k_qy[] = "qy";
 static const char __pyx_k_qz[] = "qz";
 static const char __pyx_k_pop[] = "pop";
-static const char __pyx_k_r00[] = "r00";
-static const char __pyx_k_r01[] = "r01";
-static const char __pyx_k_r02[] = "r02";
-static const char __pyx_k_r10[] = "r10";
-static const char __pyx_k_r11[] = "r11";
-static const char __pyx_k_r12[] = "r12";
-static const char __pyx_k_r20[] = "r20";
-static const char __pyx_k_r21[] = "r21";
-static const char __pyx_k_r22[] = "r22";
-static const char __pyx_k_accx[] = "accx";
-static const char __pyx_k_accy[] = "accy";
-static const char __pyx_k_accz[] = "accz";
 static const char __pyx_k_func[] = "__func__";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_test[] = "__test__";
-static const char __pyx_k_wv_x[] = "wv_x";
-static const char __pyx_k_wv_y[] = "wv_y";
-static const char __pyx_k_wv_z[] = "wv_z";
-static const char __pyx_k_bias_x[] = "bias_x";
-static const char __pyx_k_bias_y[] = "bias_y";
-static const char __pyx_k_bias_z[] = "bias_z";
 static const char __pyx_k_module[] = "__module__";
-static const char __pyx_k_moving[] = "moving";
-static const char __pyx_k_dtmotion[] = "dtmotion";
 static const char __pyx_k_qualname[] = "__qualname__";
-static const char __pyx_k_wp_prev_x[] = "wp_prev_x";
-static const char __pyx_k_wp_prev_y[] = "wp_prev_y";
-static const char __pyx_k_wp_prev_z[] = "wp_prev_z";
-static const char __pyx_k_wr_prev_x[] = "wr_prev_x";
-static const char __pyx_k_wr_prev_y[] = "wr_prev_y";
-static const char __pyx_k_wr_prev_z[] = "wr_prev_z";
-static const char __pyx_k_wv_prev_x[] = "wv_prev_x";
-static const char __pyx_k_wv_prev_y[] = "wv_prev_y";
-static const char __pyx_k_wv_prev_z[] = "wv_prev_z";
-static const char __pyx_k_wv_drift_x[] = "wv_drift_x";
-static const char __pyx_k_wv_drift_y[] = "wv_drift_y";
-static const char __pyx_k_wv_drift_z[] = "wv_drift_z";
-static const char __pyx_k_drift_alpha[] = "drift_alpha";
-static const char __pyx_k_motion_step[] = "motion_step";
 static const char __pyx_k_is_coroutine[] = "_is_coroutine";
-static const char __pyx_k_motion_ended[] = "motion_ended";
-static const char __pyx_k_local_gravity[] = "local_gravity";
-static const char __pyx_k_min_motion_time[] = "min_motion_time";
-static const char __pyx_k_motion_step_quat[] = "motion_step_quat";
+static const char __pyx_k_pyIMU__ucore[] = "pyIMU._ucore";
+static const char __pyx_k_pyIMU__ucore_pyx[] = "pyIMU/_ucore.pyx";
 static const char __pyx_k_asyncio_coroutines[] = "asyncio.coroutines";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
-static const char __pyx_k_pyIMU__motion_core[] = "pyIMU._motion_core";
-static const char __pyx_k_pyIMU__motion_core_pyx[] = "pyIMU/_motion_core.pyx";
-static const char __pyx_k_0_b_S_2S_Rq_S_2S_Rq_Rt3c_3b_2Q[] = "\200\001\3600\000\005#\240$\240b\250\001\360\010\000\005\n\210\024\210S\220\003\2202\220S\230\002\230#\230R\230q\330\004\t\210\024\210S\220\003\2202\220S\230\002\230#\230R\230q\330\004\t\210\024\210R\210t\2203\220c\230\022\2303\230b\240\003\2402\240Q\340\004\021\220\025\220c\230\036\240r\250\024\250R\250q\330\004\021\220\025\220c\230\036\240r\250\024\250R\250q\330\004\021\220\025\220c\230\036\240r\250\024\250R\250q\360\006\000\005\014\2104\210r\220\033\230B\230d\240\"\240K\250r\260\024\260R\260q\330\004\013\2104\210r\220\033\230B\230d\240\"\240K\250r\260\024\260R\260q\330\004\013\2104\210r\220\033\230B\230d\240\"\240K\250r\260\024\260R\260q\340\004\007\200q\340\010\020\220\004\220B\220a\330\010\017\210z\230\023\230E\240\022\240;\250b\260\001\330\010\017\210z\230\023\230E\240\022\240;\250b\260\001\330\010\017\210z\230\023\230E\240\022\240;\250b\260\001\340\010\024\220A\360\006\000\t\021\220\013\2302\230Q\330\010\020\220\013\2302\230Q\330\010\020\220\013\2302\230Q\360\006\000\t\020\210z\230\023\230E\240\022\240;\250b\260\001\330\010\017\210z\230\023\230E\240\022\240;\250b\260\001\330\010\017\210z\230\023\230E\240\022\240;\250b\260\001\340\010\024\220A\330\010\024\220A\330\010\024\220A\340\010\024\220A\330\010\024\220A\330\010\024\220A\340\010\024\220A\330\010\024\220A\330\010\024\220A\360\006\000\t\014\210=\230\004\230I\240R\240q\330\014\024\220L\240\002\240!\330\014\031\230\033\240B\320&6\260b\270\005\270R\270q\330\014\031\230\033\240B\320&6\260b\270\005\270R\270q\330\014\031\230\033\240B\320&6\260b\270\005\270R\270q\330\014\027\220q\340\010\024\220A\330\010\024\220A\330\010\024\220A\340\010\017\210q\330\010\017\210q\330\010\017\210q\330\010\024\220A\330\010\024\220A\330\010\024\220A\360\006\000\t\022\220\027\230\002\320\032*\250\"\250K\260r\270\021\330\010\021\220\027\230\002\320\032*\250\"\250K\260r\270\021\330\010\021\220\027\230\002\320\032*\250\"\250K\260r\270\021\340\004\005\330\010\024\220L\240\001\330\010\016\210f\220A\330\010\023\220;\230a\330\010\016\210f""\220A\330\010\023\220;\230a\330\010\023\220;\230a\330\010\024\220L\240\001\330\010\020\220\010\230\001\330\010\t";
-static const char __pyx_k_Ba_Ba_Ba_Ba_Ba_Ba_Ba_Ba_Ba_b_Cs[] = "\200\001\360.\000\005\n\210\023\210B\210a\330\004\t\210\023\210B\210a\330\004\t\210\023\210B\210a\330\004\t\210\023\210B\210a\330\004\t\210\023\210B\210a\330\004\t\210\023\210B\210a\330\004\t\210\023\210B\210a\330\004\t\210\023\210B\210a\330\004\t\210\023\210B\210a\340\004\n\210$\210b\220\004\220C\220s\230\"\230A\330\004\n\210$\210c\220\023\220B\220a\330\004\n\210$\210c\220\023\220B\220a\330\004\n\210$\210c\220\023\220B\220a\330\004\n\210$\210b\220\004\220C\220s\230\"\230A\330\004\n\210$\210c\220\023\220B\220a\330\004\n\210$\210c\220\023\220B\220a\330\004\n\210$\210c\220\023\220B\220a\330\004\n\210$\210b\220\004\220C\220s\230\"\230A\340\004\013\210;\220a\330\010\016\210f\220A\330\010\014\210D\220\004\220A\330\010\r\210U\220!\330\010\r\210U\220!\330\010\r\210U\220!\330\010\t\330\010\020\220\010\230\001\330\010\023\220;\230a\330\010\016\210f\220A\330\010\023\220;\230a\330\010\023\220;\230a\330\010\024\220L\240\001\330\010\t\330\010\t\330\010\t\330\010\t\330\010\t\330\010\t";
+static const char __pyx_k_q2gravity_components[] = "q2gravity_components";
+static const char __pyx_k_S_2S_Rq_S_2S_Rq_Rt3c_3b_2Q_D_A[] = "\200\001\360\006\000\005\n\210\024\210S\220\003\2202\220S\230\002\230#\230R\230q\330\004\t\210\024\210S\220\003\2202\220S\230\002\230#\230R\230q\330\004\t\210\024\210R\210t\2203\220c\230\022\2303\230b\240\003\2402\240Q\340\004\014\210D\220\004\220A";
 /* #### Code section: decls ### */
-static PyObject *__pyx_pf_5pyIMU_12_motion_core_motion_step(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_accx, double __pyx_v_accy, double __pyx_v_accz, double __pyx_v_qw, double __pyx_v_qx, double __pyx_v_qy, double __pyx_v_qz, double __pyx_v_r00, double __pyx_v_r01, double __pyx_v_r02, double __pyx_v_r10, double __pyx_v_r11, double __pyx_v_r12, double __pyx_v_r20, double __pyx_v_r21, double __pyx_v_r22, double __pyx_v_local_gravity, double __pyx_v_bias_x, double __pyx_v_bias_y, double __pyx_v_bias_z, double __pyx_v_wr_prev_x, double __pyx_v_wr_prev_y, double __pyx_v_wr_prev_z, double __pyx_v_wv_x, double __pyx_v_wv_y, double __pyx_v_wv_z, double __pyx_v_wv_prev_x, double __pyx_v_wv_prev_y, double __pyx_v_wv_prev_z, double __pyx_v_wp_prev_x, double __pyx_v_wp_prev_y, double __pyx_v_wp_prev_z, double __pyx_v_wv_drift_x, double __pyx_v_wv_drift_y, double __pyx_v_wv_drift_z, double __pyx_v_drift_alpha, double __pyx_v_dt, double __pyx_v_dtmotion, int __pyx_v_moving, int __pyx_v_motion_ended, double __pyx_v_min_motion_time); /* proto */
-static PyObject *__pyx_pf_5pyIMU_12_motion_core_2motion_step_quat(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_accx, double __pyx_v_accy, double __pyx_v_accz, double __pyx_v_qw, double __pyx_v_qx, double __pyx_v_qy, double __pyx_v_qz, double __pyx_v_local_gravity, double __pyx_v_bias_x, double __pyx_v_bias_y, double __pyx_v_bias_z, double __pyx_v_wr_prev_x, double __pyx_v_wr_prev_y, double __pyx_v_wr_prev_z, double __pyx_v_wv_x, double __pyx_v_wv_y, double __pyx_v_wv_z, double __pyx_v_wv_prev_x, double __pyx_v_wv_prev_y, double __pyx_v_wv_prev_z, double __pyx_v_wp_prev_x, double __pyx_v_wp_prev_y, double __pyx_v_wp_prev_z, double __pyx_v_wv_drift_x, double __pyx_v_wv_drift_y, double __pyx_v_wv_drift_z, double __pyx_v_drift_alpha, double __pyx_v_dt, double __pyx_v_dtmotion, int __pyx_v_moving, int __pyx_v_motion_ended, double __pyx_v_min_motion_time); /* proto */
+static PyObject *__pyx_pf_5pyIMU_6_ucore_q2gravity_components(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_qw, double __pyx_v_qx, double __pyx_v_qy, double __pyx_v_qz); /* proto */
 /* #### Code section: late_includes ### */
 /* #### Code section: module_state ### */
 /* SmallCodeConfig */
@@ -2218,8 +2177,8 @@ typedef struct {
   PyTypeObject *__pyx_CoroutineType;
   #endif
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_pop;
-  PyObject *__pyx_codeobj_tab[2];
-  PyObject *__pyx_string_tab[56];
+  PyObject *__pyx_codeobj_tab[1];
+  PyObject *__pyx_string_tab[18];
 /* #### Code section: module_state_contents ### */
 /* CachedMethodType.module_state_decls */
 #if CYTHON_COMPILING_IN_LIMITED_API
@@ -2255,61 +2214,23 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #endif
 /* #### Code section: constant_name_defines ### */
 #define __pyx_kp_u_ __pyx_string_tab[0]
-#define __pyx_n_u_accx __pyx_string_tab[1]
-#define __pyx_n_u_accy __pyx_string_tab[2]
-#define __pyx_n_u_accz __pyx_string_tab[3]
-#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[4]
-#define __pyx_n_u_bias_x __pyx_string_tab[5]
-#define __pyx_n_u_bias_y __pyx_string_tab[6]
-#define __pyx_n_u_bias_z __pyx_string_tab[7]
-#define __pyx_n_u_cline_in_traceback __pyx_string_tab[8]
-#define __pyx_n_u_drift_alpha __pyx_string_tab[9]
-#define __pyx_n_u_dt __pyx_string_tab[10]
-#define __pyx_n_u_dtmotion __pyx_string_tab[11]
-#define __pyx_n_u_func __pyx_string_tab[12]
-#define __pyx_n_u_is_coroutine __pyx_string_tab[13]
-#define __pyx_n_u_local_gravity __pyx_string_tab[14]
-#define __pyx_n_u_main __pyx_string_tab[15]
-#define __pyx_n_u_min_motion_time __pyx_string_tab[16]
-#define __pyx_n_u_module __pyx_string_tab[17]
-#define __pyx_n_u_motion_ended __pyx_string_tab[18]
-#define __pyx_n_u_motion_step __pyx_string_tab[19]
-#define __pyx_n_u_motion_step_quat __pyx_string_tab[20]
-#define __pyx_n_u_moving __pyx_string_tab[21]
-#define __pyx_n_u_name __pyx_string_tab[22]
-#define __pyx_n_u_pop __pyx_string_tab[23]
-#define __pyx_n_u_pyIMU__motion_core __pyx_string_tab[24]
-#define __pyx_kp_u_pyIMU__motion_core_pyx __pyx_string_tab[25]
-#define __pyx_n_u_qualname __pyx_string_tab[26]
-#define __pyx_n_u_qw __pyx_string_tab[27]
-#define __pyx_n_u_qx __pyx_string_tab[28]
-#define __pyx_n_u_qy __pyx_string_tab[29]
-#define __pyx_n_u_qz __pyx_string_tab[30]
-#define __pyx_n_u_r00 __pyx_string_tab[31]
-#define __pyx_n_u_r01 __pyx_string_tab[32]
-#define __pyx_n_u_r02 __pyx_string_tab[33]
-#define __pyx_n_u_r10 __pyx_string_tab[34]
-#define __pyx_n_u_r11 __pyx_string_tab[35]
-#define __pyx_n_u_r12 __pyx_string_tab[36]
-#define __pyx_n_u_r20 __pyx_string_tab[37]
-#define __pyx_n_u_r21 __pyx_string_tab[38]
-#define __pyx_n_u_r22 __pyx_string_tab[39]
-#define __pyx_n_u_test __pyx_string_tab[40]
-#define __pyx_n_u_wp_prev_x __pyx_string_tab[41]
-#define __pyx_n_u_wp_prev_y __pyx_string_tab[42]
-#define __pyx_n_u_wp_prev_z __pyx_string_tab[43]
-#define __pyx_n_u_wr_prev_x __pyx_string_tab[44]
-#define __pyx_n_u_wr_prev_y __pyx_string_tab[45]
-#define __pyx_n_u_wr_prev_z __pyx_string_tab[46]
-#define __pyx_n_u_wv_drift_x __pyx_string_tab[47]
-#define __pyx_n_u_wv_drift_y __pyx_string_tab[48]
-#define __pyx_n_u_wv_drift_z __pyx_string_tab[49]
-#define __pyx_n_u_wv_prev_x __pyx_string_tab[50]
-#define __pyx_n_u_wv_prev_y __pyx_string_tab[51]
-#define __pyx_n_u_wv_prev_z __pyx_string_tab[52]
-#define __pyx_n_u_wv_x __pyx_string_tab[53]
-#define __pyx_n_u_wv_y __pyx_string_tab[54]
-#define __pyx_n_u_wv_z __pyx_string_tab[55]
+#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[1]
+#define __pyx_n_u_cline_in_traceback __pyx_string_tab[2]
+#define __pyx_n_u_func __pyx_string_tab[3]
+#define __pyx_n_u_is_coroutine __pyx_string_tab[4]
+#define __pyx_n_u_main __pyx_string_tab[5]
+#define __pyx_n_u_module __pyx_string_tab[6]
+#define __pyx_n_u_name __pyx_string_tab[7]
+#define __pyx_n_u_pop __pyx_string_tab[8]
+#define __pyx_n_u_pyIMU__ucore __pyx_string_tab[9]
+#define __pyx_kp_u_pyIMU__ucore_pyx __pyx_string_tab[10]
+#define __pyx_n_u_q2gravity_components __pyx_string_tab[11]
+#define __pyx_n_u_qualname __pyx_string_tab[12]
+#define __pyx_n_u_qw __pyx_string_tab[13]
+#define __pyx_n_u_qx __pyx_string_tab[14]
+#define __pyx_n_u_qy __pyx_string_tab[15]
+#define __pyx_n_u_qz __pyx_string_tab[16]
+#define __pyx_n_u_test __pyx_string_tab[17]
 /* #### Code section: module_state_clear ### */
 #if CYTHON_USE_MODULE_STATE
 static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
@@ -2330,8 +2251,8 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   __Pyx_State_RemoveModule(NULL);
   #endif
-  for (int i=0; i<2; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<56; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<1; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
+  for (int i=0; i<18; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
   return 0;
 }
 #endif
@@ -2352,98 +2273,54 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   #ifdef __Pyx_FusedFunction_USED
   Py_VISIT(traverse_module_state->__pyx_FusedFunctionType);
   #endif
-  for (int i=0; i<2; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<56; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<1; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
+  for (int i=0; i<18; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
   return 0;
 }
 #endif
 /* #### Code section: module_code ### */
 
-/* "pyIMU/_motion_core.pyx":3
+/* "pyIMU/_ucore.pyx":3
  * # cython: language_level=3
  * 
- * cpdef tuple motion_step(             # <<<<<<<<<<<<<<
- *     double accx, double accy, double accz,
- *     double qw, double qx, double qy, double qz,
+ * cpdef tuple q2gravity_components(double qw, double qx, double qy, double qz):             # <<<<<<<<<<<<<<
+ *     cdef double gx, gy, gz
+ * 
 */
 
-static PyObject *__pyx_pw_5pyIMU_12_motion_core_1motion_step(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_5pyIMU_6_ucore_1q2gravity_components(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyObject *__pyx_f_5pyIMU_12_motion_core_motion_step(double __pyx_v_accx, double __pyx_v_accy, double __pyx_v_accz, double __pyx_v_qw, double __pyx_v_qx, double __pyx_v_qy, double __pyx_v_qz, double __pyx_v_r00, double __pyx_v_r01, double __pyx_v_r02, double __pyx_v_r10, double __pyx_v_r11, double __pyx_v_r12, double __pyx_v_r20, double __pyx_v_r21, double __pyx_v_r22, double __pyx_v_local_gravity, double __pyx_v_bias_x, double __pyx_v_bias_y, double __pyx_v_bias_z, double __pyx_v_wr_prev_x, double __pyx_v_wr_prev_y, double __pyx_v_wr_prev_z, double __pyx_v_wv_x, double __pyx_v_wv_y, double __pyx_v_wv_z, double __pyx_v_wv_prev_x, double __pyx_v_wv_prev_y, double __pyx_v_wv_prev_z, double __pyx_v_wp_prev_x, double __pyx_v_wp_prev_y, double __pyx_v_wp_prev_z, double __pyx_v_wv_drift_x, double __pyx_v_wv_drift_y, double __pyx_v_wv_drift_z, double __pyx_v_drift_alpha, double __pyx_v_dt, double __pyx_v_dtmotion, int __pyx_v_moving, int __pyx_v_motion_ended, double __pyx_v_min_motion_time, CYTHON_UNUSED int __pyx_skip_dispatch) {
+static PyObject *__pyx_f_5pyIMU_6_ucore_q2gravity_components(double __pyx_v_qw, double __pyx_v_qx, double __pyx_v_qy, double __pyx_v_qz, CYTHON_UNUSED int __pyx_skip_dispatch) {
   double __pyx_v_gx;
   double __pyx_v_gy;
   double __pyx_v_gz;
-  double __pyx_v_residual_x;
-  double __pyx_v_residual_y;
-  double __pyx_v_residual_z;
-  double __pyx_v_wr_x;
-  double __pyx_v_wr_y;
-  double __pyx_v_wr_z;
-  double __pyx_v_wp_x;
-  double __pyx_v_wp_y;
-  double __pyx_v_wp_z;
-  double __pyx_v_one_minus_alpha;
-  double __pyx_v_scale;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  int __pyx_t_2;
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
   PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
-  PyObject *__pyx_t_6 = NULL;
-  PyObject *__pyx_t_7 = NULL;
-  PyObject *__pyx_t_8 = NULL;
-  PyObject *__pyx_t_9 = NULL;
-  PyObject *__pyx_t_10 = NULL;
-  PyObject *__pyx_t_11 = NULL;
-  PyObject *__pyx_t_12 = NULL;
-  PyObject *__pyx_t_13 = NULL;
-  PyObject *__pyx_t_14 = NULL;
-  PyObject *__pyx_t_15 = NULL;
-  PyObject *__pyx_t_16 = NULL;
-  PyObject *__pyx_t_17 = NULL;
-  PyObject *__pyx_t_18 = NULL;
-  PyObject *__pyx_t_19 = NULL;
-  PyObject *__pyx_t_20 = NULL;
-  PyObject *__pyx_t_21 = NULL;
-  PyObject *__pyx_t_22 = NULL;
-  PyObject *__pyx_t_23 = NULL;
-  PyObject *__pyx_t_24 = NULL;
-  PyObject *__pyx_t_25 = NULL;
-  PyObject *__pyx_t_26 = NULL;
-  PyObject *__pyx_t_27 = NULL;
-  PyObject *__pyx_t_28 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("motion_step", 0);
+  __Pyx_RefNannySetupContext("q2gravity_components", 0);
 
-  /* "pyIMU/_motion_core.pyx":27
- *     cdef double wr_x, wr_y, wr_z
- *     cdef double wp_x, wp_y, wp_z
- *     cdef double one_minus_alpha = 1.0 - drift_alpha             # <<<<<<<<<<<<<<
- *     cdef double scale
+  /* "pyIMU/_ucore.pyx":6
+ *     cdef double gx, gy, gz
  * 
-*/
-  __pyx_v_one_minus_alpha = (1.0 - __pyx_v_drift_alpha);
-
-  /* "pyIMU/_motion_core.pyx":31
- * 
- *     # q2gravity + sensor residual on sensor frame
  *     gx = 2.0 * (qx * qz - qw * qy)             # <<<<<<<<<<<<<<
  *     gy = 2.0 * (qy * qz + qw * qx)
  *     gz = 1.0 - 2.0 * (qx * qx + qy * qy)
 */
   __pyx_v_gx = (2.0 * ((__pyx_v_qx * __pyx_v_qz) - (__pyx_v_qw * __pyx_v_qy)));
 
-  /* "pyIMU/_motion_core.pyx":32
- *     # q2gravity + sensor residual on sensor frame
+  /* "pyIMU/_ucore.pyx":7
+ * 
  *     gx = 2.0 * (qx * qz - qw * qy)
  *     gy = 2.0 * (qy * qz + qw * qx)             # <<<<<<<<<<<<<<
  *     gz = 1.0 - 2.0 * (qx * qx + qy * qy)
@@ -2451,710 +2328,57 @@ static PyObject *__pyx_f_5pyIMU_12_motion_core_motion_step(double __pyx_v_accx, 
 */
   __pyx_v_gy = (2.0 * ((__pyx_v_qy * __pyx_v_qz) + (__pyx_v_qw * __pyx_v_qx)));
 
-  /* "pyIMU/_motion_core.pyx":33
+  /* "pyIMU/_ucore.pyx":8
  *     gx = 2.0 * (qx * qz - qw * qy)
  *     gy = 2.0 * (qy * qz + qw * qx)
  *     gz = 1.0 - 2.0 * (qx * qx + qy * qy)             # <<<<<<<<<<<<<<
  * 
- *     residual_x = accx - (local_gravity * gx) - bias_x
+ *     return (gx, gy, gz)
 */
   __pyx_v_gz = (1.0 - (2.0 * ((__pyx_v_qx * __pyx_v_qx) + (__pyx_v_qy * __pyx_v_qy))));
 
-  /* "pyIMU/_motion_core.pyx":35
+  /* "pyIMU/_ucore.pyx":10
  *     gz = 1.0 - 2.0 * (qx * qx + qy * qy)
  * 
- *     residual_x = accx - (local_gravity * gx) - bias_x             # <<<<<<<<<<<<<<
- *     residual_y = accy - (local_gravity * gy) - bias_y
- *     residual_z = accz - (local_gravity * gz) - bias_z
-*/
-  __pyx_v_residual_x = ((__pyx_v_accx - (__pyx_v_local_gravity * __pyx_v_gx)) - __pyx_v_bias_x);
-
-  /* "pyIMU/_motion_core.pyx":36
- * 
- *     residual_x = accx - (local_gravity * gx) - bias_x
- *     residual_y = accy - (local_gravity * gy) - bias_y             # <<<<<<<<<<<<<<
- *     residual_z = accz - (local_gravity * gz) - bias_z
- * 
-*/
-  __pyx_v_residual_y = ((__pyx_v_accy - (__pyx_v_local_gravity * __pyx_v_gy)) - __pyx_v_bias_y);
-
-  /* "pyIMU/_motion_core.pyx":37
- *     residual_x = accx - (local_gravity * gx) - bias_x
- *     residual_y = accy - (local_gravity * gy) - bias_y
- *     residual_z = accz - (local_gravity * gz) - bias_z             # <<<<<<<<<<<<<<
- * 
- *     # residuals in world frame: r33 * residual
-*/
-  __pyx_v_residual_z = ((__pyx_v_accz - (__pyx_v_local_gravity * __pyx_v_gz)) - __pyx_v_bias_z);
-
-  /* "pyIMU/_motion_core.pyx":40
- * 
- *     # residuals in world frame: r33 * residual
- *     wr_x = r00 * residual_x + r01 * residual_y + r02 * residual_z             # <<<<<<<<<<<<<<
- *     wr_y = r10 * residual_x + r11 * residual_y + r12 * residual_z
- *     wr_z = r20 * residual_x + r21 * residual_y + r22 * residual_z
-*/
-  __pyx_v_wr_x = (((__pyx_v_r00 * __pyx_v_residual_x) + (__pyx_v_r01 * __pyx_v_residual_y)) + (__pyx_v_r02 * __pyx_v_residual_z));
-
-  /* "pyIMU/_motion_core.pyx":41
- *     # residuals in world frame: r33 * residual
- *     wr_x = r00 * residual_x + r01 * residual_y + r02 * residual_z
- *     wr_y = r10 * residual_x + r11 * residual_y + r12 * residual_z             # <<<<<<<<<<<<<<
- *     wr_z = r20 * residual_x + r21 * residual_y + r22 * residual_z
- * 
-*/
-  __pyx_v_wr_y = (((__pyx_v_r10 * __pyx_v_residual_x) + (__pyx_v_r11 * __pyx_v_residual_y)) + (__pyx_v_r12 * __pyx_v_residual_z));
-
-  /* "pyIMU/_motion_core.pyx":42
- *     wr_x = r00 * residual_x + r01 * residual_y + r02 * residual_z
- *     wr_y = r10 * residual_x + r11 * residual_y + r12 * residual_z
- *     wr_z = r20 * residual_x + r21 * residual_y + r22 * residual_z             # <<<<<<<<<<<<<<
- * 
- *     if moving:
-*/
-  __pyx_v_wr_z = (((__pyx_v_r20 * __pyx_v_residual_x) + (__pyx_v_r21 * __pyx_v_residual_y)) + (__pyx_v_r22 * __pyx_v_residual_z));
-
-  /* "pyIMU/_motion_core.pyx":44
- *     wr_z = r20 * residual_x + r21 * residual_y + r22 * residual_z
- * 
- *     if moving:             # <<<<<<<<<<<<<<
- *         # trapezoidal integrate acceleration -> velocity
- *         scale = 0.5 * dt
-*/
-  if (__pyx_v_moving) {
-
-    /* "pyIMU/_motion_core.pyx":46
- *     if moving:
- *         # trapezoidal integrate acceleration -> velocity
- *         scale = 0.5 * dt             # <<<<<<<<<<<<<<
- *         wv_x = wv_prev_x + (wr_x + wr_prev_x) * scale
- *         wv_y = wv_prev_y + (wr_y + wr_prev_y) * scale
-*/
-    __pyx_v_scale = (0.5 * __pyx_v_dt);
-
-    /* "pyIMU/_motion_core.pyx":47
- *         # trapezoidal integrate acceleration -> velocity
- *         scale = 0.5 * dt
- *         wv_x = wv_prev_x + (wr_x + wr_prev_x) * scale             # <<<<<<<<<<<<<<
- *         wv_y = wv_prev_y + (wr_y + wr_prev_y) * scale
- *         wv_z = wv_prev_z + (wr_z + wr_prev_z) * scale
-*/
-    __pyx_v_wv_x = (__pyx_v_wv_prev_x + ((__pyx_v_wr_x + __pyx_v_wr_prev_x) * __pyx_v_scale));
-
-    /* "pyIMU/_motion_core.pyx":48
- *         scale = 0.5 * dt
- *         wv_x = wv_prev_x + (wr_x + wr_prev_x) * scale
- *         wv_y = wv_prev_y + (wr_y + wr_prev_y) * scale             # <<<<<<<<<<<<<<
- *         wv_z = wv_prev_z + (wr_z + wr_prev_z) * scale
- * 
-*/
-    __pyx_v_wv_y = (__pyx_v_wv_prev_y + ((__pyx_v_wr_y + __pyx_v_wr_prev_y) * __pyx_v_scale));
-
-    /* "pyIMU/_motion_core.pyx":49
- *         wv_x = wv_prev_x + (wr_x + wr_prev_x) * scale
- *         wv_y = wv_prev_y + (wr_y + wr_prev_y) * scale
- *         wv_z = wv_prev_z + (wr_z + wr_prev_z) * scale             # <<<<<<<<<<<<<<
- * 
- *         dtmotion += dt
-*/
-    __pyx_v_wv_z = (__pyx_v_wv_prev_z + ((__pyx_v_wr_z + __pyx_v_wr_prev_z) * __pyx_v_scale));
-
-    /* "pyIMU/_motion_core.pyx":51
- *         wv_z = wv_prev_z + (wr_z + wr_prev_z) * scale
- * 
- *         dtmotion += dt             # <<<<<<<<<<<<<<
- * 
- *         # subtract learned drift
-*/
-    __pyx_v_dtmotion = (__pyx_v_dtmotion + __pyx_v_dt);
-
-    /* "pyIMU/_motion_core.pyx":54
- * 
- *         # subtract learned drift
- *         wv_x -= wv_drift_x * dt             # <<<<<<<<<<<<<<
- *         wv_y -= wv_drift_y * dt
- *         wv_z -= wv_drift_z * dt
-*/
-    __pyx_v_wv_x = (__pyx_v_wv_x - (__pyx_v_wv_drift_x * __pyx_v_dt));
-
-    /* "pyIMU/_motion_core.pyx":55
- *         # subtract learned drift
- *         wv_x -= wv_drift_x * dt
- *         wv_y -= wv_drift_y * dt             # <<<<<<<<<<<<<<
- *         wv_z -= wv_drift_z * dt
- * 
-*/
-    __pyx_v_wv_y = (__pyx_v_wv_y - (__pyx_v_wv_drift_y * __pyx_v_dt));
-
-    /* "pyIMU/_motion_core.pyx":56
- *         wv_x -= wv_drift_x * dt
- *         wv_y -= wv_drift_y * dt
- *         wv_z -= wv_drift_z * dt             # <<<<<<<<<<<<<<
- * 
- *         # trapezoidal integrate velocity -> position
-*/
-    __pyx_v_wv_z = (__pyx_v_wv_z - (__pyx_v_wv_drift_z * __pyx_v_dt));
-
-    /* "pyIMU/_motion_core.pyx":59
- * 
- *         # trapezoidal integrate velocity -> position
- *         wp_x = wp_prev_x + (wv_x + wv_prev_x) * scale             # <<<<<<<<<<<<<<
- *         wp_y = wp_prev_y + (wv_y + wv_prev_y) * scale
- *         wp_z = wp_prev_z + (wv_z + wv_prev_z) * scale
-*/
-    __pyx_v_wp_x = (__pyx_v_wp_prev_x + ((__pyx_v_wv_x + __pyx_v_wv_prev_x) * __pyx_v_scale));
-
-    /* "pyIMU/_motion_core.pyx":60
- *         # trapezoidal integrate velocity -> position
- *         wp_x = wp_prev_x + (wv_x + wv_prev_x) * scale
- *         wp_y = wp_prev_y + (wv_y + wv_prev_y) * scale             # <<<<<<<<<<<<<<
- *         wp_z = wp_prev_z + (wv_z + wv_prev_z) * scale
- * 
-*/
-    __pyx_v_wp_y = (__pyx_v_wp_prev_y + ((__pyx_v_wv_y + __pyx_v_wv_prev_y) * __pyx_v_scale));
-
-    /* "pyIMU/_motion_core.pyx":61
- *         wp_x = wp_prev_x + (wv_x + wv_prev_x) * scale
- *         wp_y = wp_prev_y + (wv_y + wv_prev_y) * scale
- *         wp_z = wp_prev_z + (wv_z + wv_prev_z) * scale             # <<<<<<<<<<<<<<
- * 
- *         wr_prev_x = wr_x
-*/
-    __pyx_v_wp_z = (__pyx_v_wp_prev_z + ((__pyx_v_wv_z + __pyx_v_wv_prev_z) * __pyx_v_scale));
-
-    /* "pyIMU/_motion_core.pyx":63
- *         wp_z = wp_prev_z + (wv_z + wv_prev_z) * scale
- * 
- *         wr_prev_x = wr_x             # <<<<<<<<<<<<<<
- *         wr_prev_y = wr_y
- *         wr_prev_z = wr_z
-*/
-    __pyx_v_wr_prev_x = __pyx_v_wr_x;
-
-    /* "pyIMU/_motion_core.pyx":64
- * 
- *         wr_prev_x = wr_x
- *         wr_prev_y = wr_y             # <<<<<<<<<<<<<<
- *         wr_prev_z = wr_z
- * 
-*/
-    __pyx_v_wr_prev_y = __pyx_v_wr_y;
-
-    /* "pyIMU/_motion_core.pyx":65
- *         wr_prev_x = wr_x
- *         wr_prev_y = wr_y
- *         wr_prev_z = wr_z             # <<<<<<<<<<<<<<
- * 
- *         wv_prev_x = wv_x
-*/
-    __pyx_v_wr_prev_z = __pyx_v_wr_z;
-
-    /* "pyIMU/_motion_core.pyx":67
- *         wr_prev_z = wr_z
- * 
- *         wv_prev_x = wv_x             # <<<<<<<<<<<<<<
- *         wv_prev_y = wv_y
- *         wv_prev_z = wv_z
-*/
-    __pyx_v_wv_prev_x = __pyx_v_wv_x;
-
-    /* "pyIMU/_motion_core.pyx":68
- * 
- *         wv_prev_x = wv_x
- *         wv_prev_y = wv_y             # <<<<<<<<<<<<<<
- *         wv_prev_z = wv_z
- * 
-*/
-    __pyx_v_wv_prev_y = __pyx_v_wv_y;
-
-    /* "pyIMU/_motion_core.pyx":69
- *         wv_prev_x = wv_x
- *         wv_prev_y = wv_y
- *         wv_prev_z = wv_z             # <<<<<<<<<<<<<<
- * 
- *         wp_prev_x = wp_x
-*/
-    __pyx_v_wv_prev_z = __pyx_v_wv_z;
-
-    /* "pyIMU/_motion_core.pyx":71
- *         wv_prev_z = wv_z
- * 
- *         wp_prev_x = wp_x             # <<<<<<<<<<<<<<
- *         wp_prev_y = wp_y
- *         wp_prev_z = wp_z
-*/
-    __pyx_v_wp_prev_x = __pyx_v_wp_x;
-
-    /* "pyIMU/_motion_core.pyx":72
- * 
- *         wp_prev_x = wp_x
- *         wp_prev_y = wp_y             # <<<<<<<<<<<<<<
- *         wp_prev_z = wp_z
- *     else:
-*/
-    __pyx_v_wp_prev_y = __pyx_v_wp_y;
-
-    /* "pyIMU/_motion_core.pyx":73
- *         wp_prev_x = wp_x
- *         wp_prev_y = wp_y
- *         wp_prev_z = wp_z             # <<<<<<<<<<<<<<
- *     else:
- *         # update drift estimate on motion stop
-*/
-    __pyx_v_wp_prev_z = __pyx_v_wp_z;
-
-    /* "pyIMU/_motion_core.pyx":44
- *     wr_z = r20 * residual_x + r21 * residual_y + r22 * residual_z
- * 
- *     if moving:             # <<<<<<<<<<<<<<
- *         # trapezoidal integrate acceleration -> velocity
- *         scale = 0.5 * dt
-*/
-    goto __pyx_L3;
-  }
-
-  /* "pyIMU/_motion_core.pyx":76
- *     else:
- *         # update drift estimate on motion stop
- *         if motion_ended and dtmotion > min_motion_time:             # <<<<<<<<<<<<<<
- *             scale = drift_alpha / dtmotion
- *             wv_drift_x = wv_drift_x * one_minus_alpha + wv_x * scale
-*/
-  /*else*/ {
-    if (__pyx_v_motion_ended) {
-    } else {
-      __pyx_t_1 = __pyx_v_motion_ended;
-      goto __pyx_L5_bool_binop_done;
-    }
-    __pyx_t_2 = (__pyx_v_dtmotion > __pyx_v_min_motion_time);
-    __pyx_t_1 = __pyx_t_2;
-    __pyx_L5_bool_binop_done:;
-    if (__pyx_t_1) {
-
-      /* "pyIMU/_motion_core.pyx":77
- *         # update drift estimate on motion stop
- *         if motion_ended and dtmotion > min_motion_time:
- *             scale = drift_alpha / dtmotion             # <<<<<<<<<<<<<<
- *             wv_drift_x = wv_drift_x * one_minus_alpha + wv_x * scale
- *             wv_drift_y = wv_drift_y * one_minus_alpha + wv_y * scale
-*/
-      if (unlikely(__pyx_v_dtmotion == 0)) {
-        PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-        __PYX_ERR(0, 77, __pyx_L1_error)
-      }
-      __pyx_v_scale = (__pyx_v_drift_alpha / __pyx_v_dtmotion);
-
-      /* "pyIMU/_motion_core.pyx":78
- *         if motion_ended and dtmotion > min_motion_time:
- *             scale = drift_alpha / dtmotion
- *             wv_drift_x = wv_drift_x * one_minus_alpha + wv_x * scale             # <<<<<<<<<<<<<<
- *             wv_drift_y = wv_drift_y * one_minus_alpha + wv_y * scale
- *             wv_drift_z = wv_drift_z * one_minus_alpha + wv_z * scale
-*/
-      __pyx_v_wv_drift_x = ((__pyx_v_wv_drift_x * __pyx_v_one_minus_alpha) + (__pyx_v_wv_x * __pyx_v_scale));
-
-      /* "pyIMU/_motion_core.pyx":79
- *             scale = drift_alpha / dtmotion
- *             wv_drift_x = wv_drift_x * one_minus_alpha + wv_x * scale
- *             wv_drift_y = wv_drift_y * one_minus_alpha + wv_y * scale             # <<<<<<<<<<<<<<
- *             wv_drift_z = wv_drift_z * one_minus_alpha + wv_z * scale
- *             dtmotion = 0.0
-*/
-      __pyx_v_wv_drift_y = ((__pyx_v_wv_drift_y * __pyx_v_one_minus_alpha) + (__pyx_v_wv_y * __pyx_v_scale));
-
-      /* "pyIMU/_motion_core.pyx":80
- *             wv_drift_x = wv_drift_x * one_minus_alpha + wv_x * scale
- *             wv_drift_y = wv_drift_y * one_minus_alpha + wv_y * scale
- *             wv_drift_z = wv_drift_z * one_minus_alpha + wv_z * scale             # <<<<<<<<<<<<<<
- *             dtmotion = 0.0
- * 
-*/
-      __pyx_v_wv_drift_z = ((__pyx_v_wv_drift_z * __pyx_v_one_minus_alpha) + (__pyx_v_wv_z * __pyx_v_scale));
-
-      /* "pyIMU/_motion_core.pyx":81
- *             wv_drift_y = wv_drift_y * one_minus_alpha + wv_y * scale
- *             wv_drift_z = wv_drift_z * one_minus_alpha + wv_z * scale
- *             dtmotion = 0.0             # <<<<<<<<<<<<<<
- * 
- *         wr_prev_x = 0.0
-*/
-      __pyx_v_dtmotion = 0.0;
-
-      /* "pyIMU/_motion_core.pyx":76
- *     else:
- *         # update drift estimate on motion stop
- *         if motion_ended and dtmotion > min_motion_time:             # <<<<<<<<<<<<<<
- *             scale = drift_alpha / dtmotion
- *             wv_drift_x = wv_drift_x * one_minus_alpha + wv_x * scale
-*/
-    }
-
-    /* "pyIMU/_motion_core.pyx":83
- *             dtmotion = 0.0
- * 
- *         wr_prev_x = 0.0             # <<<<<<<<<<<<<<
- *         wr_prev_y = 0.0
- *         wr_prev_z = 0.0
-*/
-    __pyx_v_wr_prev_x = 0.0;
-
-    /* "pyIMU/_motion_core.pyx":84
- * 
- *         wr_prev_x = 0.0
- *         wr_prev_y = 0.0             # <<<<<<<<<<<<<<
- *         wr_prev_z = 0.0
- * 
-*/
-    __pyx_v_wr_prev_y = 0.0;
-
-    /* "pyIMU/_motion_core.pyx":85
- *         wr_prev_x = 0.0
- *         wr_prev_y = 0.0
- *         wr_prev_z = 0.0             # <<<<<<<<<<<<<<
- * 
- *         wv_x = 0.0
-*/
-    __pyx_v_wr_prev_z = 0.0;
-
-    /* "pyIMU/_motion_core.pyx":87
- *         wr_prev_z = 0.0
- * 
- *         wv_x = 0.0             # <<<<<<<<<<<<<<
- *         wv_y = 0.0
- *         wv_z = 0.0
-*/
-    __pyx_v_wv_x = 0.0;
-
-    /* "pyIMU/_motion_core.pyx":88
- * 
- *         wv_x = 0.0
- *         wv_y = 0.0             # <<<<<<<<<<<<<<
- *         wv_z = 0.0
- *         wv_prev_x = 0.0
-*/
-    __pyx_v_wv_y = 0.0;
-
-    /* "pyIMU/_motion_core.pyx":89
- *         wv_x = 0.0
- *         wv_y = 0.0
- *         wv_z = 0.0             # <<<<<<<<<<<<<<
- *         wv_prev_x = 0.0
- *         wv_prev_y = 0.0
-*/
-    __pyx_v_wv_z = 0.0;
-
-    /* "pyIMU/_motion_core.pyx":90
- *         wv_y = 0.0
- *         wv_z = 0.0
- *         wv_prev_x = 0.0             # <<<<<<<<<<<<<<
- *         wv_prev_y = 0.0
- *         wv_prev_z = 0.0
-*/
-    __pyx_v_wv_prev_x = 0.0;
-
-    /* "pyIMU/_motion_core.pyx":91
- *         wv_z = 0.0
- *         wv_prev_x = 0.0
- *         wv_prev_y = 0.0             # <<<<<<<<<<<<<<
- *         wv_prev_z = 0.0
- * 
-*/
-    __pyx_v_wv_prev_y = 0.0;
-
-    /* "pyIMU/_motion_core.pyx":92
- *         wv_prev_x = 0.0
- *         wv_prev_y = 0.0
- *         wv_prev_z = 0.0             # <<<<<<<<<<<<<<
- * 
- *         # update residual bias (expected residual ~0 when stationary)
-*/
-    __pyx_v_wv_prev_z = 0.0;
-
-    /* "pyIMU/_motion_core.pyx":95
- * 
- *         # update residual bias (expected residual ~0 when stationary)
- *         bias_x = bias_x * one_minus_alpha + residual_x * drift_alpha             # <<<<<<<<<<<<<<
- *         bias_y = bias_y * one_minus_alpha + residual_y * drift_alpha
- *         bias_z = bias_z * one_minus_alpha + residual_z * drift_alpha
-*/
-    __pyx_v_bias_x = ((__pyx_v_bias_x * __pyx_v_one_minus_alpha) + (__pyx_v_residual_x * __pyx_v_drift_alpha));
-
-    /* "pyIMU/_motion_core.pyx":96
- *         # update residual bias (expected residual ~0 when stationary)
- *         bias_x = bias_x * one_minus_alpha + residual_x * drift_alpha
- *         bias_y = bias_y * one_minus_alpha + residual_y * drift_alpha             # <<<<<<<<<<<<<<
- *         bias_z = bias_z * one_minus_alpha + residual_z * drift_alpha
- * 
-*/
-    __pyx_v_bias_y = ((__pyx_v_bias_y * __pyx_v_one_minus_alpha) + (__pyx_v_residual_y * __pyx_v_drift_alpha));
-
-    /* "pyIMU/_motion_core.pyx":97
- *         bias_x = bias_x * one_minus_alpha + residual_x * drift_alpha
- *         bias_y = bias_y * one_minus_alpha + residual_y * drift_alpha
- *         bias_z = bias_z * one_minus_alpha + residual_z * drift_alpha             # <<<<<<<<<<<<<<
- * 
- *     return (
-*/
-    __pyx_v_bias_z = ((__pyx_v_bias_z * __pyx_v_one_minus_alpha) + (__pyx_v_residual_z * __pyx_v_drift_alpha));
-  }
-  __pyx_L3:;
-
-  /* "pyIMU/_motion_core.pyx":99
- *         bias_z = bias_z * one_minus_alpha + residual_z * drift_alpha
- * 
- *     return (             # <<<<<<<<<<<<<<
- *         residual_x, residual_y, residual_z,
- *         wr_x, wr_y, wr_z,
+ *     return (gx, gy, gz)             # <<<<<<<<<<<<<<
 */
   __Pyx_XDECREF(__pyx_r);
-
-  /* "pyIMU/_motion_core.pyx":100
- * 
- *     return (
- *         residual_x, residual_y, residual_z,             # <<<<<<<<<<<<<<
- *         wr_x, wr_y, wr_z,
- *         wr_prev_x, wr_prev_y, wr_prev_z,
-*/
-  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_residual_x); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 100, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_gx); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 10, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_gy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 10, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_gz); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 10, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_residual_y); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 100, __pyx_L1_error)
+  __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 10, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_residual_z); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 100, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-
-  /* "pyIMU/_motion_core.pyx":101
- *     return (
- *         residual_x, residual_y, residual_z,
- *         wr_x, wr_y, wr_z,             # <<<<<<<<<<<<<<
- *         wr_prev_x, wr_prev_y, wr_prev_z,
- *         wv_x, wv_y, wv_z,
-*/
-  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_wr_x); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 101, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = PyFloat_FromDouble(__pyx_v_wr_y); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 101, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_8 = PyFloat_FromDouble(__pyx_v_wr_z); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 101, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-
-  /* "pyIMU/_motion_core.pyx":102
- *         residual_x, residual_y, residual_z,
- *         wr_x, wr_y, wr_z,
- *         wr_prev_x, wr_prev_y, wr_prev_z,             # <<<<<<<<<<<<<<
- *         wv_x, wv_y, wv_z,
- *         wv_prev_x, wv_prev_y, wv_prev_z,
-*/
-  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_wr_prev_x); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 102, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_10 = PyFloat_FromDouble(__pyx_v_wr_prev_y); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 102, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_11 = PyFloat_FromDouble(__pyx_v_wr_prev_z); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 102, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-
-  /* "pyIMU/_motion_core.pyx":103
- *         wr_x, wr_y, wr_z,
- *         wr_prev_x, wr_prev_y, wr_prev_z,
- *         wv_x, wv_y, wv_z,             # <<<<<<<<<<<<<<
- *         wv_prev_x, wv_prev_y, wv_prev_z,
- *         wp_prev_x, wp_prev_y, wp_prev_z,
-*/
-  __pyx_t_12 = PyFloat_FromDouble(__pyx_v_wv_x); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 103, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_13 = PyFloat_FromDouble(__pyx_v_wv_y); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 103, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_14 = PyFloat_FromDouble(__pyx_v_wv_z); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 103, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_14);
-
-  /* "pyIMU/_motion_core.pyx":104
- *         wr_prev_x, wr_prev_y, wr_prev_z,
- *         wv_x, wv_y, wv_z,
- *         wv_prev_x, wv_prev_y, wv_prev_z,             # <<<<<<<<<<<<<<
- *         wp_prev_x, wp_prev_y, wp_prev_z,
- *         wv_drift_x, wv_drift_y, wv_drift_z,
-*/
-  __pyx_t_15 = PyFloat_FromDouble(__pyx_v_wv_prev_x); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 104, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_15);
-  __pyx_t_16 = PyFloat_FromDouble(__pyx_v_wv_prev_y); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 104, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_16);
-  __pyx_t_17 = PyFloat_FromDouble(__pyx_v_wv_prev_z); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 104, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_17);
-
-  /* "pyIMU/_motion_core.pyx":105
- *         wv_x, wv_y, wv_z,
- *         wv_prev_x, wv_prev_y, wv_prev_z,
- *         wp_prev_x, wp_prev_y, wp_prev_z,             # <<<<<<<<<<<<<<
- *         wv_drift_x, wv_drift_y, wv_drift_z,
- *         bias_x, bias_y, bias_z,
-*/
-  __pyx_t_18 = PyFloat_FromDouble(__pyx_v_wp_prev_x); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 105, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_18);
-  __pyx_t_19 = PyFloat_FromDouble(__pyx_v_wp_prev_y); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 105, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_19);
-  __pyx_t_20 = PyFloat_FromDouble(__pyx_v_wp_prev_z); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 105, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_20);
-
-  /* "pyIMU/_motion_core.pyx":106
- *         wv_prev_x, wv_prev_y, wv_prev_z,
- *         wp_prev_x, wp_prev_y, wp_prev_z,
- *         wv_drift_x, wv_drift_y, wv_drift_z,             # <<<<<<<<<<<<<<
- *         bias_x, bias_y, bias_z,
- *         dtmotion,
-*/
-  __pyx_t_21 = PyFloat_FromDouble(__pyx_v_wv_drift_x); if (unlikely(!__pyx_t_21)) __PYX_ERR(0, 106, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_21);
-  __pyx_t_22 = PyFloat_FromDouble(__pyx_v_wv_drift_y); if (unlikely(!__pyx_t_22)) __PYX_ERR(0, 106, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_22);
-  __pyx_t_23 = PyFloat_FromDouble(__pyx_v_wv_drift_z); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 106, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_23);
-
-  /* "pyIMU/_motion_core.pyx":107
- *         wp_prev_x, wp_prev_y, wp_prev_z,
- *         wv_drift_x, wv_drift_y, wv_drift_z,
- *         bias_x, bias_y, bias_z,             # <<<<<<<<<<<<<<
- *         dtmotion,
- *     )
-*/
-  __pyx_t_24 = PyFloat_FromDouble(__pyx_v_bias_x); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 107, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_24);
-  __pyx_t_25 = PyFloat_FromDouble(__pyx_v_bias_y); if (unlikely(!__pyx_t_25)) __PYX_ERR(0, 107, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_25);
-  __pyx_t_26 = PyFloat_FromDouble(__pyx_v_bias_z); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 107, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_26);
-
-  /* "pyIMU/_motion_core.pyx":108
- *         wv_drift_x, wv_drift_y, wv_drift_z,
- *         bias_x, bias_y, bias_z,
- *         dtmotion,             # <<<<<<<<<<<<<<
- *     )
- * 
-*/
-  __pyx_t_27 = PyFloat_FromDouble(__pyx_v_dtmotion); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 108, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_27);
-
-  /* "pyIMU/_motion_core.pyx":100
- * 
- *     return (
- *         residual_x, residual_y, residual_z,             # <<<<<<<<<<<<<<
- *         wr_x, wr_y, wr_z,
- *         wr_prev_x, wr_prev_y, wr_prev_z,
-*/
-  __pyx_t_28 = PyTuple_New(25); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 100, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_28);
+  __Pyx_GIVEREF(__pyx_t_1);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_1) != (0)) __PYX_ERR(0, 10, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_2);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_2) != (0)) __PYX_ERR(0, 10, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_3);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 0, __pyx_t_3) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_4);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 1, __pyx_t_4) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_5);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 2, __pyx_t_5) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_6);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 3, __pyx_t_6) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_7);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 4, __pyx_t_7) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_8);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 5, __pyx_t_8) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_9);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 6, __pyx_t_9) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_10);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 7, __pyx_t_10) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_11);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 8, __pyx_t_11) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_12);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 9, __pyx_t_12) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_13);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 10, __pyx_t_13) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_14);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 11, __pyx_t_14) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_15);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 12, __pyx_t_15) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_16);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 13, __pyx_t_16) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_17);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 14, __pyx_t_17) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_18);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 15, __pyx_t_18) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_19);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 16, __pyx_t_19) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_20);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 17, __pyx_t_20) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_21);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 18, __pyx_t_21) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_22);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 19, __pyx_t_22) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_23);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 20, __pyx_t_23) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_24);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 21, __pyx_t_24) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_25);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 22, __pyx_t_25) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_26);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 23, __pyx_t_26) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_27);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_28, 24, __pyx_t_27) != (0)) __PYX_ERR(0, 100, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_t_3) != (0)) __PYX_ERR(0, 10, __pyx_L1_error);
+  __pyx_t_1 = 0;
+  __pyx_t_2 = 0;
   __pyx_t_3 = 0;
+  __pyx_r = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
-  __pyx_t_5 = 0;
-  __pyx_t_6 = 0;
-  __pyx_t_7 = 0;
-  __pyx_t_8 = 0;
-  __pyx_t_9 = 0;
-  __pyx_t_10 = 0;
-  __pyx_t_11 = 0;
-  __pyx_t_12 = 0;
-  __pyx_t_13 = 0;
-  __pyx_t_14 = 0;
-  __pyx_t_15 = 0;
-  __pyx_t_16 = 0;
-  __pyx_t_17 = 0;
-  __pyx_t_18 = 0;
-  __pyx_t_19 = 0;
-  __pyx_t_20 = 0;
-  __pyx_t_21 = 0;
-  __pyx_t_22 = 0;
-  __pyx_t_23 = 0;
-  __pyx_t_24 = 0;
-  __pyx_t_25 = 0;
-  __pyx_t_26 = 0;
-  __pyx_t_27 = 0;
-  __pyx_r = ((PyObject*)__pyx_t_28);
-  __pyx_t_28 = 0;
   goto __pyx_L0;
 
-  /* "pyIMU/_motion_core.pyx":3
+  /* "pyIMU/_ucore.pyx":3
  * # cython: language_level=3
  * 
- * cpdef tuple motion_step(             # <<<<<<<<<<<<<<
- *     double accx, double accy, double accz,
- *     double qw, double qx, double qy, double qz,
+ * cpdef tuple q2gravity_components(double qw, double qx, double qy, double qz):             # <<<<<<<<<<<<<<
+ *     cdef double gx, gy, gz
+ * 
 */
 
   /* function exit code */
   __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_XDECREF(__pyx_t_9);
-  __Pyx_XDECREF(__pyx_t_10);
-  __Pyx_XDECREF(__pyx_t_11);
-  __Pyx_XDECREF(__pyx_t_12);
-  __Pyx_XDECREF(__pyx_t_13);
-  __Pyx_XDECREF(__pyx_t_14);
-  __Pyx_XDECREF(__pyx_t_15);
-  __Pyx_XDECREF(__pyx_t_16);
-  __Pyx_XDECREF(__pyx_t_17);
-  __Pyx_XDECREF(__pyx_t_18);
-  __Pyx_XDECREF(__pyx_t_19);
-  __Pyx_XDECREF(__pyx_t_20);
-  __Pyx_XDECREF(__pyx_t_21);
-  __Pyx_XDECREF(__pyx_t_22);
-  __Pyx_XDECREF(__pyx_t_23);
-  __Pyx_XDECREF(__pyx_t_24);
-  __Pyx_XDECREF(__pyx_t_25);
-  __Pyx_XDECREF(__pyx_t_26);
-  __Pyx_XDECREF(__pyx_t_27);
-  __Pyx_XDECREF(__pyx_t_28);
-  __Pyx_AddTraceback("pyIMU._motion_core.motion_step", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("pyIMU._ucore.q2gravity_components", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3163,73 +2387,36 @@ static PyObject *__pyx_f_5pyIMU_12_motion_core_motion_step(double __pyx_v_accx, 
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5pyIMU_12_motion_core_1motion_step(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_5pyIMU_6_ucore_1q2gravity_components(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_5pyIMU_12_motion_core_1motion_step = {"motion_step", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_5pyIMU_12_motion_core_1motion_step, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_5pyIMU_12_motion_core_1motion_step(PyObject *__pyx_self, 
+static PyMethodDef __pyx_mdef_5pyIMU_6_ucore_1q2gravity_components = {"q2gravity_components", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_5pyIMU_6_ucore_1q2gravity_components, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_5pyIMU_6_ucore_1q2gravity_components(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ) {
-  double __pyx_v_accx;
-  double __pyx_v_accy;
-  double __pyx_v_accz;
   double __pyx_v_qw;
   double __pyx_v_qx;
   double __pyx_v_qy;
   double __pyx_v_qz;
-  double __pyx_v_r00;
-  double __pyx_v_r01;
-  double __pyx_v_r02;
-  double __pyx_v_r10;
-  double __pyx_v_r11;
-  double __pyx_v_r12;
-  double __pyx_v_r20;
-  double __pyx_v_r21;
-  double __pyx_v_r22;
-  double __pyx_v_local_gravity;
-  double __pyx_v_bias_x;
-  double __pyx_v_bias_y;
-  double __pyx_v_bias_z;
-  double __pyx_v_wr_prev_x;
-  double __pyx_v_wr_prev_y;
-  double __pyx_v_wr_prev_z;
-  double __pyx_v_wv_x;
-  double __pyx_v_wv_y;
-  double __pyx_v_wv_z;
-  double __pyx_v_wv_prev_x;
-  double __pyx_v_wv_prev_y;
-  double __pyx_v_wv_prev_z;
-  double __pyx_v_wp_prev_x;
-  double __pyx_v_wp_prev_y;
-  double __pyx_v_wp_prev_z;
-  double __pyx_v_wv_drift_x;
-  double __pyx_v_wv_drift_y;
-  double __pyx_v_wv_drift_z;
-  double __pyx_v_drift_alpha;
-  double __pyx_v_dt;
-  double __pyx_v_dtmotion;
-  int __pyx_v_moving;
-  int __pyx_v_motion_ended;
-  double __pyx_v_min_motion_time;
   #if !CYTHON_METH_FASTCALL
   CYTHON_UNUSED Py_ssize_t __pyx_nargs;
   #endif
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
-  PyObject* values[41] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  PyObject* values[4] = {0,0,0,0};
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("motion_step (wrapper)", 0);
+  __Pyx_RefNannySetupContext("q2gravity_components (wrapper)", 0);
   #if !CYTHON_METH_FASTCALL
   #if CYTHON_ASSUME_SAFE_SIZE
   __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
@@ -3239,159 +2426,11 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   #endif
   __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
   {
-    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_accx,&__pyx_mstate_global->__pyx_n_u_accy,&__pyx_mstate_global->__pyx_n_u_accz,&__pyx_mstate_global->__pyx_n_u_qw,&__pyx_mstate_global->__pyx_n_u_qx,&__pyx_mstate_global->__pyx_n_u_qy,&__pyx_mstate_global->__pyx_n_u_qz,&__pyx_mstate_global->__pyx_n_u_r00,&__pyx_mstate_global->__pyx_n_u_r01,&__pyx_mstate_global->__pyx_n_u_r02,&__pyx_mstate_global->__pyx_n_u_r10,&__pyx_mstate_global->__pyx_n_u_r11,&__pyx_mstate_global->__pyx_n_u_r12,&__pyx_mstate_global->__pyx_n_u_r20,&__pyx_mstate_global->__pyx_n_u_r21,&__pyx_mstate_global->__pyx_n_u_r22,&__pyx_mstate_global->__pyx_n_u_local_gravity,&__pyx_mstate_global->__pyx_n_u_bias_x,&__pyx_mstate_global->__pyx_n_u_bias_y,&__pyx_mstate_global->__pyx_n_u_bias_z,&__pyx_mstate_global->__pyx_n_u_wr_prev_x,&__pyx_mstate_global->__pyx_n_u_wr_prev_y,&__pyx_mstate_global->__pyx_n_u_wr_prev_z,&__pyx_mstate_global->__pyx_n_u_wv_x,&__pyx_mstate_global->__pyx_n_u_wv_y,&__pyx_mstate_global->__pyx_n_u_wv_z,&__pyx_mstate_global->__pyx_n_u_wv_prev_x,&__pyx_mstate_global->__pyx_n_u_wv_prev_y,&__pyx_mstate_global->__pyx_n_u_wv_prev_z,&__pyx_mstate_global->__pyx_n_u_wp_prev_x,&__pyx_mstate_global->__pyx_n_u_wp_prev_y,&__pyx_mstate_global->__pyx_n_u_wp_prev_z,&__pyx_mstate_global->__pyx_n_u_wv_drift_x,&__pyx_mstate_global->__pyx_n_u_wv_drift_y,&__pyx_mstate_global->__pyx_n_u_wv_drift_z,&__pyx_mstate_global->__pyx_n_u_drift_alpha,&__pyx_mstate_global->__pyx_n_u_dt,&__pyx_mstate_global->__pyx_n_u_dtmotion,&__pyx_mstate_global->__pyx_n_u_moving,&__pyx_mstate_global->__pyx_n_u_motion_ended,&__pyx_mstate_global->__pyx_n_u_min_motion_time,0};
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_qw,&__pyx_mstate_global->__pyx_n_u_qx,&__pyx_mstate_global->__pyx_n_u_qy,&__pyx_mstate_global->__pyx_n_u_qz,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
     if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 3, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
-        case 41:
-        values[40] = __Pyx_ArgRef_FASTCALL(__pyx_args, 40);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[40])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 40:
-        values[39] = __Pyx_ArgRef_FASTCALL(__pyx_args, 39);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[39])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 39:
-        values[38] = __Pyx_ArgRef_FASTCALL(__pyx_args, 38);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[38])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 38:
-        values[37] = __Pyx_ArgRef_FASTCALL(__pyx_args, 37);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[37])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 37:
-        values[36] = __Pyx_ArgRef_FASTCALL(__pyx_args, 36);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[36])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 36:
-        values[35] = __Pyx_ArgRef_FASTCALL(__pyx_args, 35);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[35])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 35:
-        values[34] = __Pyx_ArgRef_FASTCALL(__pyx_args, 34);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[34])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 34:
-        values[33] = __Pyx_ArgRef_FASTCALL(__pyx_args, 33);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[33])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 33:
-        values[32] = __Pyx_ArgRef_FASTCALL(__pyx_args, 32);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[32])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 32:
-        values[31] = __Pyx_ArgRef_FASTCALL(__pyx_args, 31);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[31])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 31:
-        values[30] = __Pyx_ArgRef_FASTCALL(__pyx_args, 30);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[30])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 30:
-        values[29] = __Pyx_ArgRef_FASTCALL(__pyx_args, 29);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[29])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 29:
-        values[28] = __Pyx_ArgRef_FASTCALL(__pyx_args, 28);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[28])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 28:
-        values[27] = __Pyx_ArgRef_FASTCALL(__pyx_args, 27);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[27])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 27:
-        values[26] = __Pyx_ArgRef_FASTCALL(__pyx_args, 26);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[26])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 26:
-        values[25] = __Pyx_ArgRef_FASTCALL(__pyx_args, 25);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[25])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 25:
-        values[24] = __Pyx_ArgRef_FASTCALL(__pyx_args, 24);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[24])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 24:
-        values[23] = __Pyx_ArgRef_FASTCALL(__pyx_args, 23);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[23])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 23:
-        values[22] = __Pyx_ArgRef_FASTCALL(__pyx_args, 22);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[22])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 22:
-        values[21] = __Pyx_ArgRef_FASTCALL(__pyx_args, 21);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[21])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 21:
-        values[20] = __Pyx_ArgRef_FASTCALL(__pyx_args, 20);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[20])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 20:
-        values[19] = __Pyx_ArgRef_FASTCALL(__pyx_args, 19);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[19])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 19:
-        values[18] = __Pyx_ArgRef_FASTCALL(__pyx_args, 18);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[18])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 18:
-        values[17] = __Pyx_ArgRef_FASTCALL(__pyx_args, 17);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[17])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 17:
-        values[16] = __Pyx_ArgRef_FASTCALL(__pyx_args, 16);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[16])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 16:
-        values[15] = __Pyx_ArgRef_FASTCALL(__pyx_args, 15);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[15])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 15:
-        values[14] = __Pyx_ArgRef_FASTCALL(__pyx_args, 14);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[14])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 14:
-        values[13] = __Pyx_ArgRef_FASTCALL(__pyx_args, 13);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[13])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 13:
-        values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 12:
-        values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 11:
-        values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 10:
-        values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case  9:
-        values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case  8:
-        values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case  7:
-        values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case  6:
-        values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case  5:
-        values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 3, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
         if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 3, __pyx_L3_error)
@@ -3412,11 +2451,11 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "motion_step", 0) < 0) __PYX_ERR(0, 3, __pyx_L3_error)
-      for (Py_ssize_t i = __pyx_nargs; i < 41; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("motion_step", 1, 41, 41, i); __PYX_ERR(0, 3, __pyx_L3_error) }
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "q2gravity_components", 0) < 0) __PYX_ERR(0, 3, __pyx_L3_error)
+      for (Py_ssize_t i = __pyx_nargs; i < 4; i++) {
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("q2gravity_components", 1, 4, 4, i); __PYX_ERR(0, 3, __pyx_L3_error) }
       }
-    } else if (unlikely(__pyx_nargs != 41)) {
+    } else if (unlikely(__pyx_nargs != 4)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
@@ -3427,137 +2466,26 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 3, __pyx_L3_error)
       values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
       if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[13] = __Pyx_ArgRef_FASTCALL(__pyx_args, 13);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[13])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[14] = __Pyx_ArgRef_FASTCALL(__pyx_args, 14);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[14])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[15] = __Pyx_ArgRef_FASTCALL(__pyx_args, 15);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[15])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[16] = __Pyx_ArgRef_FASTCALL(__pyx_args, 16);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[16])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[17] = __Pyx_ArgRef_FASTCALL(__pyx_args, 17);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[17])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[18] = __Pyx_ArgRef_FASTCALL(__pyx_args, 18);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[18])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[19] = __Pyx_ArgRef_FASTCALL(__pyx_args, 19);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[19])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[20] = __Pyx_ArgRef_FASTCALL(__pyx_args, 20);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[20])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[21] = __Pyx_ArgRef_FASTCALL(__pyx_args, 21);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[21])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[22] = __Pyx_ArgRef_FASTCALL(__pyx_args, 22);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[22])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[23] = __Pyx_ArgRef_FASTCALL(__pyx_args, 23);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[23])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[24] = __Pyx_ArgRef_FASTCALL(__pyx_args, 24);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[24])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[25] = __Pyx_ArgRef_FASTCALL(__pyx_args, 25);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[25])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[26] = __Pyx_ArgRef_FASTCALL(__pyx_args, 26);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[26])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[27] = __Pyx_ArgRef_FASTCALL(__pyx_args, 27);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[27])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[28] = __Pyx_ArgRef_FASTCALL(__pyx_args, 28);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[28])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[29] = __Pyx_ArgRef_FASTCALL(__pyx_args, 29);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[29])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[30] = __Pyx_ArgRef_FASTCALL(__pyx_args, 30);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[30])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[31] = __Pyx_ArgRef_FASTCALL(__pyx_args, 31);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[31])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[32] = __Pyx_ArgRef_FASTCALL(__pyx_args, 32);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[32])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[33] = __Pyx_ArgRef_FASTCALL(__pyx_args, 33);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[33])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[34] = __Pyx_ArgRef_FASTCALL(__pyx_args, 34);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[34])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[35] = __Pyx_ArgRef_FASTCALL(__pyx_args, 35);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[35])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[36] = __Pyx_ArgRef_FASTCALL(__pyx_args, 36);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[36])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[37] = __Pyx_ArgRef_FASTCALL(__pyx_args, 37);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[37])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[38] = __Pyx_ArgRef_FASTCALL(__pyx_args, 38);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[38])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[39] = __Pyx_ArgRef_FASTCALL(__pyx_args, 39);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[39])) __PYX_ERR(0, 3, __pyx_L3_error)
-      values[40] = __Pyx_ArgRef_FASTCALL(__pyx_args, 40);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[40])) __PYX_ERR(0, 3, __pyx_L3_error)
     }
-    __pyx_v_accx = __Pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_accx == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 4, __pyx_L3_error)
-    __pyx_v_accy = __Pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_accy == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 4, __pyx_L3_error)
-    __pyx_v_accz = __Pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_accz == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 4, __pyx_L3_error)
-    __pyx_v_qw = __Pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_qw == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 5, __pyx_L3_error)
-    __pyx_v_qx = __Pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_qx == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 5, __pyx_L3_error)
-    __pyx_v_qy = __Pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_qy == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 5, __pyx_L3_error)
-    __pyx_v_qz = __Pyx_PyFloat_AsDouble(values[6]); if (unlikely((__pyx_v_qz == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 5, __pyx_L3_error)
-    __pyx_v_r00 = __Pyx_PyFloat_AsDouble(values[7]); if (unlikely((__pyx_v_r00 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 6, __pyx_L3_error)
-    __pyx_v_r01 = __Pyx_PyFloat_AsDouble(values[8]); if (unlikely((__pyx_v_r01 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 6, __pyx_L3_error)
-    __pyx_v_r02 = __Pyx_PyFloat_AsDouble(values[9]); if (unlikely((__pyx_v_r02 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 6, __pyx_L3_error)
-    __pyx_v_r10 = __Pyx_PyFloat_AsDouble(values[10]); if (unlikely((__pyx_v_r10 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 7, __pyx_L3_error)
-    __pyx_v_r11 = __Pyx_PyFloat_AsDouble(values[11]); if (unlikely((__pyx_v_r11 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 7, __pyx_L3_error)
-    __pyx_v_r12 = __Pyx_PyFloat_AsDouble(values[12]); if (unlikely((__pyx_v_r12 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 7, __pyx_L3_error)
-    __pyx_v_r20 = __Pyx_PyFloat_AsDouble(values[13]); if (unlikely((__pyx_v_r20 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 8, __pyx_L3_error)
-    __pyx_v_r21 = __Pyx_PyFloat_AsDouble(values[14]); if (unlikely((__pyx_v_r21 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 8, __pyx_L3_error)
-    __pyx_v_r22 = __Pyx_PyFloat_AsDouble(values[15]); if (unlikely((__pyx_v_r22 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 8, __pyx_L3_error)
-    __pyx_v_local_gravity = __Pyx_PyFloat_AsDouble(values[16]); if (unlikely((__pyx_v_local_gravity == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 9, __pyx_L3_error)
-    __pyx_v_bias_x = __Pyx_PyFloat_AsDouble(values[17]); if (unlikely((__pyx_v_bias_x == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 10, __pyx_L3_error)
-    __pyx_v_bias_y = __Pyx_PyFloat_AsDouble(values[18]); if (unlikely((__pyx_v_bias_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 10, __pyx_L3_error)
-    __pyx_v_bias_z = __Pyx_PyFloat_AsDouble(values[19]); if (unlikely((__pyx_v_bias_z == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 10, __pyx_L3_error)
-    __pyx_v_wr_prev_x = __Pyx_PyFloat_AsDouble(values[20]); if (unlikely((__pyx_v_wr_prev_x == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 11, __pyx_L3_error)
-    __pyx_v_wr_prev_y = __Pyx_PyFloat_AsDouble(values[21]); if (unlikely((__pyx_v_wr_prev_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 11, __pyx_L3_error)
-    __pyx_v_wr_prev_z = __Pyx_PyFloat_AsDouble(values[22]); if (unlikely((__pyx_v_wr_prev_z == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 11, __pyx_L3_error)
-    __pyx_v_wv_x = __Pyx_PyFloat_AsDouble(values[23]); if (unlikely((__pyx_v_wv_x == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L3_error)
-    __pyx_v_wv_y = __Pyx_PyFloat_AsDouble(values[24]); if (unlikely((__pyx_v_wv_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L3_error)
-    __pyx_v_wv_z = __Pyx_PyFloat_AsDouble(values[25]); if (unlikely((__pyx_v_wv_z == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L3_error)
-    __pyx_v_wv_prev_x = __Pyx_PyFloat_AsDouble(values[26]); if (unlikely((__pyx_v_wv_prev_x == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 13, __pyx_L3_error)
-    __pyx_v_wv_prev_y = __Pyx_PyFloat_AsDouble(values[27]); if (unlikely((__pyx_v_wv_prev_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 13, __pyx_L3_error)
-    __pyx_v_wv_prev_z = __Pyx_PyFloat_AsDouble(values[28]); if (unlikely((__pyx_v_wv_prev_z == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 13, __pyx_L3_error)
-    __pyx_v_wp_prev_x = __Pyx_PyFloat_AsDouble(values[29]); if (unlikely((__pyx_v_wp_prev_x == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 14, __pyx_L3_error)
-    __pyx_v_wp_prev_y = __Pyx_PyFloat_AsDouble(values[30]); if (unlikely((__pyx_v_wp_prev_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 14, __pyx_L3_error)
-    __pyx_v_wp_prev_z = __Pyx_PyFloat_AsDouble(values[31]); if (unlikely((__pyx_v_wp_prev_z == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 14, __pyx_L3_error)
-    __pyx_v_wv_drift_x = __Pyx_PyFloat_AsDouble(values[32]); if (unlikely((__pyx_v_wv_drift_x == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 15, __pyx_L3_error)
-    __pyx_v_wv_drift_y = __Pyx_PyFloat_AsDouble(values[33]); if (unlikely((__pyx_v_wv_drift_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 15, __pyx_L3_error)
-    __pyx_v_wv_drift_z = __Pyx_PyFloat_AsDouble(values[34]); if (unlikely((__pyx_v_wv_drift_z == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 15, __pyx_L3_error)
-    __pyx_v_drift_alpha = __Pyx_PyFloat_AsDouble(values[35]); if (unlikely((__pyx_v_drift_alpha == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 16, __pyx_L3_error)
-    __pyx_v_dt = __Pyx_PyFloat_AsDouble(values[36]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 17, __pyx_L3_error)
-    __pyx_v_dtmotion = __Pyx_PyFloat_AsDouble(values[37]); if (unlikely((__pyx_v_dtmotion == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 18, __pyx_L3_error)
-    __pyx_v_moving = __Pyx_PyObject_IsTrue(values[38]); if (unlikely((__pyx_v_moving == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 19, __pyx_L3_error)
-    __pyx_v_motion_ended = __Pyx_PyObject_IsTrue(values[39]); if (unlikely((__pyx_v_motion_ended == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 20, __pyx_L3_error)
-    __pyx_v_min_motion_time = __Pyx_PyFloat_AsDouble(values[40]); if (unlikely((__pyx_v_min_motion_time == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 21, __pyx_L3_error)
+    __pyx_v_qw = __Pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_qw == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 3, __pyx_L3_error)
+    __pyx_v_qx = __Pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_qx == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 3, __pyx_L3_error)
+    __pyx_v_qy = __Pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_qy == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 3, __pyx_L3_error)
+    __pyx_v_qz = __Pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_qz == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 3, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("motion_step", 1, 41, 41, __pyx_nargs); __PYX_ERR(0, 3, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("q2gravity_components", 1, 4, 4, __pyx_nargs); __PYX_ERR(0, 3, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
   for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
     Py_XDECREF(values[__pyx_temp]);
   }
-  __Pyx_AddTraceback("pyIMU._motion_core.motion_step", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("pyIMU._ucore.q2gravity_components", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_5pyIMU_12_motion_core_motion_step(__pyx_self, __pyx_v_accx, __pyx_v_accy, __pyx_v_accz, __pyx_v_qw, __pyx_v_qx, __pyx_v_qy, __pyx_v_qz, __pyx_v_r00, __pyx_v_r01, __pyx_v_r02, __pyx_v_r10, __pyx_v_r11, __pyx_v_r12, __pyx_v_r20, __pyx_v_r21, __pyx_v_r22, __pyx_v_local_gravity, __pyx_v_bias_x, __pyx_v_bias_y, __pyx_v_bias_z, __pyx_v_wr_prev_x, __pyx_v_wr_prev_y, __pyx_v_wr_prev_z, __pyx_v_wv_x, __pyx_v_wv_y, __pyx_v_wv_z, __pyx_v_wv_prev_x, __pyx_v_wv_prev_y, __pyx_v_wv_prev_z, __pyx_v_wp_prev_x, __pyx_v_wp_prev_y, __pyx_v_wp_prev_z, __pyx_v_wv_drift_x, __pyx_v_wv_drift_y, __pyx_v_wv_drift_z, __pyx_v_drift_alpha, __pyx_v_dt, __pyx_v_dtmotion, __pyx_v_moving, __pyx_v_motion_ended, __pyx_v_min_motion_time);
+  __pyx_r = __pyx_pf_5pyIMU_6_ucore_q2gravity_components(__pyx_self, __pyx_v_qw, __pyx_v_qx, __pyx_v_qy, __pyx_v_qz);
 
   /* function exit code */
   for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
@@ -3567,16 +2495,16 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5pyIMU_12_motion_core_motion_step(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_accx, double __pyx_v_accy, double __pyx_v_accz, double __pyx_v_qw, double __pyx_v_qx, double __pyx_v_qy, double __pyx_v_qz, double __pyx_v_r00, double __pyx_v_r01, double __pyx_v_r02, double __pyx_v_r10, double __pyx_v_r11, double __pyx_v_r12, double __pyx_v_r20, double __pyx_v_r21, double __pyx_v_r22, double __pyx_v_local_gravity, double __pyx_v_bias_x, double __pyx_v_bias_y, double __pyx_v_bias_z, double __pyx_v_wr_prev_x, double __pyx_v_wr_prev_y, double __pyx_v_wr_prev_z, double __pyx_v_wv_x, double __pyx_v_wv_y, double __pyx_v_wv_z, double __pyx_v_wv_prev_x, double __pyx_v_wv_prev_y, double __pyx_v_wv_prev_z, double __pyx_v_wp_prev_x, double __pyx_v_wp_prev_y, double __pyx_v_wp_prev_z, double __pyx_v_wv_drift_x, double __pyx_v_wv_drift_y, double __pyx_v_wv_drift_z, double __pyx_v_drift_alpha, double __pyx_v_dt, double __pyx_v_dtmotion, int __pyx_v_moving, int __pyx_v_motion_ended, double __pyx_v_min_motion_time) {
+static PyObject *__pyx_pf_5pyIMU_6_ucore_q2gravity_components(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_qw, double __pyx_v_qx, double __pyx_v_qy, double __pyx_v_qz) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("motion_step", 0);
+  __Pyx_RefNannySetupContext("q2gravity_components", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_5pyIMU_12_motion_core_motion_step(__pyx_v_accx, __pyx_v_accy, __pyx_v_accz, __pyx_v_qw, __pyx_v_qx, __pyx_v_qy, __pyx_v_qz, __pyx_v_r00, __pyx_v_r01, __pyx_v_r02, __pyx_v_r10, __pyx_v_r11, __pyx_v_r12, __pyx_v_r20, __pyx_v_r21, __pyx_v_r22, __pyx_v_local_gravity, __pyx_v_bias_x, __pyx_v_bias_y, __pyx_v_bias_z, __pyx_v_wr_prev_x, __pyx_v_wr_prev_y, __pyx_v_wr_prev_z, __pyx_v_wv_x, __pyx_v_wv_y, __pyx_v_wv_z, __pyx_v_wv_prev_x, __pyx_v_wv_prev_y, __pyx_v_wv_prev_z, __pyx_v_wp_prev_x, __pyx_v_wp_prev_y, __pyx_v_wp_prev_z, __pyx_v_wv_drift_x, __pyx_v_wv_drift_y, __pyx_v_wv_drift_z, __pyx_v_drift_alpha, __pyx_v_dt, __pyx_v_dtmotion, __pyx_v_moving, __pyx_v_motion_ended, __pyx_v_min_motion_time, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 3, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_5pyIMU_6_ucore_q2gravity_components(__pyx_v_qw, __pyx_v_qx, __pyx_v_qy, __pyx_v_qz, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 3, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -3585,610 +2513,7 @@ static PyObject *__pyx_pf_5pyIMU_12_motion_core_motion_step(CYTHON_UNUSED PyObje
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("pyIMU._motion_core.motion_step", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "pyIMU/_motion_core.pyx":112
- * 
- * 
- * cpdef tuple motion_step_quat(             # <<<<<<<<<<<<<<
- *     double accx, double accy, double accz,
- *     double qw, double qx, double qy, double qz,
-*/
-
-static PyObject *__pyx_pw_5pyIMU_12_motion_core_3motion_step_quat(PyObject *__pyx_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static PyObject *__pyx_f_5pyIMU_12_motion_core_motion_step_quat(double __pyx_v_accx, double __pyx_v_accy, double __pyx_v_accz, double __pyx_v_qw, double __pyx_v_qx, double __pyx_v_qy, double __pyx_v_qz, double __pyx_v_local_gravity, double __pyx_v_bias_x, double __pyx_v_bias_y, double __pyx_v_bias_z, double __pyx_v_wr_prev_x, double __pyx_v_wr_prev_y, double __pyx_v_wr_prev_z, double __pyx_v_wv_x, double __pyx_v_wv_y, double __pyx_v_wv_z, double __pyx_v_wv_prev_x, double __pyx_v_wv_prev_y, double __pyx_v_wv_prev_z, double __pyx_v_wp_prev_x, double __pyx_v_wp_prev_y, double __pyx_v_wp_prev_z, double __pyx_v_wv_drift_x, double __pyx_v_wv_drift_y, double __pyx_v_wv_drift_z, double __pyx_v_drift_alpha, double __pyx_v_dt, double __pyx_v_dtmotion, int __pyx_v_moving, int __pyx_v_motion_ended, double __pyx_v_min_motion_time, CYTHON_UNUSED int __pyx_skip_dispatch) {
-  double __pyx_v_xx;
-  double __pyx_v_xy;
-  double __pyx_v_xz;
-  double __pyx_v_xw;
-  double __pyx_v_yy;
-  double __pyx_v_yz;
-  double __pyx_v_yw;
-  double __pyx_v_zz;
-  double __pyx_v_zw;
-  double __pyx_v_r00;
-  double __pyx_v_r01;
-  double __pyx_v_r02;
-  double __pyx_v_r10;
-  double __pyx_v_r11;
-  double __pyx_v_r12;
-  double __pyx_v_r20;
-  double __pyx_v_r21;
-  double __pyx_v_r22;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("motion_step_quat", 0);
-
-  /* "pyIMU/_motion_core.pyx":135
- * 
- *     # Quaternion -> rotation matrix (sensor to world)
- *     xx = qx * qx             # <<<<<<<<<<<<<<
- *     xy = qx * qy
- *     xz = qx * qz
-*/
-  __pyx_v_xx = (__pyx_v_qx * __pyx_v_qx);
-
-  /* "pyIMU/_motion_core.pyx":136
- *     # Quaternion -> rotation matrix (sensor to world)
- *     xx = qx * qx
- *     xy = qx * qy             # <<<<<<<<<<<<<<
- *     xz = qx * qz
- *     xw = qx * qw
-*/
-  __pyx_v_xy = (__pyx_v_qx * __pyx_v_qy);
-
-  /* "pyIMU/_motion_core.pyx":137
- *     xx = qx * qx
- *     xy = qx * qy
- *     xz = qx * qz             # <<<<<<<<<<<<<<
- *     xw = qx * qw
- *     yy = qy * qy
-*/
-  __pyx_v_xz = (__pyx_v_qx * __pyx_v_qz);
-
-  /* "pyIMU/_motion_core.pyx":138
- *     xy = qx * qy
- *     xz = qx * qz
- *     xw = qx * qw             # <<<<<<<<<<<<<<
- *     yy = qy * qy
- *     yz = qy * qz
-*/
-  __pyx_v_xw = (__pyx_v_qx * __pyx_v_qw);
-
-  /* "pyIMU/_motion_core.pyx":139
- *     xz = qx * qz
- *     xw = qx * qw
- *     yy = qy * qy             # <<<<<<<<<<<<<<
- *     yz = qy * qz
- *     yw = qy * qw
-*/
-  __pyx_v_yy = (__pyx_v_qy * __pyx_v_qy);
-
-  /* "pyIMU/_motion_core.pyx":140
- *     xw = qx * qw
- *     yy = qy * qy
- *     yz = qy * qz             # <<<<<<<<<<<<<<
- *     yw = qy * qw
- *     zz = qz * qz
-*/
-  __pyx_v_yz = (__pyx_v_qy * __pyx_v_qz);
-
-  /* "pyIMU/_motion_core.pyx":141
- *     yy = qy * qy
- *     yz = qy * qz
- *     yw = qy * qw             # <<<<<<<<<<<<<<
- *     zz = qz * qz
- *     zw = qz * qw
-*/
-  __pyx_v_yw = (__pyx_v_qy * __pyx_v_qw);
-
-  /* "pyIMU/_motion_core.pyx":142
- *     yz = qy * qz
- *     yw = qy * qw
- *     zz = qz * qz             # <<<<<<<<<<<<<<
- *     zw = qz * qw
- * 
-*/
-  __pyx_v_zz = (__pyx_v_qz * __pyx_v_qz);
-
-  /* "pyIMU/_motion_core.pyx":143
- *     yw = qy * qw
- *     zz = qz * qz
- *     zw = qz * qw             # <<<<<<<<<<<<<<
- * 
- *     r00 = 1.0 - 2.0 * (yy + zz)
-*/
-  __pyx_v_zw = (__pyx_v_qz * __pyx_v_qw);
-
-  /* "pyIMU/_motion_core.pyx":145
- *     zw = qz * qw
- * 
- *     r00 = 1.0 - 2.0 * (yy + zz)             # <<<<<<<<<<<<<<
- *     r01 = 2.0 * (xy - zw)
- *     r02 = 2.0 * (xz + yw)
-*/
-  __pyx_v_r00 = (1.0 - (2.0 * (__pyx_v_yy + __pyx_v_zz)));
-
-  /* "pyIMU/_motion_core.pyx":146
- * 
- *     r00 = 1.0 - 2.0 * (yy + zz)
- *     r01 = 2.0 * (xy - zw)             # <<<<<<<<<<<<<<
- *     r02 = 2.0 * (xz + yw)
- *     r10 = 2.0 * (xy + zw)
-*/
-  __pyx_v_r01 = (2.0 * (__pyx_v_xy - __pyx_v_zw));
-
-  /* "pyIMU/_motion_core.pyx":147
- *     r00 = 1.0 - 2.0 * (yy + zz)
- *     r01 = 2.0 * (xy - zw)
- *     r02 = 2.0 * (xz + yw)             # <<<<<<<<<<<<<<
- *     r10 = 2.0 * (xy + zw)
- *     r11 = 1.0 - 2.0 * (xx + zz)
-*/
-  __pyx_v_r02 = (2.0 * (__pyx_v_xz + __pyx_v_yw));
-
-  /* "pyIMU/_motion_core.pyx":148
- *     r01 = 2.0 * (xy - zw)
- *     r02 = 2.0 * (xz + yw)
- *     r10 = 2.0 * (xy + zw)             # <<<<<<<<<<<<<<
- *     r11 = 1.0 - 2.0 * (xx + zz)
- *     r12 = 2.0 * (yz - xw)
-*/
-  __pyx_v_r10 = (2.0 * (__pyx_v_xy + __pyx_v_zw));
-
-  /* "pyIMU/_motion_core.pyx":149
- *     r02 = 2.0 * (xz + yw)
- *     r10 = 2.0 * (xy + zw)
- *     r11 = 1.0 - 2.0 * (xx + zz)             # <<<<<<<<<<<<<<
- *     r12 = 2.0 * (yz - xw)
- *     r20 = 2.0 * (xz - yw)
-*/
-  __pyx_v_r11 = (1.0 - (2.0 * (__pyx_v_xx + __pyx_v_zz)));
-
-  /* "pyIMU/_motion_core.pyx":150
- *     r10 = 2.0 * (xy + zw)
- *     r11 = 1.0 - 2.0 * (xx + zz)
- *     r12 = 2.0 * (yz - xw)             # <<<<<<<<<<<<<<
- *     r20 = 2.0 * (xz - yw)
- *     r21 = 2.0 * (yz + xw)
-*/
-  __pyx_v_r12 = (2.0 * (__pyx_v_yz - __pyx_v_xw));
-
-  /* "pyIMU/_motion_core.pyx":151
- *     r11 = 1.0 - 2.0 * (xx + zz)
- *     r12 = 2.0 * (yz - xw)
- *     r20 = 2.0 * (xz - yw)             # <<<<<<<<<<<<<<
- *     r21 = 2.0 * (yz + xw)
- *     r22 = 1.0 - 2.0 * (xx + yy)
-*/
-  __pyx_v_r20 = (2.0 * (__pyx_v_xz - __pyx_v_yw));
-
-  /* "pyIMU/_motion_core.pyx":152
- *     r12 = 2.0 * (yz - xw)
- *     r20 = 2.0 * (xz - yw)
- *     r21 = 2.0 * (yz + xw)             # <<<<<<<<<<<<<<
- *     r22 = 1.0 - 2.0 * (xx + yy)
- * 
-*/
-  __pyx_v_r21 = (2.0 * (__pyx_v_yz + __pyx_v_xw));
-
-  /* "pyIMU/_motion_core.pyx":153
- *     r20 = 2.0 * (xz - yw)
- *     r21 = 2.0 * (yz + xw)
- *     r22 = 1.0 - 2.0 * (xx + yy)             # <<<<<<<<<<<<<<
- * 
- *     return motion_step(
-*/
-  __pyx_v_r22 = (1.0 - (2.0 * (__pyx_v_xx + __pyx_v_yy)));
-
-  /* "pyIMU/_motion_core.pyx":155
- *     r22 = 1.0 - 2.0 * (xx + yy)
- * 
- *     return motion_step(             # <<<<<<<<<<<<<<
- *         accx, accy, accz,
- *         qw, qx, qy, qz,
-*/
-  __Pyx_XDECREF(__pyx_r);
-
-  /* "pyIMU/_motion_core.pyx":173
- *         moving,
- *         motion_ended,
- *         min_motion_time             # <<<<<<<<<<<<<<
- *     )
-*/
-  __pyx_t_1 = __pyx_f_5pyIMU_12_motion_core_motion_step(__pyx_v_accx, __pyx_v_accy, __pyx_v_accz, __pyx_v_qw, __pyx_v_qx, __pyx_v_qy, __pyx_v_qz, __pyx_v_r00, __pyx_v_r01, __pyx_v_r02, __pyx_v_r10, __pyx_v_r11, __pyx_v_r12, __pyx_v_r20, __pyx_v_r21, __pyx_v_r22, __pyx_v_local_gravity, __pyx_v_bias_x, __pyx_v_bias_y, __pyx_v_bias_z, __pyx_v_wr_prev_x, __pyx_v_wr_prev_y, __pyx_v_wr_prev_z, __pyx_v_wv_x, __pyx_v_wv_y, __pyx_v_wv_z, __pyx_v_wv_prev_x, __pyx_v_wv_prev_y, __pyx_v_wv_prev_z, __pyx_v_wp_prev_x, __pyx_v_wp_prev_y, __pyx_v_wp_prev_z, __pyx_v_wv_drift_x, __pyx_v_wv_drift_y, __pyx_v_wv_drift_z, __pyx_v_drift_alpha, __pyx_v_dt, __pyx_v_dtmotion, __pyx_v_moving, __pyx_v_motion_ended, __pyx_v_min_motion_time, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 155, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = ((PyObject*)__pyx_t_1);
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "pyIMU/_motion_core.pyx":112
- * 
- * 
- * cpdef tuple motion_step_quat(             # <<<<<<<<<<<<<<
- *     double accx, double accy, double accz,
- *     double qw, double qx, double qy, double qz,
-*/
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("pyIMU._motion_core.motion_step_quat", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* Python wrapper */
-static PyObject *__pyx_pw_5pyIMU_12_motion_core_3motion_step_quat(PyObject *__pyx_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static PyMethodDef __pyx_mdef_5pyIMU_12_motion_core_3motion_step_quat = {"motion_step_quat", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_5pyIMU_12_motion_core_3motion_step_quat, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_5pyIMU_12_motion_core_3motion_step_quat(PyObject *__pyx_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-) {
-  double __pyx_v_accx;
-  double __pyx_v_accy;
-  double __pyx_v_accz;
-  double __pyx_v_qw;
-  double __pyx_v_qx;
-  double __pyx_v_qy;
-  double __pyx_v_qz;
-  double __pyx_v_local_gravity;
-  double __pyx_v_bias_x;
-  double __pyx_v_bias_y;
-  double __pyx_v_bias_z;
-  double __pyx_v_wr_prev_x;
-  double __pyx_v_wr_prev_y;
-  double __pyx_v_wr_prev_z;
-  double __pyx_v_wv_x;
-  double __pyx_v_wv_y;
-  double __pyx_v_wv_z;
-  double __pyx_v_wv_prev_x;
-  double __pyx_v_wv_prev_y;
-  double __pyx_v_wv_prev_z;
-  double __pyx_v_wp_prev_x;
-  double __pyx_v_wp_prev_y;
-  double __pyx_v_wp_prev_z;
-  double __pyx_v_wv_drift_x;
-  double __pyx_v_wv_drift_y;
-  double __pyx_v_wv_drift_z;
-  double __pyx_v_drift_alpha;
-  double __pyx_v_dt;
-  double __pyx_v_dtmotion;
-  int __pyx_v_moving;
-  int __pyx_v_motion_ended;
-  double __pyx_v_min_motion_time;
-  #if !CYTHON_METH_FASTCALL
-  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
-  #endif
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
-  PyObject* values[32] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("motion_step_quat (wrapper)", 0);
-  #if !CYTHON_METH_FASTCALL
-  #if CYTHON_ASSUME_SAFE_SIZE
-  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
-  #else
-  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
-  #endif
-  #endif
-  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
-  {
-    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_accx,&__pyx_mstate_global->__pyx_n_u_accy,&__pyx_mstate_global->__pyx_n_u_accz,&__pyx_mstate_global->__pyx_n_u_qw,&__pyx_mstate_global->__pyx_n_u_qx,&__pyx_mstate_global->__pyx_n_u_qy,&__pyx_mstate_global->__pyx_n_u_qz,&__pyx_mstate_global->__pyx_n_u_local_gravity,&__pyx_mstate_global->__pyx_n_u_bias_x,&__pyx_mstate_global->__pyx_n_u_bias_y,&__pyx_mstate_global->__pyx_n_u_bias_z,&__pyx_mstate_global->__pyx_n_u_wr_prev_x,&__pyx_mstate_global->__pyx_n_u_wr_prev_y,&__pyx_mstate_global->__pyx_n_u_wr_prev_z,&__pyx_mstate_global->__pyx_n_u_wv_x,&__pyx_mstate_global->__pyx_n_u_wv_y,&__pyx_mstate_global->__pyx_n_u_wv_z,&__pyx_mstate_global->__pyx_n_u_wv_prev_x,&__pyx_mstate_global->__pyx_n_u_wv_prev_y,&__pyx_mstate_global->__pyx_n_u_wv_prev_z,&__pyx_mstate_global->__pyx_n_u_wp_prev_x,&__pyx_mstate_global->__pyx_n_u_wp_prev_y,&__pyx_mstate_global->__pyx_n_u_wp_prev_z,&__pyx_mstate_global->__pyx_n_u_wv_drift_x,&__pyx_mstate_global->__pyx_n_u_wv_drift_y,&__pyx_mstate_global->__pyx_n_u_wv_drift_z,&__pyx_mstate_global->__pyx_n_u_drift_alpha,&__pyx_mstate_global->__pyx_n_u_dt,&__pyx_mstate_global->__pyx_n_u_dtmotion,&__pyx_mstate_global->__pyx_n_u_moving,&__pyx_mstate_global->__pyx_n_u_motion_ended,&__pyx_mstate_global->__pyx_n_u_min_motion_time,0};
-    const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 112, __pyx_L3_error)
-    if (__pyx_kwds_len > 0) {
-      switch (__pyx_nargs) {
-        case 32:
-        values[31] = __Pyx_ArgRef_FASTCALL(__pyx_args, 31);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[31])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 31:
-        values[30] = __Pyx_ArgRef_FASTCALL(__pyx_args, 30);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[30])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 30:
-        values[29] = __Pyx_ArgRef_FASTCALL(__pyx_args, 29);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[29])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 29:
-        values[28] = __Pyx_ArgRef_FASTCALL(__pyx_args, 28);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[28])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 28:
-        values[27] = __Pyx_ArgRef_FASTCALL(__pyx_args, 27);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[27])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 27:
-        values[26] = __Pyx_ArgRef_FASTCALL(__pyx_args, 26);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[26])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 26:
-        values[25] = __Pyx_ArgRef_FASTCALL(__pyx_args, 25);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[25])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 25:
-        values[24] = __Pyx_ArgRef_FASTCALL(__pyx_args, 24);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[24])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 24:
-        values[23] = __Pyx_ArgRef_FASTCALL(__pyx_args, 23);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[23])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 23:
-        values[22] = __Pyx_ArgRef_FASTCALL(__pyx_args, 22);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[22])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 22:
-        values[21] = __Pyx_ArgRef_FASTCALL(__pyx_args, 21);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[21])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 21:
-        values[20] = __Pyx_ArgRef_FASTCALL(__pyx_args, 20);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[20])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 20:
-        values[19] = __Pyx_ArgRef_FASTCALL(__pyx_args, 19);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[19])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 19:
-        values[18] = __Pyx_ArgRef_FASTCALL(__pyx_args, 18);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[18])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 18:
-        values[17] = __Pyx_ArgRef_FASTCALL(__pyx_args, 17);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[17])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 17:
-        values[16] = __Pyx_ArgRef_FASTCALL(__pyx_args, 16);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[16])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 16:
-        values[15] = __Pyx_ArgRef_FASTCALL(__pyx_args, 15);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[15])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 15:
-        values[14] = __Pyx_ArgRef_FASTCALL(__pyx_args, 14);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[14])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 14:
-        values[13] = __Pyx_ArgRef_FASTCALL(__pyx_args, 13);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[13])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 13:
-        values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 12:
-        values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 11:
-        values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case 10:
-        values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case  9:
-        values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case  8:
-        values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case  7:
-        values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case  6:
-        values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case  5:
-        values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case  4:
-        values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case  3:
-        values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case  2:
-        values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case  1:
-        values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 112, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "motion_step_quat", 0) < 0) __PYX_ERR(0, 112, __pyx_L3_error)
-      for (Py_ssize_t i = __pyx_nargs; i < 32; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("motion_step_quat", 1, 32, 32, i); __PYX_ERR(0, 112, __pyx_L3_error) }
-      }
-    } else if (unlikely(__pyx_nargs != 32)) {
-      goto __pyx_L5_argtuple_error;
-    } else {
-      values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[13] = __Pyx_ArgRef_FASTCALL(__pyx_args, 13);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[13])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[14] = __Pyx_ArgRef_FASTCALL(__pyx_args, 14);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[14])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[15] = __Pyx_ArgRef_FASTCALL(__pyx_args, 15);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[15])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[16] = __Pyx_ArgRef_FASTCALL(__pyx_args, 16);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[16])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[17] = __Pyx_ArgRef_FASTCALL(__pyx_args, 17);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[17])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[18] = __Pyx_ArgRef_FASTCALL(__pyx_args, 18);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[18])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[19] = __Pyx_ArgRef_FASTCALL(__pyx_args, 19);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[19])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[20] = __Pyx_ArgRef_FASTCALL(__pyx_args, 20);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[20])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[21] = __Pyx_ArgRef_FASTCALL(__pyx_args, 21);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[21])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[22] = __Pyx_ArgRef_FASTCALL(__pyx_args, 22);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[22])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[23] = __Pyx_ArgRef_FASTCALL(__pyx_args, 23);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[23])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[24] = __Pyx_ArgRef_FASTCALL(__pyx_args, 24);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[24])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[25] = __Pyx_ArgRef_FASTCALL(__pyx_args, 25);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[25])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[26] = __Pyx_ArgRef_FASTCALL(__pyx_args, 26);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[26])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[27] = __Pyx_ArgRef_FASTCALL(__pyx_args, 27);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[27])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[28] = __Pyx_ArgRef_FASTCALL(__pyx_args, 28);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[28])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[29] = __Pyx_ArgRef_FASTCALL(__pyx_args, 29);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[29])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[30] = __Pyx_ArgRef_FASTCALL(__pyx_args, 30);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[30])) __PYX_ERR(0, 112, __pyx_L3_error)
-      values[31] = __Pyx_ArgRef_FASTCALL(__pyx_args, 31);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[31])) __PYX_ERR(0, 112, __pyx_L3_error)
-    }
-    __pyx_v_accx = __Pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_accx == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 113, __pyx_L3_error)
-    __pyx_v_accy = __Pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_accy == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 113, __pyx_L3_error)
-    __pyx_v_accz = __Pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_accz == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 113, __pyx_L3_error)
-    __pyx_v_qw = __Pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_qw == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 114, __pyx_L3_error)
-    __pyx_v_qx = __Pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_qx == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 114, __pyx_L3_error)
-    __pyx_v_qy = __Pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_qy == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 114, __pyx_L3_error)
-    __pyx_v_qz = __Pyx_PyFloat_AsDouble(values[6]); if (unlikely((__pyx_v_qz == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 114, __pyx_L3_error)
-    __pyx_v_local_gravity = __Pyx_PyFloat_AsDouble(values[7]); if (unlikely((__pyx_v_local_gravity == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 115, __pyx_L3_error)
-    __pyx_v_bias_x = __Pyx_PyFloat_AsDouble(values[8]); if (unlikely((__pyx_v_bias_x == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 116, __pyx_L3_error)
-    __pyx_v_bias_y = __Pyx_PyFloat_AsDouble(values[9]); if (unlikely((__pyx_v_bias_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 116, __pyx_L3_error)
-    __pyx_v_bias_z = __Pyx_PyFloat_AsDouble(values[10]); if (unlikely((__pyx_v_bias_z == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 116, __pyx_L3_error)
-    __pyx_v_wr_prev_x = __Pyx_PyFloat_AsDouble(values[11]); if (unlikely((__pyx_v_wr_prev_x == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 117, __pyx_L3_error)
-    __pyx_v_wr_prev_y = __Pyx_PyFloat_AsDouble(values[12]); if (unlikely((__pyx_v_wr_prev_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 117, __pyx_L3_error)
-    __pyx_v_wr_prev_z = __Pyx_PyFloat_AsDouble(values[13]); if (unlikely((__pyx_v_wr_prev_z == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 117, __pyx_L3_error)
-    __pyx_v_wv_x = __Pyx_PyFloat_AsDouble(values[14]); if (unlikely((__pyx_v_wv_x == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 118, __pyx_L3_error)
-    __pyx_v_wv_y = __Pyx_PyFloat_AsDouble(values[15]); if (unlikely((__pyx_v_wv_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 118, __pyx_L3_error)
-    __pyx_v_wv_z = __Pyx_PyFloat_AsDouble(values[16]); if (unlikely((__pyx_v_wv_z == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 118, __pyx_L3_error)
-    __pyx_v_wv_prev_x = __Pyx_PyFloat_AsDouble(values[17]); if (unlikely((__pyx_v_wv_prev_x == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 119, __pyx_L3_error)
-    __pyx_v_wv_prev_y = __Pyx_PyFloat_AsDouble(values[18]); if (unlikely((__pyx_v_wv_prev_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 119, __pyx_L3_error)
-    __pyx_v_wv_prev_z = __Pyx_PyFloat_AsDouble(values[19]); if (unlikely((__pyx_v_wv_prev_z == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 119, __pyx_L3_error)
-    __pyx_v_wp_prev_x = __Pyx_PyFloat_AsDouble(values[20]); if (unlikely((__pyx_v_wp_prev_x == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 120, __pyx_L3_error)
-    __pyx_v_wp_prev_y = __Pyx_PyFloat_AsDouble(values[21]); if (unlikely((__pyx_v_wp_prev_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 120, __pyx_L3_error)
-    __pyx_v_wp_prev_z = __Pyx_PyFloat_AsDouble(values[22]); if (unlikely((__pyx_v_wp_prev_z == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 120, __pyx_L3_error)
-    __pyx_v_wv_drift_x = __Pyx_PyFloat_AsDouble(values[23]); if (unlikely((__pyx_v_wv_drift_x == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 121, __pyx_L3_error)
-    __pyx_v_wv_drift_y = __Pyx_PyFloat_AsDouble(values[24]); if (unlikely((__pyx_v_wv_drift_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 121, __pyx_L3_error)
-    __pyx_v_wv_drift_z = __Pyx_PyFloat_AsDouble(values[25]); if (unlikely((__pyx_v_wv_drift_z == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 121, __pyx_L3_error)
-    __pyx_v_drift_alpha = __Pyx_PyFloat_AsDouble(values[26]); if (unlikely((__pyx_v_drift_alpha == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 122, __pyx_L3_error)
-    __pyx_v_dt = __Pyx_PyFloat_AsDouble(values[27]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 123, __pyx_L3_error)
-    __pyx_v_dtmotion = __Pyx_PyFloat_AsDouble(values[28]); if (unlikely((__pyx_v_dtmotion == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 124, __pyx_L3_error)
-    __pyx_v_moving = __Pyx_PyObject_IsTrue(values[29]); if (unlikely((__pyx_v_moving == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 125, __pyx_L3_error)
-    __pyx_v_motion_ended = __Pyx_PyObject_IsTrue(values[30]); if (unlikely((__pyx_v_motion_ended == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 126, __pyx_L3_error)
-    __pyx_v_min_motion_time = __Pyx_PyFloat_AsDouble(values[31]); if (unlikely((__pyx_v_min_motion_time == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 127, __pyx_L3_error)
-  }
-  goto __pyx_L6_skip;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("motion_step_quat", 1, 32, 32, __pyx_nargs); __PYX_ERR(0, 112, __pyx_L3_error)
-  __pyx_L6_skip:;
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L3_error:;
-  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
-    Py_XDECREF(values[__pyx_temp]);
-  }
-  __Pyx_AddTraceback("pyIMU._motion_core.motion_step_quat", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_5pyIMU_12_motion_core_2motion_step_quat(__pyx_self, __pyx_v_accx, __pyx_v_accy, __pyx_v_accz, __pyx_v_qw, __pyx_v_qx, __pyx_v_qy, __pyx_v_qz, __pyx_v_local_gravity, __pyx_v_bias_x, __pyx_v_bias_y, __pyx_v_bias_z, __pyx_v_wr_prev_x, __pyx_v_wr_prev_y, __pyx_v_wr_prev_z, __pyx_v_wv_x, __pyx_v_wv_y, __pyx_v_wv_z, __pyx_v_wv_prev_x, __pyx_v_wv_prev_y, __pyx_v_wv_prev_z, __pyx_v_wp_prev_x, __pyx_v_wp_prev_y, __pyx_v_wp_prev_z, __pyx_v_wv_drift_x, __pyx_v_wv_drift_y, __pyx_v_wv_drift_z, __pyx_v_drift_alpha, __pyx_v_dt, __pyx_v_dtmotion, __pyx_v_moving, __pyx_v_motion_ended, __pyx_v_min_motion_time);
-
-  /* function exit code */
-  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
-    Py_XDECREF(values[__pyx_temp]);
-  }
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_5pyIMU_12_motion_core_2motion_step_quat(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_accx, double __pyx_v_accy, double __pyx_v_accz, double __pyx_v_qw, double __pyx_v_qx, double __pyx_v_qy, double __pyx_v_qz, double __pyx_v_local_gravity, double __pyx_v_bias_x, double __pyx_v_bias_y, double __pyx_v_bias_z, double __pyx_v_wr_prev_x, double __pyx_v_wr_prev_y, double __pyx_v_wr_prev_z, double __pyx_v_wv_x, double __pyx_v_wv_y, double __pyx_v_wv_z, double __pyx_v_wv_prev_x, double __pyx_v_wv_prev_y, double __pyx_v_wv_prev_z, double __pyx_v_wp_prev_x, double __pyx_v_wp_prev_y, double __pyx_v_wp_prev_z, double __pyx_v_wv_drift_x, double __pyx_v_wv_drift_y, double __pyx_v_wv_drift_z, double __pyx_v_drift_alpha, double __pyx_v_dt, double __pyx_v_dtmotion, int __pyx_v_moving, int __pyx_v_motion_ended, double __pyx_v_min_motion_time) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("motion_step_quat", 0);
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_5pyIMU_12_motion_core_motion_step_quat(__pyx_v_accx, __pyx_v_accy, __pyx_v_accz, __pyx_v_qw, __pyx_v_qx, __pyx_v_qy, __pyx_v_qz, __pyx_v_local_gravity, __pyx_v_bias_x, __pyx_v_bias_y, __pyx_v_bias_z, __pyx_v_wr_prev_x, __pyx_v_wr_prev_y, __pyx_v_wr_prev_z, __pyx_v_wv_x, __pyx_v_wv_y, __pyx_v_wv_z, __pyx_v_wv_prev_x, __pyx_v_wv_prev_y, __pyx_v_wv_prev_z, __pyx_v_wp_prev_x, __pyx_v_wp_prev_y, __pyx_v_wp_prev_z, __pyx_v_wv_drift_x, __pyx_v_wv_drift_y, __pyx_v_wv_drift_z, __pyx_v_drift_alpha, __pyx_v_dt, __pyx_v_dtmotion, __pyx_v_moving, __pyx_v_motion_ended, __pyx_v_min_motion_time, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 112, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("pyIMU._motion_core.motion_step_quat", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("pyIMU._ucore.q2gravity_components", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -4280,10 +2605,10 @@ static int __Pyx_modinit_function_import_code(__pyx_mstatetype *__pyx_mstate) {
 
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 static PyObject* __pyx_pymod_create(PyObject *spec, PyModuleDef *def); /*proto*/
-static int __pyx_pymod_exec__motion_core(PyObject* module); /*proto*/
+static int __pyx_pymod_exec__ucore(PyObject* module); /*proto*/
 static PyModuleDef_Slot __pyx_moduledef_slots[] = {
   {Py_mod_create, (void*)__pyx_pymod_create},
-  {Py_mod_exec, (void*)__pyx_pymod_exec__motion_core},
+  {Py_mod_exec, (void*)__pyx_pymod_exec__ucore},
   #if CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
   {Py_mod_gil, Py_MOD_GIL_USED},
   #endif
@@ -4302,7 +2627,7 @@ namespace {
   #endif
   {
       PyModuleDef_HEAD_INIT,
-      "_motion_core",
+      "_ucore",
       0, /* m_doc */
     #if CYTHON_USE_MODULE_STATE
       sizeof(__pyx_mstatetype), /* m_size */
@@ -4340,8 +2665,8 @@ namespace {
   #endif
 #endif
 
-__Pyx_PyMODINIT_FUNC PyInit__motion_core(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC PyInit__motion_core(void)
+__Pyx_PyMODINIT_FUNC PyInit__ucore(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC PyInit__ucore(void)
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 {
   return PyModuleDef_Init(&__pyx_moduledef);
@@ -4444,7 +2769,7 @@ bad:
 }
 
 
-static CYTHON_SMALL_CODE int __pyx_pymod_exec__motion_core(PyObject *__pyx_pyinit_module)
+static CYTHON_SMALL_CODE int __pyx_pymod_exec__ucore(PyObject *__pyx_pyinit_module)
 #endif
 {
   int stringtab_initialized = 0;
@@ -4461,7 +2786,7 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec__motion_core(PyObject *__pyx_pyini
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   if (__pyx_m) {
     if (__pyx_m == __pyx_pyinit_module) return 0;
-    PyErr_SetString(PyExc_RuntimeError, "Module '_motion_core' has already been imported. Re-initialisation is not supported.");
+    PyErr_SetString(PyExc_RuntimeError, "Module '_ucore' has already been imported. Re-initialisation is not supported.");
     return -1;
   }
   #else
@@ -4477,7 +2802,7 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec__motion_core(PyObject *__pyx_pyini
   #if CYTHON_USE_MODULE_STATE
   {
     int add_module_result = __Pyx_State_AddModule(__pyx_t_1, &__pyx_moduledef);
-    __pyx_t_1 = 0; /* transfer ownership from __pyx_t_1 to "_motion_core" pseudovariable */
+    __pyx_t_1 = 0; /* transfer ownership from __pyx_t_1 to "_ucore" pseudovariable */
     if (unlikely((add_module_result < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
     pystate_addmodule_run = 1;
   }
@@ -4505,7 +2830,7 @@ if (!__Pyx_RefNanny) {
 }
 #endif
 
-__Pyx_RefNannySetupContext("PyInit__motion_core", 0);
+__Pyx_RefNannySetupContext("PyInit__ucore", 0);
   if (__Pyx_check_binary_version(__PYX_LIMITED_VERSION_HEX, __Pyx_get_runtime_version(), CYTHON_COMPILING_IN_LIMITED_API) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #ifdef __Pxy_PyFrame_Initialize_Offsets
   __Pxy_PyFrame_Initialize_Offsets();
@@ -4533,13 +2858,13 @@ __Pyx_RefNannySetupContext("PyInit__motion_core", 0);
   if (__Pyx_InitConstants(__pyx_mstate) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   stringtab_initialized = 1;
   if (__Pyx_InitGlobals() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__pyx_module_is_main_pyIMU___motion_core) {
+  if (__pyx_module_is_main_pyIMU___ucore) {
     if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_name, __pyx_mstate_global->__pyx_n_u_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "pyIMU._motion_core")) {
-      if (unlikely((PyDict_SetItemString(modules, "pyIMU._motion_core", __pyx_m) < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "pyIMU._ucore")) {
+      if (unlikely((PyDict_SetItemString(modules, "pyIMU._ucore", __pyx_m) < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   /*--- Builtin init code ---*/
@@ -4557,34 +2882,22 @@ __Pyx_RefNannySetupContext("PyInit__motion_core", 0);
   (void)__Pyx_modinit_function_import_code(__pyx_mstate);
   /*--- Execution code ---*/
 
-  /* "pyIMU/_motion_core.pyx":3
+  /* "pyIMU/_ucore.pyx":3
  * # cython: language_level=3
  * 
- * cpdef tuple motion_step(             # <<<<<<<<<<<<<<
- *     double accx, double accy, double accz,
- *     double qw, double qx, double qy, double qz,
+ * cpdef tuple q2gravity_components(double qw, double qx, double qy, double qz):             # <<<<<<<<<<<<<<
+ *     cdef double gx, gy, gz
+ * 
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5pyIMU_12_motion_core_1motion_step, 0, __pyx_mstate_global->__pyx_n_u_motion_step, NULL, __pyx_mstate_global->__pyx_n_u_pyIMU__motion_core, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 3, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5pyIMU_6_ucore_1q2gravity_components, 0, __pyx_mstate_global->__pyx_n_u_q2gravity_components, NULL, __pyx_mstate_global->__pyx_n_u_pyIMU__ucore, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 3, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_motion_step, __pyx_t_2) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_q2gravity_components, __pyx_t_2) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "pyIMU/_motion_core.pyx":112
- * 
- * 
- * cpdef tuple motion_step_quat(             # <<<<<<<<<<<<<<
- *     double accx, double accy, double accz,
- *     double qw, double qx, double qy, double qz,
-*/
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5pyIMU_12_motion_core_3motion_step_quat, 0, __pyx_mstate_global->__pyx_n_u_motion_step_quat, NULL, __pyx_mstate_global->__pyx_n_u_pyIMU__motion_core, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 112, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_motion_step_quat, __pyx_t_2) < 0) __PYX_ERR(0, 112, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "pyIMU/_motion_core.pyx":1
+  /* "pyIMU/_ucore.pyx":1
  * # cython: language_level=3             # <<<<<<<<<<<<<<
  * 
- * cpdef tuple motion_step(
+ * cpdef tuple q2gravity_components(double qw, double qx, double qy, double qz):
 */
   __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -4598,7 +2911,7 @@ __Pyx_RefNannySetupContext("PyInit__motion_core", 0);
   __Pyx_XDECREF(__pyx_t_2);
   if (__pyx_m) {
     if (__pyx_mstate->__pyx_d && stringtab_initialized) {
-      __Pyx_AddTraceback("init pyIMU._motion_core", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init pyIMU._ucore", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     #if !CYTHON_USE_MODULE_STATE
     Py_CLEAR(__pyx_m);
@@ -4612,7 +2925,7 @@ __Pyx_RefNannySetupContext("PyInit__motion_core", 0);
     }
     #endif
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init pyIMU._motion_core");
+    PyErr_SetString(PyExc_ImportError, "init pyIMU._ucore");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -4626,11 +2939,11 @@ __Pyx_RefNannySetupContext("PyInit__motion_core", 0);
 
 typedef struct {
     const char *s;
-#if 22 <= 65535
+#if 20 <= 65535
     const unsigned short n;
-#elif 22 / 2 < INT_MAX
+#elif 20 / 2 < INT_MAX
     const unsigned int n;
-#elif 22 / 2 < LONG_MAX
+#elif 20 / 2 < LONG_MAX
     const unsigned long n;
 #else
     const Py_ssize_t n;
@@ -4650,61 +2963,23 @@ typedef struct {
 static const char * const __pyx_string_tab_encodings[] = { 0 };
 static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_, sizeof(__pyx_k_), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_ */
-  {__pyx_k_accx, sizeof(__pyx_k_accx), 0, 1, 1}, /* PyObject cname: __pyx_n_u_accx */
-  {__pyx_k_accy, sizeof(__pyx_k_accy), 0, 1, 1}, /* PyObject cname: __pyx_n_u_accy */
-  {__pyx_k_accz, sizeof(__pyx_k_accz), 0, 1, 1}, /* PyObject cname: __pyx_n_u_accz */
   {__pyx_k_asyncio_coroutines, sizeof(__pyx_k_asyncio_coroutines), 0, 1, 1}, /* PyObject cname: __pyx_n_u_asyncio_coroutines */
-  {__pyx_k_bias_x, sizeof(__pyx_k_bias_x), 0, 1, 1}, /* PyObject cname: __pyx_n_u_bias_x */
-  {__pyx_k_bias_y, sizeof(__pyx_k_bias_y), 0, 1, 1}, /* PyObject cname: __pyx_n_u_bias_y */
-  {__pyx_k_bias_z, sizeof(__pyx_k_bias_z), 0, 1, 1}, /* PyObject cname: __pyx_n_u_bias_z */
   {__pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 1, 1}, /* PyObject cname: __pyx_n_u_cline_in_traceback */
-  {__pyx_k_drift_alpha, sizeof(__pyx_k_drift_alpha), 0, 1, 1}, /* PyObject cname: __pyx_n_u_drift_alpha */
-  {__pyx_k_dt, sizeof(__pyx_k_dt), 0, 1, 1}, /* PyObject cname: __pyx_n_u_dt */
-  {__pyx_k_dtmotion, sizeof(__pyx_k_dtmotion), 0, 1, 1}, /* PyObject cname: __pyx_n_u_dtmotion */
   {__pyx_k_func, sizeof(__pyx_k_func), 0, 1, 1}, /* PyObject cname: __pyx_n_u_func */
   {__pyx_k_is_coroutine, sizeof(__pyx_k_is_coroutine), 0, 1, 1}, /* PyObject cname: __pyx_n_u_is_coroutine */
-  {__pyx_k_local_gravity, sizeof(__pyx_k_local_gravity), 0, 1, 1}, /* PyObject cname: __pyx_n_u_local_gravity */
   {__pyx_k_main, sizeof(__pyx_k_main), 0, 1, 1}, /* PyObject cname: __pyx_n_u_main */
-  {__pyx_k_min_motion_time, sizeof(__pyx_k_min_motion_time), 0, 1, 1}, /* PyObject cname: __pyx_n_u_min_motion_time */
   {__pyx_k_module, sizeof(__pyx_k_module), 0, 1, 1}, /* PyObject cname: __pyx_n_u_module */
-  {__pyx_k_motion_ended, sizeof(__pyx_k_motion_ended), 0, 1, 1}, /* PyObject cname: __pyx_n_u_motion_ended */
-  {__pyx_k_motion_step, sizeof(__pyx_k_motion_step), 0, 1, 1}, /* PyObject cname: __pyx_n_u_motion_step */
-  {__pyx_k_motion_step_quat, sizeof(__pyx_k_motion_step_quat), 0, 1, 1}, /* PyObject cname: __pyx_n_u_motion_step_quat */
-  {__pyx_k_moving, sizeof(__pyx_k_moving), 0, 1, 1}, /* PyObject cname: __pyx_n_u_moving */
   {__pyx_k_name, sizeof(__pyx_k_name), 0, 1, 1}, /* PyObject cname: __pyx_n_u_name */
   {__pyx_k_pop, sizeof(__pyx_k_pop), 0, 1, 1}, /* PyObject cname: __pyx_n_u_pop */
-  {__pyx_k_pyIMU__motion_core, sizeof(__pyx_k_pyIMU__motion_core), 0, 1, 1}, /* PyObject cname: __pyx_n_u_pyIMU__motion_core */
-  {__pyx_k_pyIMU__motion_core_pyx, sizeof(__pyx_k_pyIMU__motion_core_pyx), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_pyIMU__motion_core_pyx */
+  {__pyx_k_pyIMU__ucore, sizeof(__pyx_k_pyIMU__ucore), 0, 1, 1}, /* PyObject cname: __pyx_n_u_pyIMU__ucore */
+  {__pyx_k_pyIMU__ucore_pyx, sizeof(__pyx_k_pyIMU__ucore_pyx), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_pyIMU__ucore_pyx */
+  {__pyx_k_q2gravity_components, sizeof(__pyx_k_q2gravity_components), 0, 1, 1}, /* PyObject cname: __pyx_n_u_q2gravity_components */
   {__pyx_k_qualname, sizeof(__pyx_k_qualname), 0, 1, 1}, /* PyObject cname: __pyx_n_u_qualname */
   {__pyx_k_qw, sizeof(__pyx_k_qw), 0, 1, 1}, /* PyObject cname: __pyx_n_u_qw */
   {__pyx_k_qx, sizeof(__pyx_k_qx), 0, 1, 1}, /* PyObject cname: __pyx_n_u_qx */
   {__pyx_k_qy, sizeof(__pyx_k_qy), 0, 1, 1}, /* PyObject cname: __pyx_n_u_qy */
   {__pyx_k_qz, sizeof(__pyx_k_qz), 0, 1, 1}, /* PyObject cname: __pyx_n_u_qz */
-  {__pyx_k_r00, sizeof(__pyx_k_r00), 0, 1, 1}, /* PyObject cname: __pyx_n_u_r00 */
-  {__pyx_k_r01, sizeof(__pyx_k_r01), 0, 1, 1}, /* PyObject cname: __pyx_n_u_r01 */
-  {__pyx_k_r02, sizeof(__pyx_k_r02), 0, 1, 1}, /* PyObject cname: __pyx_n_u_r02 */
-  {__pyx_k_r10, sizeof(__pyx_k_r10), 0, 1, 1}, /* PyObject cname: __pyx_n_u_r10 */
-  {__pyx_k_r11, sizeof(__pyx_k_r11), 0, 1, 1}, /* PyObject cname: __pyx_n_u_r11 */
-  {__pyx_k_r12, sizeof(__pyx_k_r12), 0, 1, 1}, /* PyObject cname: __pyx_n_u_r12 */
-  {__pyx_k_r20, sizeof(__pyx_k_r20), 0, 1, 1}, /* PyObject cname: __pyx_n_u_r20 */
-  {__pyx_k_r21, sizeof(__pyx_k_r21), 0, 1, 1}, /* PyObject cname: __pyx_n_u_r21 */
-  {__pyx_k_r22, sizeof(__pyx_k_r22), 0, 1, 1}, /* PyObject cname: __pyx_n_u_r22 */
   {__pyx_k_test, sizeof(__pyx_k_test), 0, 1, 1}, /* PyObject cname: __pyx_n_u_test */
-  {__pyx_k_wp_prev_x, sizeof(__pyx_k_wp_prev_x), 0, 1, 1}, /* PyObject cname: __pyx_n_u_wp_prev_x */
-  {__pyx_k_wp_prev_y, sizeof(__pyx_k_wp_prev_y), 0, 1, 1}, /* PyObject cname: __pyx_n_u_wp_prev_y */
-  {__pyx_k_wp_prev_z, sizeof(__pyx_k_wp_prev_z), 0, 1, 1}, /* PyObject cname: __pyx_n_u_wp_prev_z */
-  {__pyx_k_wr_prev_x, sizeof(__pyx_k_wr_prev_x), 0, 1, 1}, /* PyObject cname: __pyx_n_u_wr_prev_x */
-  {__pyx_k_wr_prev_y, sizeof(__pyx_k_wr_prev_y), 0, 1, 1}, /* PyObject cname: __pyx_n_u_wr_prev_y */
-  {__pyx_k_wr_prev_z, sizeof(__pyx_k_wr_prev_z), 0, 1, 1}, /* PyObject cname: __pyx_n_u_wr_prev_z */
-  {__pyx_k_wv_drift_x, sizeof(__pyx_k_wv_drift_x), 0, 1, 1}, /* PyObject cname: __pyx_n_u_wv_drift_x */
-  {__pyx_k_wv_drift_y, sizeof(__pyx_k_wv_drift_y), 0, 1, 1}, /* PyObject cname: __pyx_n_u_wv_drift_y */
-  {__pyx_k_wv_drift_z, sizeof(__pyx_k_wv_drift_z), 0, 1, 1}, /* PyObject cname: __pyx_n_u_wv_drift_z */
-  {__pyx_k_wv_prev_x, sizeof(__pyx_k_wv_prev_x), 0, 1, 1}, /* PyObject cname: __pyx_n_u_wv_prev_x */
-  {__pyx_k_wv_prev_y, sizeof(__pyx_k_wv_prev_y), 0, 1, 1}, /* PyObject cname: __pyx_n_u_wv_prev_y */
-  {__pyx_k_wv_prev_z, sizeof(__pyx_k_wv_prev_z), 0, 1, 1}, /* PyObject cname: __pyx_n_u_wv_prev_z */
-  {__pyx_k_wv_x, sizeof(__pyx_k_wv_x), 0, 1, 1}, /* PyObject cname: __pyx_n_u_wv_x */
-  {__pyx_k_wv_y, sizeof(__pyx_k_wv_y), 0, 1, 1}, /* PyObject cname: __pyx_n_u_wv_y */
-  {__pyx_k_wv_z, sizeof(__pyx_k_wv_z), 0, 1, 1}, /* PyObject cname: __pyx_n_u_wv_z */
   {0, 0, 0, 0, 0}
 };
 /* InitStrings.proto */
@@ -4739,13 +3014,13 @@ static int __Pyx_InitConstants(__pyx_mstatetype *__pyx_mstate) {
 /* #### Code section: init_codeobjects ### */
 \
         typedef struct {
-            unsigned int argcount : 6;
+            unsigned int argcount : 3;
             unsigned int num_posonly_args : 1;
             unsigned int num_kwonly_args : 1;
-            unsigned int nlocals : 6;
+            unsigned int nlocals : 3;
             unsigned int flags : 10;
-            unsigned int first_line : 7;
-            unsigned int line_table_length : 14;
+            unsigned int first_line : 2;
+            unsigned int line_table_length : 11;
         } __Pyx_PyCode_New_function_description;
 /* NewCodeObj.proto */
 static PyObject* __Pyx_PyCode_New(
@@ -4762,14 +3037,9 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
   PyObject* tuple_dedup_map = PyDict_New();
   if (unlikely(!tuple_dedup_map)) return -1;
   {
-    __Pyx_PyCode_New_function_description descr = {41, 0, 0, 41, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 3, 653};
-    PyObject* varnames[] = {__pyx_mstate->__pyx_n_u_accx, __pyx_mstate->__pyx_n_u_accy, __pyx_mstate->__pyx_n_u_accz, __pyx_mstate->__pyx_n_u_qw, __pyx_mstate->__pyx_n_u_qx, __pyx_mstate->__pyx_n_u_qy, __pyx_mstate->__pyx_n_u_qz, __pyx_mstate->__pyx_n_u_r00, __pyx_mstate->__pyx_n_u_r01, __pyx_mstate->__pyx_n_u_r02, __pyx_mstate->__pyx_n_u_r10, __pyx_mstate->__pyx_n_u_r11, __pyx_mstate->__pyx_n_u_r12, __pyx_mstate->__pyx_n_u_r20, __pyx_mstate->__pyx_n_u_r21, __pyx_mstate->__pyx_n_u_r22, __pyx_mstate->__pyx_n_u_local_gravity, __pyx_mstate->__pyx_n_u_bias_x, __pyx_mstate->__pyx_n_u_bias_y, __pyx_mstate->__pyx_n_u_bias_z, __pyx_mstate->__pyx_n_u_wr_prev_x, __pyx_mstate->__pyx_n_u_wr_prev_y, __pyx_mstate->__pyx_n_u_wr_prev_z, __pyx_mstate->__pyx_n_u_wv_x, __pyx_mstate->__pyx_n_u_wv_y, __pyx_mstate->__pyx_n_u_wv_z, __pyx_mstate->__pyx_n_u_wv_prev_x, __pyx_mstate->__pyx_n_u_wv_prev_y, __pyx_mstate->__pyx_n_u_wv_prev_z, __pyx_mstate->__pyx_n_u_wp_prev_x, __pyx_mstate->__pyx_n_u_wp_prev_y, __pyx_mstate->__pyx_n_u_wp_prev_z, __pyx_mstate->__pyx_n_u_wv_drift_x, __pyx_mstate->__pyx_n_u_wv_drift_y, __pyx_mstate->__pyx_n_u_wv_drift_z, __pyx_mstate->__pyx_n_u_drift_alpha, __pyx_mstate->__pyx_n_u_dt, __pyx_mstate->__pyx_n_u_dtmotion, __pyx_mstate->__pyx_n_u_moving, __pyx_mstate->__pyx_n_u_motion_ended, __pyx_mstate->__pyx_n_u_min_motion_time};
-    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pyIMU__motion_core_pyx, __pyx_mstate->__pyx_n_u_motion_step, __pyx_k_0_b_S_2S_Rq_S_2S_Rq_Rt3c_3b_2Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
-  }
-  {
-    __Pyx_PyCode_New_function_description descr = {32, 0, 0, 32, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 112, 321};
-    PyObject* varnames[] = {__pyx_mstate->__pyx_n_u_accx, __pyx_mstate->__pyx_n_u_accy, __pyx_mstate->__pyx_n_u_accz, __pyx_mstate->__pyx_n_u_qw, __pyx_mstate->__pyx_n_u_qx, __pyx_mstate->__pyx_n_u_qy, __pyx_mstate->__pyx_n_u_qz, __pyx_mstate->__pyx_n_u_local_gravity, __pyx_mstate->__pyx_n_u_bias_x, __pyx_mstate->__pyx_n_u_bias_y, __pyx_mstate->__pyx_n_u_bias_z, __pyx_mstate->__pyx_n_u_wr_prev_x, __pyx_mstate->__pyx_n_u_wr_prev_y, __pyx_mstate->__pyx_n_u_wr_prev_z, __pyx_mstate->__pyx_n_u_wv_x, __pyx_mstate->__pyx_n_u_wv_y, __pyx_mstate->__pyx_n_u_wv_z, __pyx_mstate->__pyx_n_u_wv_prev_x, __pyx_mstate->__pyx_n_u_wv_prev_y, __pyx_mstate->__pyx_n_u_wv_prev_z, __pyx_mstate->__pyx_n_u_wp_prev_x, __pyx_mstate->__pyx_n_u_wp_prev_y, __pyx_mstate->__pyx_n_u_wp_prev_z, __pyx_mstate->__pyx_n_u_wv_drift_x, __pyx_mstate->__pyx_n_u_wv_drift_y, __pyx_mstate->__pyx_n_u_wv_drift_z, __pyx_mstate->__pyx_n_u_drift_alpha, __pyx_mstate->__pyx_n_u_dt, __pyx_mstate->__pyx_n_u_dtmotion, __pyx_mstate->__pyx_n_u_moving, __pyx_mstate->__pyx_n_u_motion_ended, __pyx_mstate->__pyx_n_u_min_motion_time};
-    __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pyIMU__motion_core_pyx, __pyx_mstate->__pyx_n_u_motion_step_quat, __pyx_k_Ba_Ba_Ba_Ba_Ba_Ba_Ba_Ba_Ba_b_Cs, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
+    __Pyx_PyCode_New_function_description descr = {4, 0, 0, 4, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 3, 80};
+    PyObject* varnames[] = {__pyx_mstate->__pyx_n_u_qw, __pyx_mstate->__pyx_n_u_qx, __pyx_mstate->__pyx_n_u_qy, __pyx_mstate->__pyx_n_u_qz};
+    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pyIMU__ucore_pyx, __pyx_mstate->__pyx_n_u_q2gravity_components, __pyx_k_S_2S_Rq_S_2S_Rq_Rt3c_3b_2Q_D_A, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
   }
   Py_DECREF(tuple_dedup_map);
   return 0;

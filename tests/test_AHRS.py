@@ -63,7 +63,7 @@ for i in range(1000):
     rnd = random.uniform(0,0.2)    
     acc = acc + Vector3D(rnd,rnd,rnd)
     rnd = random.uniform(0,1)    
-    mag = gyr + Vector3D(rnd,rnd,rnd)
+    mag = mag + Vector3D(rnd,rnd,rnd)
     rnd = random.uniform(0,0.2)    
     gyr = gyr + Vector3D(rnd,rnd,rnd)
         
@@ -77,8 +77,7 @@ for i in range(1000):
 
     if not moving:
         gyr_offset = 0.99*gyr_offset + 0.01*gyr
-        gyr_offset_updated = True
 
-    q = FUSER.update(acc=acc,gyr=gyr,mag=mag,dt=dt)
-    h = qmag2h(q=q, mag=mag, declination=DECLINATION)
+    q = FUSER.update(acc=_acc, gyr=_gyr, mag=_mag, dt=dt)
+    h = qmag2h(q=q, mag=_mag, declination=DECLINATION)
     rpy=q2rpy(q=q)

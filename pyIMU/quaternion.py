@@ -35,6 +35,7 @@ RAD2DEG = 180.0 / math.pi
 EPSILON = 2.0*math.ldexp(1.0, -53)
 
 class Quaternion():
+    __slots__ = ("w", "x", "y", "z")
     '''
     Quaternion Class
     q1 = Quaternion(1., 2., 3., 4.)
@@ -398,6 +399,7 @@ def r33toq(r33, check= False) -> Quaternion:
 ###############################################################################################
 
 class Vector3D():
+    __slots__ = ("x", "y", "z")
     '''
     3D Vector Class
     v1 = Vector3D(1., 2., 3.)

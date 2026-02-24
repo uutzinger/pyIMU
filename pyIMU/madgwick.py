@@ -253,7 +253,6 @@ class Madgwick:
       updateMARG when using gyroscope, accelerometer and magnetometer data (MARG implementation).
 
     Initialization:
-      frequency : float, default: 100.0; Sampling frequency in Hertz, or
       dt : float, default: 0.01;         Sampling step in seconds. Inverse of sampling frequency. Not required.
       gain : float,                      Filter gain. Defaults to 0.033 for IMU implementations, or to 0.041 for MARG implementations.
       gain_imu : float, default: 0.033;  Filter gain for IMU implementation.
@@ -261,7 +260,7 @@ class Madgwick:
 
     Example:
     >>> from pyIMU.madgwick import Madgwick
-    >>> madgwick = Madgwick(frequency=150.0, gain=0.033)
+    >>> madgwick = Madgwick(dt=1.0/150.0, gain=0.033)
     >>> madgwick = Madgwick(dt=1/150.0, gain_imu=0.033)
     >>> type(madgwick.q)
 
@@ -287,8 +286,7 @@ class Madgwick:
         self.acc                   = None
         self.gyr                   = None
         self.mag                   = None
-        self.frequency: float      = kwargs.get('frequency', 100.0)
-        self.dt: float             = kwargs.get('dt', (1.0/self.frequency) if self.frequency else 0.01)
+        self.dt: float             = kwargs.get('dt', 0.01)
         gain                       = kwargs.get('gain', None)
         self.gain_imu              = kwargs.get('gain_imu', gain if gain is not None else 0.033)
         self.gain_marg             = kwargs.get('gain_marg', gain if gain is not None else 0.041)
@@ -319,8 +317,28 @@ class Madgwick:
         if dt <= 0:
             dt = self.dt
 
-        self.gyr = self._to_gyr_rads(gyr)
-        self.acc = self._to_acc_g(acc)
+        if self.gyr is None:
+            self.gyr = Vector3D(0.0, 0.0, 0.0)
+        if self.acc is None:
+            self.acc = Vector3D(0.0, 0.0, 0.0)
+
+        if self.gyr_in_dps:
+            self.gyr.x = gyr.x * DEG2RAD
+            self.gyr.y = gyr.y * DEG2RAD
+            self.gyr.z = gyr.z * DEG2RAD
+        else:
+            self.gyr.x = gyr.x
+            self.gyr.y = gyr.y
+            self.gyr.z = gyr.z
+
+        if self.acc_in_g:
+            self.acc.x = acc.x
+            self.acc.y = acc.y
+            self.acc.z = acc.z
+        else:
+            self.acc.x = acc.x / GRAVITY
+            self.acc.y = acc.y / GRAVITY
+            self.acc.z = acc.z / GRAVITY
              
         if mag is None:
             # Compute with IMU architecture
@@ -332,11 +350,15 @@ class Madgwick:
                 # self.q.normalize()
                 # print('Init with acc only: ', q2rpy(self.q))
             else:
-                self.q = updateIMU(self.q, self.gyr, self.acc, dt=dt, gain=self.gain_imu)
+                updateIMU_inplace(self.q, self.gyr, self.acc, dt=dt, gain=self.gain_imu)
 
         else:
             # Compute with MARG architecture
-            self.mag = copy(mag)
+            if self.mag is None:
+                self.mag = Vector3D(0.0, 0.0, 0.0)
+            self.mag.x = mag.x
+            self.mag.y = mag.y
+            self.mag.z = mag.z
             if self.q is None:
                 # We run this the first time. Estimate initial quaternion.
                 #   Nake sure that you have stable readings from the senor before
@@ -345,7 +367,7 @@ class Madgwick:
                 # self.q.normalize()
                 # print('Init with acc and mag: ', q2rpy(self.q))
             else:    
-                self.q = updateMARG(self.q, self.gyr, self.acc, self.mag, dt=dt, gain=self.gain_marg)
+                updateMARG_inplace(self.q, self.gyr, self.acc, self.mag, dt=dt, gain=self.gain_marg)
 
         return self.q
         

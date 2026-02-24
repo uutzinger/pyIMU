@@ -34,8 +34,7 @@ class Fusion:
 
     def __init__(self, **kwargs):
         # Sampling
-        self.frequency = float(kwargs.get("frequency", 100.0))
-        self.dt = float(kwargs.get("dt", (1.0 / self.frequency) if self.frequency > 0.0 else 0.01))
+        self.dt = float(kwargs.get("dt", 0.01))
 
         # Gains / initialisation ramp
         self.k_init = float(kwargs.get("k_init", 10.0))
@@ -170,12 +169,64 @@ class Fusion:
 
         gyr_rads = self._to_gyr_rads(gyr)
         acc_g = self._to_acc_g(acc)
+        mag_present = mag is not None
+        if mag_present:
+            mx, my, mz = mag.x, mag.y, mag.z
+        else:
+            mx = my = mz = 0.0
 
         if self.q is None:
-            if mag is None:
+            if not mag_present:
                 self.q = accel2q(acc_g)
             else:
                 self.q = accelmag2q(acc_g, mag)
+
+        if _HAS_FCORE:
+            (
+                self.q.w, self.q.x, self.q.y, self.q.z,
+                self.gyro_bias.x, self.gyro_bias.y, self.gyro_bias.z,
+                self._acc_trigger, self._acc_timeout, self._mag_trigger, self._mag_timeout,
+                self._stationary_time, self.ramped_gain, initialising,
+                angular_rate_recovery, accelerometer_ignored, magnetometer_ignored,
+                self.acceleration_error, self.magnetic_error,
+                self.azero.x, self.azero.y, self.azero.z,
+                self.aglobal.x, self.aglobal.y, self.aglobal.z
+            ) = _fcore.fusion_step(
+                self.q.w, self.q.x, self.q.y, self.q.z,
+                gyr_rads.x, gyr_rads.y, gyr_rads.z,
+                acc_g.x, acc_g.y, acc_g.z,
+                mag_present, mx, my, mz,
+                self.gyro_bias.x, self.gyro_bias.y, self.gyro_bias.z,
+                dt,
+                self.k_normal,
+                self.ramped_gain,
+                self._gain_ramp_rate,
+                self.initialising,
+                self._gyr_range_rad,
+                self.omega_min,
+                self.fc_bias,
+                self.t_bias,
+                self.g_deviation,
+                self.acceleration_rejection,
+                self.magnetic_rejection,
+                self.mag_min is not None,
+                0.0 if self.mag_min is None else float(self.mag_min),
+                self.mag_max is not None,
+                0.0 if self.mag_max is None else float(self.mag_max),
+                self.t_acc_reject,
+                self.t_mag_reject,
+                self.recovery_timeout_factor,
+                self._acc_trigger,
+                self._acc_timeout,
+                self._mag_trigger,
+                self._mag_timeout,
+                self._stationary_time
+            )
+            self.initialising = bool(initialising)
+            self.angular_rate_recovery = bool(angular_rate_recovery)
+            self.accelerometer_ignored = bool(accelerometer_ignored)
+            self.magnetometer_ignored = bool(magnetometer_ignored)
+            return self.q
 
         if self.initialising and self._gain_ramp_rate > 0.0:
             self.ramped_gain -= self._gain_ramp_rate * dt
@@ -217,7 +268,7 @@ class Fusion:
 
         self.magnetometer_ignored = True
         self.magnetic_error = 0.0
-        if mag is not None and not self.angular_rate_recovery:
+        if mag_present and not self.angular_rate_recovery:
             mag_vec = Vector3D(mag)
             mag_norm_raw = mag_vec.norm
             if mag_norm_raw > EPSILON:

@@ -7,6 +7,13 @@ import struct
 import numbers
 from copy import copy
 
+try:
+    from pyIMU import _ucore
+    _HAS_UCORE = True
+except Exception:
+    _ucore = None
+    _HAS_UCORE = False
+
 IDENTITY_QUATERNION = Quaternion(1.0, 0.0, 0.0, 0.0)
 VECTOR_ZERO         = Vector3D(0.0, 0.0, 0.0)
 
@@ -508,9 +515,12 @@ def q2gravity(pose: Quaternion) -> Vector3D:
     rotated_vector = np.dot(r33.T, np.array([0,0,1]))
 
     '''
-    x =       2.0 * (pose.x * pose.z - pose.w * pose.y)
-    y =       2.0 * (pose.y * pose.z + pose.w * pose.x)
-    z = 1.0 - 2.0 * (pose.x * pose.x + pose.y * pose.y)
+    if _HAS_UCORE:
+        x, y, z = _ucore.q2gravity_components(pose.w, pose.x, pose.y, pose.z)
+    else:
+        x =       2.0 * (pose.x * pose.z - pose.w * pose.y)
+        y =       2.0 * (pose.y * pose.z + pose.w * pose.x)
+        z = 1.0 - 2.0 * (pose.x * pose.x + pose.y * pose.y)
 
     return Vector3D(x, y, z)
 

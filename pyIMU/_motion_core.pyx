@@ -108,3 +108,67 @@ cpdef tuple motion_step(
         dtmotion,
     )
 
+
+cpdef tuple motion_step_quat(
+    double accx, double accy, double accz,
+    double qw, double qx, double qy, double qz,
+    double local_gravity,
+    double bias_x, double bias_y, double bias_z,
+    double wr_prev_x, double wr_prev_y, double wr_prev_z,
+    double wv_x, double wv_y, double wv_z,
+    double wv_prev_x, double wv_prev_y, double wv_prev_z,
+    double wp_prev_x, double wp_prev_y, double wp_prev_z,
+    double wv_drift_x, double wv_drift_y, double wv_drift_z,
+    double drift_alpha,
+    double dt,
+    double dtmotion,
+    bint moving,
+    bint motion_ended,
+    double min_motion_time
+):
+    cdef double xx, xy, xz, xw, yy, yz, yw, zz, zw
+    cdef double r00, r01, r02
+    cdef double r10, r11, r12
+    cdef double r20, r21, r22
+
+    # Quaternion -> rotation matrix (sensor to world)
+    xx = qx * qx
+    xy = qx * qy
+    xz = qx * qz
+    xw = qx * qw
+    yy = qy * qy
+    yz = qy * qz
+    yw = qy * qw
+    zz = qz * qz
+    zw = qz * qw
+
+    r00 = 1.0 - 2.0 * (yy + zz)
+    r01 = 2.0 * (xy - zw)
+    r02 = 2.0 * (xz + yw)
+    r10 = 2.0 * (xy + zw)
+    r11 = 1.0 - 2.0 * (xx + zz)
+    r12 = 2.0 * (yz - xw)
+    r20 = 2.0 * (xz - yw)
+    r21 = 2.0 * (yz + xw)
+    r22 = 1.0 - 2.0 * (xx + yy)
+
+    return motion_step(
+        accx, accy, accz,
+        qw, qx, qy, qz,
+        r00, r01, r02,
+        r10, r11, r12,
+        r20, r21, r22,
+        local_gravity,
+        bias_x, bias_y, bias_z,
+        wr_prev_x, wr_prev_y, wr_prev_z,
+        wv_x, wv_y, wv_z,
+        wv_prev_x, wv_prev_y, wv_prev_z,
+        wp_prev_x, wp_prev_y, wp_prev_z,
+        wv_drift_x, wv_drift_y, wv_drift_z,
+        drift_alpha,
+        dt,
+        dtmotion,
+        moving,
+        motion_ended,
+        min_motion_time
+    )

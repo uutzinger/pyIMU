@@ -1981,27 +1981,13 @@ static void __pyx_insert_code_object(int code_line, __Pyx_CachedCodeObjectType* 
 static void __Pyx_AddTraceback(const char *funcname, int c_line,
                                int py_line, const char *filename);
 
-/* FormatTypeName.proto */
-#if CYTHON_COMPILING_IN_LIMITED_API
-typedef PyObject *__Pyx_TypeName;
-#define __Pyx_FMT_TYPENAME "%U"
-#define __Pyx_DECREF_TypeName(obj) Py_XDECREF(obj)
-#if __PYX_LIMITED_VERSION_HEX >= 0x030d0000
-#define __Pyx_PyType_GetFullyQualifiedName PyType_GetFullyQualifiedName
-#else
-static __Pyx_TypeName __Pyx_PyType_GetFullyQualifiedName(PyTypeObject* tp);
-#endif
-#else  // !LIMITED_API
-typedef const char *__Pyx_TypeName;
-#define __Pyx_FMT_TYPENAME "%.200s"
-#define __Pyx_PyType_GetFullyQualifiedName(tp) ((tp)->tp_name)
-#define __Pyx_DECREF_TypeName(obj)
-#endif
-
 /* GCCDiagnostics.proto */
 #if !defined(__INTEL_COMPILER) && defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
 #define __Pyx_HAS_GCC_DIAGNOSTIC
 #endif
+
+/* CIntFromPy.proto */
+static CYTHON_INLINE int __Pyx_PyLong_As_int(PyObject *);
 
 /* PyObjectVectorCallKwBuilder.proto */
 CYTHON_UNUSED static int __Pyx_VectorcallBuilder_AddArg_Check(PyObject *key, PyObject *value, PyObject *builder, PyObject **args, int n);
@@ -2022,13 +2008,30 @@ static int __Pyx_VectorcallBuilder_AddArgStr(const char *key, PyObject *value, P
 #endif
 
 /* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyLong_From_int(int value);
+
+/* FormatTypeName.proto */
+#if CYTHON_COMPILING_IN_LIMITED_API
+typedef PyObject *__Pyx_TypeName;
+#define __Pyx_FMT_TYPENAME "%U"
+#define __Pyx_DECREF_TypeName(obj) Py_XDECREF(obj)
+#if __PYX_LIMITED_VERSION_HEX >= 0x030d0000
+#define __Pyx_PyType_GetFullyQualifiedName PyType_GetFullyQualifiedName
+#else
+static __Pyx_TypeName __Pyx_PyType_GetFullyQualifiedName(PyTypeObject* tp);
+#endif
+#else  // !LIMITED_API
+typedef const char *__Pyx_TypeName;
+#define __Pyx_FMT_TYPENAME "%.200s"
+#define __Pyx_PyType_GetFullyQualifiedName(tp) ((tp)->tp_name)
+#define __Pyx_DECREF_TypeName(obj)
+#endif
+
+/* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyLong_From_long(long value);
 
 /* CIntFromPy.proto */
 static CYTHON_INLINE long __Pyx_PyLong_As_long(PyObject *);
-
-/* CIntFromPy.proto */
-static CYTHON_INLINE int __Pyx_PyLong_As_int(PyObject *);
 
 /* FastTypeChecks.proto */
 #if CYTHON_COMPILING_IN_CPYTHON
@@ -2111,7 +2114,12 @@ static int __Pyx_State_RemoveModule(void*);
 /* Module declarations from "libc.math" */
 
 /* Module declarations from "pyIMU._fcore" */
+static double __pyx_v_5pyIMU_6_fcore_EPSILON;
+static double __pyx_v_5pyIMU_6_fcore_TWO_PI;
+static CYTHON_INLINE double __pyx_f_5pyIMU_6_fcore_clampd(double, double, double); /*proto*/
+static CYTHON_INLINE int __pyx_f_5pyIMU_6_fcore_clipi(int, int); /*proto*/
 static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, int __pyx_skip_dispatch); /*proto*/
+static PyObject *__pyx_f_5pyIMU_6_fcore_fusion_step(double, double, double, double, double, double, double, double, double, double, int, double, double, double, double, double, double, double, double, double, double, int, double, double, double, double, double, double, double, int, double, int, double, double, double, int, int, int, int, int, double, int __pyx_skip_dispatch); /*proto*/
 /* #### Code section: typeinfo ### */
 /* #### Code section: before_global_var ### */
 #define __Pyx_MODULE_NAME "pyIMU._fcore"
@@ -2122,6 +2130,9 @@ int __pyx_module_is_main_pyIMU___fcore = 0;
 /* #### Code section: global_var ### */
 /* #### Code section: string_decls ### */
 static const char __pyx_k_[] = "?";
+static const char __pyx_k_ax[] = "ax";
+static const char __pyx_k_ay[] = "ay";
+static const char __pyx_k_az[] = "az";
 static const char __pyx_k_bx[] = "bx";
 static const char __pyx_k_by[] = "by";
 static const char __pyx_k_bz[] = "bz";
@@ -2132,6 +2143,9 @@ static const char __pyx_k_fz[] = "fz";
 static const char __pyx_k_gx[] = "gx";
 static const char __pyx_k_gy[] = "gy";
 static const char __pyx_k_gz[] = "gz";
+static const char __pyx_k_mx[] = "mx";
+static const char __pyx_k_my[] = "my";
+static const char __pyx_k_mz[] = "mz";
 static const char __pyx_k_qw[] = "qw";
 static const char __pyx_k_qx[] = "qx";
 static const char __pyx_k_qy[] = "qy";
@@ -2142,17 +2156,47 @@ static const char __pyx_k_gain[] = "gain";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_test[] = "__test__";
+static const char __pyx_k_bias_x[] = "bias_x";
+static const char __pyx_k_bias_y[] = "bias_y";
+static const char __pyx_k_bias_z[] = "bias_z";
 static const char __pyx_k_module[] = "__module__";
+static const char __pyx_k_t_bias[] = "t_bias";
+static const char __pyx_k_fc_bias[] = "fc_bias";
+static const char __pyx_k_mag_max[] = "mag_max";
+static const char __pyx_k_mag_min[] = "mag_min";
+static const char __pyx_k_k_normal[] = "k_normal";
 static const char __pyx_k_qualname[] = "__qualname__";
+static const char __pyx_k_omega_min[] = "omega_min";
+static const char __pyx_k_acc_timeout[] = "acc_timeout";
+static const char __pyx_k_acc_trigger[] = "acc_trigger";
+static const char __pyx_k_fusion_step[] = "fusion_step";
+static const char __pyx_k_g_deviation[] = "g_deviation";
+static const char __pyx_k_mag_present[] = "mag_present";
+static const char __pyx_k_mag_timeout[] = "mag_timeout";
+static const char __pyx_k_mag_trigger[] = "mag_trigger";
+static const char __pyx_k_ramped_gain[] = "ramped_gain";
+static const char __pyx_k_initialising[] = "initialising";
 static const char __pyx_k_is_coroutine[] = "_is_coroutine";
 static const char __pyx_k_pyIMU__fcore[] = "pyIMU._fcore";
+static const char __pyx_k_t_acc_reject[] = "t_acc_reject";
+static const char __pyx_k_t_mag_reject[] = "t_mag_reject";
+static const char __pyx_k_gyr_range_rad[] = "gyr_range_rad";
+static const char __pyx_k_gain_ramp_rate[] = "gain_ramp_rate";
+static const char __pyx_k_mag_max_enabled[] = "mag_max_enabled";
+static const char __pyx_k_mag_min_enabled[] = "mag_min_enabled";
+static const char __pyx_k_stationary_time[] = "stationary_time";
 static const char __pyx_k_pyIMU__fcore_pyx[] = "pyIMU/_fcore.pyx";
 static const char __pyx_k_asyncio_coroutines[] = "asyncio.coroutines";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
+static const char __pyx_k_magnetic_rejection[] = "magnetic_rejection";
+static const char __pyx_k_acceleration_rejection[] = "acceleration_rejection";
+static const char __pyx_k_recovery_timeout_factor[] = "recovery_timeout_factor";
 static const char __pyx_k_integrate_quaternion_step[] = "integrate_quaternion_step";
-static const char __pyx_k_c_Bd_E_1_c_Bd_E_1_c_Bd_E_1_3b_B[] = "\200\001\360\"\000\005\013\210$\210c\220\023\220B\220d\230\"\230E\240\022\2401\330\004\n\210$\210c\220\023\220B\220d\230\"\230E\240\022\2401\330\004\n\210$\210c\220\023\220B\220d\230\"\230E\240\022\2401\340\004\n\210!\2103\210b\220\004\220B\220c\230\022\2304\230r\240\023\240B\240a\330\004\013\2103\210b\220\004\220B\220c\230\022\2304\230r\240\023\240B\240a\330\004\013\2103\210b\220\004\220B\220c\230\022\2304\230r\240\023\240B\240a\330\004\013\2103\210b\220\004\220B\220c\230\022\2304\230r\240\023\240B\240a\340\004\n\210$\210b\220\001\330\004\n\210$\210b\220\001\330\004\n\210$\210b\220\001\330\004\n\210$\210b\220\001\340\004\014\210D\220\001\220\023\220B\220c\230\022\2303\230b\240\003\2402\240S\250\002\250#\250R\250s\260\"\260A\330\004\007\200v\210R\210q\330\010\024\220D\230\002\230!\330\010\016\210a\330\010\016\210a\330\010\016\210a\330\010\016\210a\340\004\014\210D\220\004\220D\230\001";
+static const char __pyx_k_D_a_a_a_Q_a_Q_D_r_b_s_1_b_T_b_D[] = "\200\001\360D\001\000\005\027\220a\330\004\026\220a\330\004\026\220a\360\016\000\005&\240Q\330\004&\240a\360\032\000\005\"\240\021\330\004%\240Q\330\004 \240\001\360\"\000\005\010\200}\220D\230\017\240r\250\021\330\010\027\220\240b\250\001\330\010\013\210<\220s\230!\330\014\032\230!\330\014\033\2301\360\006\000\005\022\220\025\220b\230\001\330\004\035\230T\240\021\240$\240b\250\014\260D\270\004\270A\270T\300\022\300<\310t\320SW\320WX\320X\\\320\\^\320^_\360\006\000\005\013\210#\210R\210s\220\"\220C\220r\230\021\330\004\n\210#\210R\210s\220\"\220C\220r\230\021\330\004\n\210#\210R\210s\220\"\220D\230\002\230#\230R\230q\360\006\000\005\020\210t\2201\220C\220r\230\023\230B\230c\240\022\2403\240b\250\003\2502\250Q\330\004\024\220D\230\001\230\031\240\"\240A\330\004\007\200y\220\002\220(\230$\230d\240!\330\010\021\220\023\220B\220a\330\010\021\220\023\220B\220a\330\010\021\220\023\220B\220a\340\010\025\220W\230B\230d\240\"\240G\2502\250Q\330\010\025\220W\230B\230d\240\"\240G\2502\250Q\330\010\025\220W\230B\230d\240\"\240G\2502\250Q\340\010\030\230\004\230A\230[\250\002\250+\260R\260{\300\"\300K\310r\320Q\\\320\\^\320^_\330\010\035\230T\240\021\240&\250\001\250\024\250R\250\270f\300A\340\010\030\230\016\240c\250\035\260e\320;N\310c\320QR\330\010\031\230\025\230e\2401\240M\260\022\2601\330\010\013\210?\230\"\230A\330\014\035\230Q\330\010\031\320\0311\260\022\2601\340\010\013\210=\230\003\2301\330\014\033\2301\330\014$\240A\340\014\033\2301\330\014$\240A\340\010\013\210<\220r\230\021\330\014\032\230!\330\014$\240A\330\r\031\230\022\2301\330\014\032\230!\330\014$\240A\340\014\033\2301\340\010\013\2104\210q\330\014\032\230%\230q\240\r\250Q\330\014\032\230%\230q\240\r\250Q\340\010\013\2104\210q\330\014\023\2201\330\014\023\2201\330\014\023\2201\340\010 \240\001\330\010\035\230Q\360\006\000\005\010\200|\2204\220t\2301\330\010\027\220t\2301\230C\230r\240\023\240B\240c\250\022\2503\250b\260\003\2602\260Q\330\010\013\210=\230\002\230!\330\014\025\220S\230\002\230!\330\014\025""\220S\230\002\230!\330\014\025\220S\230\002\230!\360\006\000\r\023\220!\330\014\022\220!\2201\330\014\022\220!\2201\330\014\022\220!\2201\340\014\021\220\022\2204\220r\230\027\240\002\240$\240b\250\007\250r\260\024\260R\260q\330\014\021\220\024\220R\220w\230b\240\004\240B\240g\250R\250t\2602\260Q\330\014\021\220\024\220R\220w\230b\240\004\240B\240g\250R\250t\2602\260Q\330\014\021\220\024\220R\220w\230b\240\004\240B\240g\250R\250t\2602\260Q\340\014\021\220\023\220B\220c\230\022\2303\230b\240\003\2402\240S\250\002\250#\250R\250s\260\"\260A\330\014\021\220\023\220B\220c\230\022\2303\230b\240\003\2402\240S\250\002\250#\250R\250s\260\"\260A\330\014\021\220\023\220B\220c\230\022\2303\230b\240\003\2402\240S\250\002\250#\250R\250s\260\"\260A\330\014\021\220\023\220B\220c\230\022\2303\230b\240\003\2402\240S\250\002\250#\250R\250s\260\"\260A\340\014\021\220\024\220Q\220c\230\022\2303\230b\240\003\2402\240Q\330\014\021\220\021\340\014\023\2204\220r\230\023\230C\230t\2402\240S\250\002\250#\250R\250s\260\"\260D\270\002\270$\270b\300\003\3003\300c\310\022\3103\310b\320PS\320SU\320UV\330\014\023\2204\220r\230\023\230C\230s\240\"\240C\240r\250\023\250B\250d\260\"\260D\270\002\270#\270S\300\003\3002\300S\310\002\310#\310R\310q\330\014\023\2204\220r\230\023\230C\230s\240\"\240C\240r\250\023\250B\250d\260\"\260D\270\002\270#\270S\300\004\300B\300c\310\022\3103\310b\320PS\320SU\320UV\340\014\027\220t\2301\230E\240\022\2405\250\002\250%\250r\260\025\260b\270\005\270R\270q\330\014\017\210y\230\002\230!\330\020\030\230\001\330\020\030\230\001\330\020\030\230\001\340\014\031\230\027\240\002\240%\240r\250\027\260\002\260!\330\014\031\230\027\240\002\240%\240r\250\027\260\002\260!\330\014\031\230\027\240\002\240%\240r\250\027\260\002\260!\340\014\034\230D\240\001\240\033\250B\250k\270\022\270;\300b\310\013\320SU\320U`\320`b\320bc\330\014\035\230T\240\021\240&\250\001\250\024\250R\250\270f\300A\340\014\036\230a\330\014\017\320\017\037\230t\240=\260\002\260!\330\020\"\240!\330\014\017\320""\017\037\230t\240=\260\002\260!\330\020\"\240!\340\014\033\320\033+\2505\260\017\270s\300!\330\014\035\230U\240%\240q\250\r\260R\260q\330\014\017\210\230b\240\001\330\020!\240\021\330\014\035\320\0355\260R\260q\340\014\017\210}\230C\230q\330\020\037\230q\330\020'\240q\340\020\037\230q\330\020'\240q\340\014\017\210|\2302\230Q\330\020\036\230a\330\020'\240q\330\021\035\230R\230q\330\020\036\230a\330\020'\240q\340\020\037\230q\340\014\017\210t\2201\330\020\036\230e\2401\240M\260\021\330\020\036\230e\2401\240M\260\021\340\014\017\210t\2201\330\020\027\220q\330\020\027\220q\330\020\027\220q\340\004\007\200q\330\010 \240\001\330\010\037\230q\360\006\000\005\020\210t\2201\220C\220r\230\023\230B\230c\240\022\2403\240b\250\003\2502\250Q\330\004\025\220Y\230c\240\033\250E\260\036\270s\300!\330\004\007\200q\330\010\033\2301\340\010\032\230!\340\004\007\320\007\027\220s\230!\330\010\020\220\006\220a\220w\230b\240\010\250\002\250$\250e\2601\330\010\022\220&\230\003\2303\230b\240\001\330\010\022\220&\230\003\2303\230b\240\001\330\010\022\220&\230\003\2303\230b\240\001\340\004\013\210?\320\032,\250A\360\006\000\005\013\210$\210c\220\023\220B\220h\230b\240\005\240R\240q\330\004\n\210$\210c\220\023\220B\220h\230b\240\005\240R\240q\330\004\n\210$\210c\220\023\220B\220h\230b\240\005\240R\240q\340\004\n\210!\2103\210b\220\004\220B\220c\230\022\2304\230r\240\023\240B\240a\330\004\013\2103\210b\220\004\220B\220c\230\022\2304\230r\240\023\240B\240a\330\004\013\2103\210b\220\004\220B\220c\230\022\2304\230r\240\023\240B\240a\330\004\013\2103\210b\220\004\220B\220c\230\022\2304\230r\240\023\240B\240a\340\004\n\210$\210b\220\001\330\004\n\210$\210b\220\001\330\004\n\210$\210b\220\001\330\004\n\210$\210b\220\001\340\004\014\210D\220\001\220\023\220B\220c\230\022\2303\230b\240\003\2402\240S\250\002\250#\250R\250s\260\"\260A\330\004\007\200v\210R\210q\330\010\024\220D\230\002\230!\330\010\016\210a\330\010\016\210a\330\010\016\210a\330\010\016\210a\360\006\000\005\013\210$\210c\220\023\220B\220c""\230\022\2303\230b\240\001\330\004\n\210$\210c\220\023\220B\220c\230\022\2303\230b\240\001\330\004\n\210#\210R\210s\220\"\220C\220r\230\023\230B\230c\240\022\2403\240b\250\003\2502\250Q\340\004\n\210#\210R\210q\330\004\n\210#\210R\210q\330\004\n\210#\210R\210q\360\006\000\005\013\210!\330\004\n\210!\2101\330\004\n\210!\2101\330\004\n\210!\2101\340\004\t\210\022\2104\210r\220\024\220R\220t\2302\230T\240\022\2404\240r\250\021\330\004\t\210\024\210R\210t\2202\220T\230\022\2304\230r\240\024\240R\240q\330\004\t\210\024\210R\210t\2202\220T\230\022\2304\230r\240\024\240R\240q\330\004\t\210\024\210R\210t\2202\220T\230\022\2304\230r\240\024\240R\240q\340\004\n\210#\210R\210s\220\"\220C\220r\230\023\230B\230c\240\022\2403\240b\250\003\2502\250Q\330\004\n\210#\210R\210s\220\"\220C\220r\230\023\230B\230c\240\022\2403\240b\250\003\2502\250Q\330\004\n\210#\210R\210s\220\"\220C\220r\230\023\230B\230c\240\022\2403\240b\250\003\2502\250Q\340\004\005\330\010\014\210D\220\004\220A\330\010\020\220\010\230\001\330\010\025\220]\240-\250q\330\010\031\230\035\240e\2501\330\010\r\320\r$\240E\320)@\300\005\300Q\330\010\034\230A\330\010\r\210U\220%\220u\230E\240\021";
+static const char __pyx_k_c_Bd_E_1_c_Bd_E_1_c_Bd_E_1_3b_B[] = "\200\001\360\030\000\005\013\210$\210c\220\023\220B\220d\230\"\230E\240\022\2401\330\004\n\210$\210c\220\023\220B\220d\230\"\230E\240\022\2401\330\004\n\210$\210c\220\023\220B\220d\230\"\230E\240\022\2401\340\004\n\210!\2103\210b\220\004\220B\220c\230\022\2304\230r\240\023\240B\240a\330\004\013\2103\210b\220\004\220B\220c\230\022\2304\230r\240\023\240B\240a\330\004\013\2103\210b\220\004\220B\220c\230\022\2304\230r\240\023\240B\240a\330\004\013\2103\210b\220\004\220B\220c\230\022\2304\230r\240\023\240B\240a\340\004\n\210$\210b\220\001\330\004\n\210$\210b\220\001\330\004\n\210$\210b\220\001\330\004\n\210$\210b\220\001\340\004\014\210D\220\001\220\023\220B\220c\230\022\2303\230b\240\003\2402\240S\250\002\250#\250R\250s\260\"\260A\330\004\007\200v\210R\210q\330\010\024\220D\230\002\230!\330\010\016\210a\330\010\016\210a\330\010\016\210a\330\010\016\210a\340\004\014\210D\220\004\220D\230\001";
 /* #### Code section: decls ### */
 static PyObject *__pyx_pf_5pyIMU_6_fcore_integrate_quaternion_step(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_qw, double __pyx_v_qx, double __pyx_v_qy, double __pyx_v_qz, double __pyx_v_gx, double __pyx_v_gy, double __pyx_v_gz, double __pyx_v_bx, double __pyx_v_by, double __pyx_v_bz, double __pyx_v_fx, double __pyx_v_fy, double __pyx_v_fz, double __pyx_v_gain, double __pyx_v_dt); /* proto */
+static PyObject *__pyx_pf_5pyIMU_6_fcore_2fusion_step(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_qw, double __pyx_v_qx, double __pyx_v_qy, double __pyx_v_qz, double __pyx_v_gx, double __pyx_v_gy, double __pyx_v_gz, double __pyx_v_ax, double __pyx_v_ay, double __pyx_v_az, int __pyx_v_mag_present, double __pyx_v_mx, double __pyx_v_my, double __pyx_v_mz, double __pyx_v_bias_x, double __pyx_v_bias_y, double __pyx_v_bias_z, double __pyx_v_dt, double __pyx_v_k_normal, double __pyx_v_ramped_gain, double __pyx_v_gain_ramp_rate, int __pyx_v_initialising, double __pyx_v_gyr_range_rad, double __pyx_v_omega_min, double __pyx_v_fc_bias, double __pyx_v_t_bias, double __pyx_v_g_deviation, double __pyx_v_acceleration_rejection, double __pyx_v_magnetic_rejection, int __pyx_v_mag_min_enabled, double __pyx_v_mag_min, int __pyx_v_mag_max_enabled, double __pyx_v_mag_max, double __pyx_v_t_acc_reject, double __pyx_v_t_mag_reject, int __pyx_v_recovery_timeout_factor, int __pyx_v_acc_trigger, int __pyx_v_acc_timeout, int __pyx_v_mag_trigger, int __pyx_v_mag_timeout, double __pyx_v_stationary_time); /* proto */
 /* #### Code section: late_includes ### */
 /* #### Code section: module_state ### */
 /* SmallCodeConfig */
@@ -2192,8 +2236,8 @@ typedef struct {
   PyTypeObject *__pyx_CoroutineType;
   #endif
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_pop;
-  PyObject *__pyx_codeobj_tab[1];
-  PyObject *__pyx_string_tab[29];
+  PyObject *__pyx_codeobj_tab[2];
+  PyObject *__pyx_string_tab[63];
 /* #### Code section: module_state_contents ### */
 /* CachedMethodType.module_state_decls */
 #if CYTHON_COMPILING_IN_LIMITED_API
@@ -2229,34 +2273,68 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #endif
 /* #### Code section: constant_name_defines ### */
 #define __pyx_kp_u_ __pyx_string_tab[0]
-#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[1]
-#define __pyx_n_u_bx __pyx_string_tab[2]
-#define __pyx_n_u_by __pyx_string_tab[3]
-#define __pyx_n_u_bz __pyx_string_tab[4]
-#define __pyx_n_u_cline_in_traceback __pyx_string_tab[5]
-#define __pyx_n_u_dt __pyx_string_tab[6]
-#define __pyx_n_u_func __pyx_string_tab[7]
-#define __pyx_n_u_fx __pyx_string_tab[8]
-#define __pyx_n_u_fy __pyx_string_tab[9]
-#define __pyx_n_u_fz __pyx_string_tab[10]
-#define __pyx_n_u_gain __pyx_string_tab[11]
-#define __pyx_n_u_gx __pyx_string_tab[12]
-#define __pyx_n_u_gy __pyx_string_tab[13]
-#define __pyx_n_u_gz __pyx_string_tab[14]
-#define __pyx_n_u_integrate_quaternion_step __pyx_string_tab[15]
-#define __pyx_n_u_is_coroutine __pyx_string_tab[16]
-#define __pyx_n_u_main __pyx_string_tab[17]
-#define __pyx_n_u_module __pyx_string_tab[18]
-#define __pyx_n_u_name __pyx_string_tab[19]
-#define __pyx_n_u_pop __pyx_string_tab[20]
-#define __pyx_n_u_pyIMU__fcore __pyx_string_tab[21]
-#define __pyx_kp_u_pyIMU__fcore_pyx __pyx_string_tab[22]
-#define __pyx_n_u_qualname __pyx_string_tab[23]
-#define __pyx_n_u_qw __pyx_string_tab[24]
-#define __pyx_n_u_qx __pyx_string_tab[25]
-#define __pyx_n_u_qy __pyx_string_tab[26]
-#define __pyx_n_u_qz __pyx_string_tab[27]
-#define __pyx_n_u_test __pyx_string_tab[28]
+#define __pyx_n_u_acc_timeout __pyx_string_tab[1]
+#define __pyx_n_u_acc_trigger __pyx_string_tab[2]
+#define __pyx_n_u_acceleration_rejection __pyx_string_tab[3]
+#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[4]
+#define __pyx_n_u_ax __pyx_string_tab[5]
+#define __pyx_n_u_ay __pyx_string_tab[6]
+#define __pyx_n_u_az __pyx_string_tab[7]
+#define __pyx_n_u_bias_x __pyx_string_tab[8]
+#define __pyx_n_u_bias_y __pyx_string_tab[9]
+#define __pyx_n_u_bias_z __pyx_string_tab[10]
+#define __pyx_n_u_bx __pyx_string_tab[11]
+#define __pyx_n_u_by __pyx_string_tab[12]
+#define __pyx_n_u_bz __pyx_string_tab[13]
+#define __pyx_n_u_cline_in_traceback __pyx_string_tab[14]
+#define __pyx_n_u_dt __pyx_string_tab[15]
+#define __pyx_n_u_fc_bias __pyx_string_tab[16]
+#define __pyx_n_u_func __pyx_string_tab[17]
+#define __pyx_n_u_fusion_step __pyx_string_tab[18]
+#define __pyx_n_u_fx __pyx_string_tab[19]
+#define __pyx_n_u_fy __pyx_string_tab[20]
+#define __pyx_n_u_fz __pyx_string_tab[21]
+#define __pyx_n_u_g_deviation __pyx_string_tab[22]
+#define __pyx_n_u_gain __pyx_string_tab[23]
+#define __pyx_n_u_gain_ramp_rate __pyx_string_tab[24]
+#define __pyx_n_u_gx __pyx_string_tab[25]
+#define __pyx_n_u_gy __pyx_string_tab[26]
+#define __pyx_n_u_gyr_range_rad __pyx_string_tab[27]
+#define __pyx_n_u_gz __pyx_string_tab[28]
+#define __pyx_n_u_initialising __pyx_string_tab[29]
+#define __pyx_n_u_integrate_quaternion_step __pyx_string_tab[30]
+#define __pyx_n_u_is_coroutine __pyx_string_tab[31]
+#define __pyx_n_u_k_normal __pyx_string_tab[32]
+#define __pyx_n_u_mag_max __pyx_string_tab[33]
+#define __pyx_n_u_mag_max_enabled __pyx_string_tab[34]
+#define __pyx_n_u_mag_min __pyx_string_tab[35]
+#define __pyx_n_u_mag_min_enabled __pyx_string_tab[36]
+#define __pyx_n_u_mag_present __pyx_string_tab[37]
+#define __pyx_n_u_mag_timeout __pyx_string_tab[38]
+#define __pyx_n_u_mag_trigger __pyx_string_tab[39]
+#define __pyx_n_u_magnetic_rejection __pyx_string_tab[40]
+#define __pyx_n_u_main __pyx_string_tab[41]
+#define __pyx_n_u_module __pyx_string_tab[42]
+#define __pyx_n_u_mx __pyx_string_tab[43]
+#define __pyx_n_u_my __pyx_string_tab[44]
+#define __pyx_n_u_mz __pyx_string_tab[45]
+#define __pyx_n_u_name __pyx_string_tab[46]
+#define __pyx_n_u_omega_min __pyx_string_tab[47]
+#define __pyx_n_u_pop __pyx_string_tab[48]
+#define __pyx_n_u_pyIMU__fcore __pyx_string_tab[49]
+#define __pyx_kp_u_pyIMU__fcore_pyx __pyx_string_tab[50]
+#define __pyx_n_u_qualname __pyx_string_tab[51]
+#define __pyx_n_u_qw __pyx_string_tab[52]
+#define __pyx_n_u_qx __pyx_string_tab[53]
+#define __pyx_n_u_qy __pyx_string_tab[54]
+#define __pyx_n_u_qz __pyx_string_tab[55]
+#define __pyx_n_u_ramped_gain __pyx_string_tab[56]
+#define __pyx_n_u_recovery_timeout_factor __pyx_string_tab[57]
+#define __pyx_n_u_stationary_time __pyx_string_tab[58]
+#define __pyx_n_u_t_acc_reject __pyx_string_tab[59]
+#define __pyx_n_u_t_bias __pyx_string_tab[60]
+#define __pyx_n_u_t_mag_reject __pyx_string_tab[61]
+#define __pyx_n_u_test __pyx_string_tab[62]
 /* #### Code section: module_state_clear ### */
 #if CYTHON_USE_MODULE_STATE
 static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
@@ -2277,8 +2355,8 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   __Pyx_State_RemoveModule(NULL);
   #endif
-  for (int i=0; i<1; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<29; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<2; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
+  for (int i=0; i<63; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
   return 0;
 }
 #endif
@@ -2299,14 +2377,200 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   #ifdef __Pyx_FusedFunction_USED
   Py_VISIT(traverse_module_state->__pyx_FusedFunctionType);
   #endif
-  for (int i=0; i<1; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<29; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<2; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
+  for (int i=0; i<63; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
   return 0;
 }
 #endif
 /* #### Code section: module_code ### */
 
-/* "pyIMU/_fcore.pyx":6
+/* "pyIMU/_fcore.pyx":9
+ * 
+ * 
+ * cdef inline double clampd(double v, double lo, double hi):             # <<<<<<<<<<<<<<
+ *     if v < lo:
+ *         return lo
+*/
+
+static CYTHON_INLINE double __pyx_f_5pyIMU_6_fcore_clampd(double __pyx_v_v, double __pyx_v_lo, double __pyx_v_hi) {
+  double __pyx_r;
+  int __pyx_t_1;
+
+  /* "pyIMU/_fcore.pyx":10
+ * 
+ * cdef inline double clampd(double v, double lo, double hi):
+ *     if v < lo:             # <<<<<<<<<<<<<<
+ *         return lo
+ *     if v > hi:
+*/
+  __pyx_t_1 = (__pyx_v_v < __pyx_v_lo);
+  if (__pyx_t_1) {
+
+    /* "pyIMU/_fcore.pyx":11
+ * cdef inline double clampd(double v, double lo, double hi):
+ *     if v < lo:
+ *         return lo             # <<<<<<<<<<<<<<
+ *     if v > hi:
+ *         return hi
+*/
+    __pyx_r = __pyx_v_lo;
+    goto __pyx_L0;
+
+    /* "pyIMU/_fcore.pyx":10
+ * 
+ * cdef inline double clampd(double v, double lo, double hi):
+ *     if v < lo:             # <<<<<<<<<<<<<<
+ *         return lo
+ *     if v > hi:
+*/
+  }
+
+  /* "pyIMU/_fcore.pyx":12
+ *     if v < lo:
+ *         return lo
+ *     if v > hi:             # <<<<<<<<<<<<<<
+ *         return hi
+ *     return v
+*/
+  __pyx_t_1 = (__pyx_v_v > __pyx_v_hi);
+  if (__pyx_t_1) {
+
+    /* "pyIMU/_fcore.pyx":13
+ *         return lo
+ *     if v > hi:
+ *         return hi             # <<<<<<<<<<<<<<
+ *     return v
+ * 
+*/
+    __pyx_r = __pyx_v_hi;
+    goto __pyx_L0;
+
+    /* "pyIMU/_fcore.pyx":12
+ *     if v < lo:
+ *         return lo
+ *     if v > hi:             # <<<<<<<<<<<<<<
+ *         return hi
+ *     return v
+*/
+  }
+
+  /* "pyIMU/_fcore.pyx":14
+ *     if v > hi:
+ *         return hi
+ *     return v             # <<<<<<<<<<<<<<
+ * 
+ * 
+*/
+  __pyx_r = __pyx_v_v;
+  goto __pyx_L0;
+
+  /* "pyIMU/_fcore.pyx":9
+ * 
+ * 
+ * cdef inline double clampd(double v, double lo, double hi):             # <<<<<<<<<<<<<<
+ *     if v < lo:
+ *         return lo
+*/
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+/* "pyIMU/_fcore.pyx":17
+ * 
+ * 
+ * cdef inline int clipi(int v, int hi):             # <<<<<<<<<<<<<<
+ *     if v < 0:
+ *         return 0
+*/
+
+static CYTHON_INLINE int __pyx_f_5pyIMU_6_fcore_clipi(int __pyx_v_v, int __pyx_v_hi) {
+  int __pyx_r;
+  int __pyx_t_1;
+
+  /* "pyIMU/_fcore.pyx":18
+ * 
+ * cdef inline int clipi(int v, int hi):
+ *     if v < 0:             # <<<<<<<<<<<<<<
+ *         return 0
+ *     if v > hi:
+*/
+  __pyx_t_1 = (__pyx_v_v < 0);
+  if (__pyx_t_1) {
+
+    /* "pyIMU/_fcore.pyx":19
+ * cdef inline int clipi(int v, int hi):
+ *     if v < 0:
+ *         return 0             # <<<<<<<<<<<<<<
+ *     if v > hi:
+ *         return hi
+*/
+    __pyx_r = 0;
+    goto __pyx_L0;
+
+    /* "pyIMU/_fcore.pyx":18
+ * 
+ * cdef inline int clipi(int v, int hi):
+ *     if v < 0:             # <<<<<<<<<<<<<<
+ *         return 0
+ *     if v > hi:
+*/
+  }
+
+  /* "pyIMU/_fcore.pyx":20
+ *     if v < 0:
+ *         return 0
+ *     if v > hi:             # <<<<<<<<<<<<<<
+ *         return hi
+ *     return v
+*/
+  __pyx_t_1 = (__pyx_v_v > __pyx_v_hi);
+  if (__pyx_t_1) {
+
+    /* "pyIMU/_fcore.pyx":21
+ *         return 0
+ *     if v > hi:
+ *         return hi             # <<<<<<<<<<<<<<
+ *     return v
+ * 
+*/
+    __pyx_r = __pyx_v_hi;
+    goto __pyx_L0;
+
+    /* "pyIMU/_fcore.pyx":20
+ *     if v < 0:
+ *         return 0
+ *     if v > hi:             # <<<<<<<<<<<<<<
+ *         return hi
+ *     return v
+*/
+  }
+
+  /* "pyIMU/_fcore.pyx":22
+ *     if v > hi:
+ *         return hi
+ *     return v             # <<<<<<<<<<<<<<
+ * 
+ * 
+*/
+  __pyx_r = __pyx_v_v;
+  goto __pyx_L0;
+
+  /* "pyIMU/_fcore.pyx":17
+ * 
+ * 
+ * cdef inline int clipi(int v, int hi):             # <<<<<<<<<<<<<<
+ *     if v < 0:
+ *         return 0
+*/
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+/* "pyIMU/_fcore.pyx":25
  * 
  * 
  * cpdef tuple integrate_quaternion_step(             # <<<<<<<<<<<<<<
@@ -2344,7 +2608,7 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("integrate_quaternion_step", 0);
 
-  /* "pyIMU/_fcore.pyx":23
+  /* "pyIMU/_fcore.pyx":37
  *     cdef double qnorm, inv_qnorm
  * 
  *     hgx = 0.5 * (gx - bx) + gain * fx             # <<<<<<<<<<<<<<
@@ -2353,7 +2617,7 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
 */
   __pyx_v_hgx = ((0.5 * (__pyx_v_gx - __pyx_v_bx)) + (__pyx_v_gain * __pyx_v_fx));
 
-  /* "pyIMU/_fcore.pyx":24
+  /* "pyIMU/_fcore.pyx":38
  * 
  *     hgx = 0.5 * (gx - bx) + gain * fx
  *     hgy = 0.5 * (gy - by) + gain * fy             # <<<<<<<<<<<<<<
@@ -2362,7 +2626,7 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
 */
   __pyx_v_hgy = ((0.5 * (__pyx_v_gy - __pyx_v_by)) + (__pyx_v_gain * __pyx_v_fy));
 
-  /* "pyIMU/_fcore.pyx":25
+  /* "pyIMU/_fcore.pyx":39
  *     hgx = 0.5 * (gx - bx) + gain * fx
  *     hgy = 0.5 * (gy - by) + gain * fy
  *     hgz = 0.5 * (gz - bz) + gain * fz             # <<<<<<<<<<<<<<
@@ -2371,7 +2635,7 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
 */
   __pyx_v_hgz = ((0.5 * (__pyx_v_gz - __pyx_v_bz)) + (__pyx_v_gain * __pyx_v_fz));
 
-  /* "pyIMU/_fcore.pyx":27
+  /* "pyIMU/_fcore.pyx":41
  *     hgz = 0.5 * (gz - bz) + gain * fz
  * 
  *     qdw = -qx * hgx - qy * hgy - qz * hgz             # <<<<<<<<<<<<<<
@@ -2380,7 +2644,7 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
 */
   __pyx_v_qdw = ((((-__pyx_v_qx) * __pyx_v_hgx) - (__pyx_v_qy * __pyx_v_hgy)) - (__pyx_v_qz * __pyx_v_hgz));
 
-  /* "pyIMU/_fcore.pyx":28
+  /* "pyIMU/_fcore.pyx":42
  * 
  *     qdw = -qx * hgx - qy * hgy - qz * hgz
  *     qdx =  qw * hgx + qy * hgz - qz * hgy             # <<<<<<<<<<<<<<
@@ -2389,7 +2653,7 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
 */
   __pyx_v_qdx = (((__pyx_v_qw * __pyx_v_hgx) + (__pyx_v_qy * __pyx_v_hgz)) - (__pyx_v_qz * __pyx_v_hgy));
 
-  /* "pyIMU/_fcore.pyx":29
+  /* "pyIMU/_fcore.pyx":43
  *     qdw = -qx * hgx - qy * hgy - qz * hgz
  *     qdx =  qw * hgx + qy * hgz - qz * hgy
  *     qdy =  qw * hgy - qx * hgz + qz * hgx             # <<<<<<<<<<<<<<
@@ -2398,7 +2662,7 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
 */
   __pyx_v_qdy = (((__pyx_v_qw * __pyx_v_hgy) - (__pyx_v_qx * __pyx_v_hgz)) + (__pyx_v_qz * __pyx_v_hgx));
 
-  /* "pyIMU/_fcore.pyx":30
+  /* "pyIMU/_fcore.pyx":44
  *     qdx =  qw * hgx + qy * hgz - qz * hgy
  *     qdy =  qw * hgy - qx * hgz + qz * hgx
  *     qdz =  qw * hgz + qx * hgy - qy * hgx             # <<<<<<<<<<<<<<
@@ -2407,7 +2671,7 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
 */
   __pyx_v_qdz = (((__pyx_v_qw * __pyx_v_hgz) + (__pyx_v_qx * __pyx_v_hgy)) - (__pyx_v_qy * __pyx_v_hgx));
 
-  /* "pyIMU/_fcore.pyx":32
+  /* "pyIMU/_fcore.pyx":46
  *     qdz =  qw * hgz + qx * hgy - qy * hgx
  * 
  *     qw += qdw * dt             # <<<<<<<<<<<<<<
@@ -2416,7 +2680,7 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
 */
   __pyx_v_qw = (__pyx_v_qw + (__pyx_v_qdw * __pyx_v_dt));
 
-  /* "pyIMU/_fcore.pyx":33
+  /* "pyIMU/_fcore.pyx":47
  * 
  *     qw += qdw * dt
  *     qx += qdx * dt             # <<<<<<<<<<<<<<
@@ -2425,7 +2689,7 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
 */
   __pyx_v_qx = (__pyx_v_qx + (__pyx_v_qdx * __pyx_v_dt));
 
-  /* "pyIMU/_fcore.pyx":34
+  /* "pyIMU/_fcore.pyx":48
  *     qw += qdw * dt
  *     qx += qdx * dt
  *     qy += qdy * dt             # <<<<<<<<<<<<<<
@@ -2434,7 +2698,7 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
 */
   __pyx_v_qy = (__pyx_v_qy + (__pyx_v_qdy * __pyx_v_dt));
 
-  /* "pyIMU/_fcore.pyx":35
+  /* "pyIMU/_fcore.pyx":49
  *     qx += qdx * dt
  *     qy += qdy * dt
  *     qz += qdz * dt             # <<<<<<<<<<<<<<
@@ -2443,7 +2707,7 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
 */
   __pyx_v_qz = (__pyx_v_qz + (__pyx_v_qdz * __pyx_v_dt));
 
-  /* "pyIMU/_fcore.pyx":37
+  /* "pyIMU/_fcore.pyx":51
  *     qz += qdz * dt
  * 
  *     qnorm = sqrt(qw * qw + qx * qx + qy * qy + qz * qz)             # <<<<<<<<<<<<<<
@@ -2452,7 +2716,7 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
 */
   __pyx_v_qnorm = sqrt(((((__pyx_v_qw * __pyx_v_qw) + (__pyx_v_qx * __pyx_v_qx)) + (__pyx_v_qy * __pyx_v_qy)) + (__pyx_v_qz * __pyx_v_qz)));
 
-  /* "pyIMU/_fcore.pyx":38
+  /* "pyIMU/_fcore.pyx":52
  * 
  *     qnorm = sqrt(qw * qw + qx * qx + qy * qy + qz * qz)
  *     if qnorm > 0.0:             # <<<<<<<<<<<<<<
@@ -2462,7 +2726,7 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
   __pyx_t_1 = (__pyx_v_qnorm > 0.0);
   if (__pyx_t_1) {
 
-    /* "pyIMU/_fcore.pyx":39
+    /* "pyIMU/_fcore.pyx":53
  *     qnorm = sqrt(qw * qw + qx * qx + qy * qy + qz * qz)
  *     if qnorm > 0.0:
  *         inv_qnorm = 1.0 / qnorm             # <<<<<<<<<<<<<<
@@ -2471,11 +2735,11 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
 */
     if (unlikely(__pyx_v_qnorm == 0)) {
       PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-      __PYX_ERR(0, 39, __pyx_L1_error)
+      __PYX_ERR(0, 53, __pyx_L1_error)
     }
     __pyx_v_inv_qnorm = (1.0 / __pyx_v_qnorm);
 
-    /* "pyIMU/_fcore.pyx":40
+    /* "pyIMU/_fcore.pyx":54
  *     if qnorm > 0.0:
  *         inv_qnorm = 1.0 / qnorm
  *         qw *= inv_qnorm             # <<<<<<<<<<<<<<
@@ -2484,7 +2748,7 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
 */
     __pyx_v_qw = (__pyx_v_qw * __pyx_v_inv_qnorm);
 
-    /* "pyIMU/_fcore.pyx":41
+    /* "pyIMU/_fcore.pyx":55
  *         inv_qnorm = 1.0 / qnorm
  *         qw *= inv_qnorm
  *         qx *= inv_qnorm             # <<<<<<<<<<<<<<
@@ -2493,7 +2757,7 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
 */
     __pyx_v_qx = (__pyx_v_qx * __pyx_v_inv_qnorm);
 
-    /* "pyIMU/_fcore.pyx":42
+    /* "pyIMU/_fcore.pyx":56
  *         qw *= inv_qnorm
  *         qx *= inv_qnorm
  *         qy *= inv_qnorm             # <<<<<<<<<<<<<<
@@ -2502,7 +2766,7 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
 */
     __pyx_v_qy = (__pyx_v_qy * __pyx_v_inv_qnorm);
 
-    /* "pyIMU/_fcore.pyx":43
+    /* "pyIMU/_fcore.pyx":57
  *         qx *= inv_qnorm
  *         qy *= inv_qnorm
  *         qz *= inv_qnorm             # <<<<<<<<<<<<<<
@@ -2511,7 +2775,7 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
 */
     __pyx_v_qz = (__pyx_v_qz * __pyx_v_inv_qnorm);
 
-    /* "pyIMU/_fcore.pyx":38
+    /* "pyIMU/_fcore.pyx":52
  * 
  *     qnorm = sqrt(qw * qw + qx * qx + qy * qy + qz * qz)
  *     if qnorm > 0.0:             # <<<<<<<<<<<<<<
@@ -2520,30 +2784,32 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
 */
   }
 
-  /* "pyIMU/_fcore.pyx":45
+  /* "pyIMU/_fcore.pyx":59
  *         qz *= inv_qnorm
  * 
  *     return (qw, qx, qy, qz)             # <<<<<<<<<<<<<<
+ * 
+ * 
 */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_qw); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_qw); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_qx); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_qx); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_qy); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_qy); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_qz); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_qz); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = PyTuple_New(4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_6 = PyTuple_New(4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_GIVEREF(__pyx_t_2);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_2) != (0)) __PYX_ERR(0, 45, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_2) != (0)) __PYX_ERR(0, 59, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_3);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_t_3) != (0)) __PYX_ERR(0, 45, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_t_3) != (0)) __PYX_ERR(0, 59, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_4);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_6, 2, __pyx_t_4) != (0)) __PYX_ERR(0, 45, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_6, 2, __pyx_t_4) != (0)) __PYX_ERR(0, 59, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_5);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_6, 3, __pyx_t_5) != (0)) __PYX_ERR(0, 45, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_6, 3, __pyx_t_5) != (0)) __PYX_ERR(0, 59, __pyx_L1_error);
   __pyx_t_2 = 0;
   __pyx_t_3 = 0;
   __pyx_t_4 = 0;
@@ -2552,7 +2818,7 @@ static PyObject *__pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(double __pyx_v
   __pyx_t_6 = 0;
   goto __pyx_L0;
 
-  /* "pyIMU/_fcore.pyx":6
+  /* "pyIMU/_fcore.pyx":25
  * 
  * 
  * cpdef tuple integrate_quaternion_step(             # <<<<<<<<<<<<<<
@@ -2583,8 +2849,7 @@ PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-PyDoc_STRVAR(__pyx_doc_5pyIMU_6_fcore_integrate_quaternion_step, "\n    Integrate quaternion using Fusion-style corrected gyro term:\n      half_gyr = 0.5 * (gyro - bias) + gain * feedback\n      q_dot = q * [0, half_gyr]\n    ");
-static PyMethodDef __pyx_mdef_5pyIMU_6_fcore_1integrate_quaternion_step = {"integrate_quaternion_step", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_5pyIMU_6_fcore_1integrate_quaternion_step, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_5pyIMU_6_fcore_integrate_quaternion_step};
+static PyMethodDef __pyx_mdef_5pyIMU_6_fcore_1integrate_quaternion_step = {"integrate_quaternion_step", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_5pyIMU_6_fcore_1integrate_quaternion_step, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
 static PyObject *__pyx_pw_5pyIMU_6_fcore_1integrate_quaternion_step(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
@@ -2629,130 +2894,130 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_qw,&__pyx_mstate_global->__pyx_n_u_qx,&__pyx_mstate_global->__pyx_n_u_qy,&__pyx_mstate_global->__pyx_n_u_qz,&__pyx_mstate_global->__pyx_n_u_gx,&__pyx_mstate_global->__pyx_n_u_gy,&__pyx_mstate_global->__pyx_n_u_gz,&__pyx_mstate_global->__pyx_n_u_bx,&__pyx_mstate_global->__pyx_n_u_by,&__pyx_mstate_global->__pyx_n_u_bz,&__pyx_mstate_global->__pyx_n_u_fx,&__pyx_mstate_global->__pyx_n_u_fy,&__pyx_mstate_global->__pyx_n_u_fz,&__pyx_mstate_global->__pyx_n_u_gain,&__pyx_mstate_global->__pyx_n_u_dt,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 6, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 25, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case 15:
         values[14] = __Pyx_ArgRef_FASTCALL(__pyx_args, 14);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[14])) __PYX_ERR(0, 6, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[14])) __PYX_ERR(0, 25, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 14:
         values[13] = __Pyx_ArgRef_FASTCALL(__pyx_args, 13);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[13])) __PYX_ERR(0, 6, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[13])) __PYX_ERR(0, 25, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 13:
         values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 6, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 25, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 12:
         values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 6, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 25, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 11:
         values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 6, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 25, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 10:
         values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 6, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 25, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  9:
         values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 6, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 25, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  8:
         values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 6, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 25, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  7:
         values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 6, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 25, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  6:
         values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 6, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 25, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  5:
         values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 6, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 25, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 6, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 25, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 6, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 25, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 6, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 25, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 6, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 25, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "integrate_quaternion_step", 0) < 0) __PYX_ERR(0, 6, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "integrate_quaternion_step", 0) < 0) __PYX_ERR(0, 25, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 15; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("integrate_quaternion_step", 1, 15, 15, i); __PYX_ERR(0, 6, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("integrate_quaternion_step", 1, 15, 15, i); __PYX_ERR(0, 25, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 15)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 6, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 25, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 6, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 25, __pyx_L3_error)
       values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 6, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 25, __pyx_L3_error)
       values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 6, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 25, __pyx_L3_error)
       values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 6, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 25, __pyx_L3_error)
       values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 6, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 25, __pyx_L3_error)
       values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 6, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 25, __pyx_L3_error)
       values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 6, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 25, __pyx_L3_error)
       values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 6, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 25, __pyx_L3_error)
       values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 6, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 25, __pyx_L3_error)
       values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 6, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 25, __pyx_L3_error)
       values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 6, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 25, __pyx_L3_error)
       values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 6, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 25, __pyx_L3_error)
       values[13] = __Pyx_ArgRef_FASTCALL(__pyx_args, 13);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[13])) __PYX_ERR(0, 6, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[13])) __PYX_ERR(0, 25, __pyx_L3_error)
       values[14] = __Pyx_ArgRef_FASTCALL(__pyx_args, 14);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[14])) __PYX_ERR(0, 6, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[14])) __PYX_ERR(0, 25, __pyx_L3_error)
     }
-    __pyx_v_qw = __Pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_qw == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 7, __pyx_L3_error)
-    __pyx_v_qx = __Pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_qx == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 7, __pyx_L3_error)
-    __pyx_v_qy = __Pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_qy == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 7, __pyx_L3_error)
-    __pyx_v_qz = __Pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_qz == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 7, __pyx_L3_error)
-    __pyx_v_gx = __Pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_gx == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 8, __pyx_L3_error)
-    __pyx_v_gy = __Pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_gy == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 8, __pyx_L3_error)
-    __pyx_v_gz = __Pyx_PyFloat_AsDouble(values[6]); if (unlikely((__pyx_v_gz == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 8, __pyx_L3_error)
-    __pyx_v_bx = __Pyx_PyFloat_AsDouble(values[7]); if (unlikely((__pyx_v_bx == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 9, __pyx_L3_error)
-    __pyx_v_by = __Pyx_PyFloat_AsDouble(values[8]); if (unlikely((__pyx_v_by == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 9, __pyx_L3_error)
-    __pyx_v_bz = __Pyx_PyFloat_AsDouble(values[9]); if (unlikely((__pyx_v_bz == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 9, __pyx_L3_error)
-    __pyx_v_fx = __Pyx_PyFloat_AsDouble(values[10]); if (unlikely((__pyx_v_fx == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 10, __pyx_L3_error)
-    __pyx_v_fy = __Pyx_PyFloat_AsDouble(values[11]); if (unlikely((__pyx_v_fy == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 10, __pyx_L3_error)
-    __pyx_v_fz = __Pyx_PyFloat_AsDouble(values[12]); if (unlikely((__pyx_v_fz == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 10, __pyx_L3_error)
-    __pyx_v_gain = __Pyx_PyFloat_AsDouble(values[13]); if (unlikely((__pyx_v_gain == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 11, __pyx_L3_error)
-    __pyx_v_dt = __Pyx_PyFloat_AsDouble(values[14]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L3_error)
+    __pyx_v_qw = __Pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_qw == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 26, __pyx_L3_error)
+    __pyx_v_qx = __Pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_qx == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 26, __pyx_L3_error)
+    __pyx_v_qy = __Pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_qy == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 26, __pyx_L3_error)
+    __pyx_v_qz = __Pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_qz == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 26, __pyx_L3_error)
+    __pyx_v_gx = __Pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_gx == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 27, __pyx_L3_error)
+    __pyx_v_gy = __Pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_gy == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 27, __pyx_L3_error)
+    __pyx_v_gz = __Pyx_PyFloat_AsDouble(values[6]); if (unlikely((__pyx_v_gz == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 27, __pyx_L3_error)
+    __pyx_v_bx = __Pyx_PyFloat_AsDouble(values[7]); if (unlikely((__pyx_v_bx == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 28, __pyx_L3_error)
+    __pyx_v_by = __Pyx_PyFloat_AsDouble(values[8]); if (unlikely((__pyx_v_by == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 28, __pyx_L3_error)
+    __pyx_v_bz = __Pyx_PyFloat_AsDouble(values[9]); if (unlikely((__pyx_v_bz == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 28, __pyx_L3_error)
+    __pyx_v_fx = __Pyx_PyFloat_AsDouble(values[10]); if (unlikely((__pyx_v_fx == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 29, __pyx_L3_error)
+    __pyx_v_fy = __Pyx_PyFloat_AsDouble(values[11]); if (unlikely((__pyx_v_fy == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 29, __pyx_L3_error)
+    __pyx_v_fz = __Pyx_PyFloat_AsDouble(values[12]); if (unlikely((__pyx_v_fz == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 29, __pyx_L3_error)
+    __pyx_v_gain = __Pyx_PyFloat_AsDouble(values[13]); if (unlikely((__pyx_v_gain == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 30, __pyx_L3_error)
+    __pyx_v_dt = __Pyx_PyFloat_AsDouble(values[14]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 31, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("integrate_quaternion_step", 1, 15, 15, __pyx_nargs); __PYX_ERR(0, 6, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("integrate_quaternion_step", 1, 15, 15, __pyx_nargs); __PYX_ERR(0, 25, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -2782,7 +3047,7 @@ static PyObject *__pyx_pf_5pyIMU_6_fcore_integrate_quaternion_step(CYTHON_UNUSED
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("integrate_quaternion_step", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(__pyx_v_qw, __pyx_v_qx, __pyx_v_qy, __pyx_v_qz, __pyx_v_gx, __pyx_v_gy, __pyx_v_gz, __pyx_v_bx, __pyx_v_by, __pyx_v_bz, __pyx_v_fx, __pyx_v_fy, __pyx_v_fz, __pyx_v_gain, __pyx_v_dt, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_5pyIMU_6_fcore_integrate_quaternion_step(__pyx_v_qw, __pyx_v_qx, __pyx_v_qy, __pyx_v_qz, __pyx_v_gx, __pyx_v_gy, __pyx_v_gz, __pyx_v_bx, __pyx_v_by, __pyx_v_bz, __pyx_v_fx, __pyx_v_fy, __pyx_v_fz, __pyx_v_gain, __pyx_v_dt, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 25, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -2792,6 +3057,2717 @@ static PyObject *__pyx_pf_5pyIMU_6_fcore_integrate_quaternion_step(CYTHON_UNUSED
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_AddTraceback("pyIMU._fcore.integrate_quaternion_step", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "pyIMU/_fcore.pyx":62
+ * 
+ * 
+ * cpdef tuple fusion_step(             # <<<<<<<<<<<<<<
+ *     double qw, double qx, double qy, double qz,
+ *     double gx, double gy, double gz,
+*/
+
+static PyObject *__pyx_pw_5pyIMU_6_fcore_3fusion_step(PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyObject *__pyx_f_5pyIMU_6_fcore_fusion_step(double __pyx_v_qw, double __pyx_v_qx, double __pyx_v_qy, double __pyx_v_qz, double __pyx_v_gx, double __pyx_v_gy, double __pyx_v_gz, double __pyx_v_ax, double __pyx_v_ay, double __pyx_v_az, int __pyx_v_mag_present, double __pyx_v_mx, double __pyx_v_my, double __pyx_v_mz, double __pyx_v_bias_x, double __pyx_v_bias_y, double __pyx_v_bias_z, double __pyx_v_dt, double __pyx_v_k_normal, double __pyx_v_ramped_gain, double __pyx_v_gain_ramp_rate, int __pyx_v_initialising, double __pyx_v_gyr_range_rad, double __pyx_v_omega_min, double __pyx_v_fc_bias, double __pyx_v_t_bias, double __pyx_v_g_deviation, double __pyx_v_acceleration_rejection, double __pyx_v_magnetic_rejection, int __pyx_v_mag_min_enabled, double __pyx_v_mag_min, int __pyx_v_mag_max_enabled, double __pyx_v_mag_max, double __pyx_v_t_acc_reject, double __pyx_v_t_mag_reject, int __pyx_v_recovery_timeout_factor, int __pyx_v_acc_trigger, int __pyx_v_acc_timeout, int __pyx_v_mag_trigger, int __pyx_v_mag_timeout, double __pyx_v_stationary_time, CYTHON_UNUSED int __pyx_skip_dispatch) {
+  double __pyx_v_rate_limit;
+  int __pyx_v_angular_rate_recovery;
+  double __pyx_v_fbx;
+  double __pyx_v_fby;
+  double __pyx_v_fbz;
+  double __pyx_v_hgx;
+  double __pyx_v_hgy;
+  double __pyx_v_hgz;
+  double __pyx_v_acc_norm;
+  double __pyx_v_acc_mag_error;
+  double __pyx_v_acc_ux;
+  double __pyx_v_acc_uy;
+  double __pyx_v_acc_uz;
+  double __pyx_v_half_acc_x;
+  double __pyx_v_half_acc_y;
+  double __pyx_v_half_acc_z;
+  double __pyx_v_half_acc_norm;
+  double __pyx_v_acceleration_error;
+  int __pyx_v_accelerometer_ignored;
+  int __pyx_v_acc_accepted;
+  int __pyx_v_trigger_period;
+  int __pyx_v_timeout_period;
+  double __pyx_v_mag_norm_raw;
+  double __pyx_v_mag_ux;
+  double __pyx_v_mag_uy;
+  double __pyx_v_mag_uz;
+  double __pyx_v_qcw;
+  double __pyx_v_qcx;
+  double __pyx_v_qcy;
+  double __pyx_v_qcz;
+  double __pyx_v_tw;
+  double __pyx_v_tx;
+  double __pyx_v_ty;
+  double __pyx_v_tz;
+  CYTHON_UNUSED double __pyx_v_hw;
+  double __pyx_v_hx;
+  double __pyx_v_hy;
+  double __pyx_v_hz;
+  double __pyx_v_bx;
+  double __pyx_v_bz;
+  double __pyx_v_refx;
+  double __pyx_v_refy;
+  double __pyx_v_refz;
+  double __pyx_v_ref_norm;
+  double __pyx_v_half_mag_x;
+  double __pyx_v_half_mag_y;
+  double __pyx_v_half_mag_z;
+  double __pyx_v_half_mag_norm;
+  double __pyx_v_magnetic_error;
+  int __pyx_v_magnetometer_ignored;
+  int __pyx_v_mag_strength_ok;
+  int __pyx_v_mag_accepted;
+  double __pyx_v_gyr_norm;
+  int __pyx_v_is_stationary;
+  double __pyx_v_alpha;
+  double __pyx_v_gain;
+  double __pyx_v_cgx;
+  double __pyx_v_cgy;
+  double __pyx_v_cgz;
+  double __pyx_v_qdw;
+  double __pyx_v_qdx;
+  double __pyx_v_qdy;
+  double __pyx_v_qdz;
+  double __pyx_v_qnorm;
+  double __pyx_v_inv_qnorm;
+  double __pyx_v_gsx;
+  double __pyx_v_gsy;
+  double __pyx_v_gsz;
+  double __pyx_v_azx;
+  double __pyx_v_azy;
+  double __pyx_v_azz;
+  double __pyx_v_agx;
+  double __pyx_v_agy;
+  double __pyx_v_agz;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  double __pyx_t_3;
+  int __pyx_t_4;
+  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_7 = NULL;
+  PyObject *__pyx_t_8 = NULL;
+  PyObject *__pyx_t_9 = NULL;
+  PyObject *__pyx_t_10 = NULL;
+  PyObject *__pyx_t_11 = NULL;
+  PyObject *__pyx_t_12 = NULL;
+  PyObject *__pyx_t_13 = NULL;
+  PyObject *__pyx_t_14 = NULL;
+  PyObject *__pyx_t_15 = NULL;
+  PyObject *__pyx_t_16 = NULL;
+  PyObject *__pyx_t_17 = NULL;
+  PyObject *__pyx_t_18 = NULL;
+  PyObject *__pyx_t_19 = NULL;
+  PyObject *__pyx_t_20 = NULL;
+  PyObject *__pyx_t_21 = NULL;
+  PyObject *__pyx_t_22 = NULL;
+  PyObject *__pyx_t_23 = NULL;
+  PyObject *__pyx_t_24 = NULL;
+  PyObject *__pyx_t_25 = NULL;
+  PyObject *__pyx_t_26 = NULL;
+  PyObject *__pyx_t_27 = NULL;
+  PyObject *__pyx_t_28 = NULL;
+  PyObject *__pyx_t_29 = NULL;
+  PyObject *__pyx_t_30 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("fusion_step", 0);
+
+  /* "pyIMU/_fcore.pyx":96
+ *     cdef double rate_limit
+ *     cdef bint angular_rate_recovery
+ *     cdef double fbx = 0.0             # <<<<<<<<<<<<<<
+ *     cdef double fby = 0.0
+ *     cdef double fbz = 0.0
+*/
+  __pyx_v_fbx = 0.0;
+
+  /* "pyIMU/_fcore.pyx":97
+ *     cdef bint angular_rate_recovery
+ *     cdef double fbx = 0.0
+ *     cdef double fby = 0.0             # <<<<<<<<<<<<<<
+ *     cdef double fbz = 0.0
+ * 
+*/
+  __pyx_v_fby = 0.0;
+
+  /* "pyIMU/_fcore.pyx":98
+ *     cdef double fbx = 0.0
+ *     cdef double fby = 0.0
+ *     cdef double fbz = 0.0             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double hgx, hgy, hgz
+*/
+  __pyx_v_fbz = 0.0;
+
+  /* "pyIMU/_fcore.pyx":105
+ *     cdef double half_acc_x, half_acc_y, half_acc_z
+ *     cdef double half_acc_norm
+ *     cdef double acceleration_error = 0.0             # <<<<<<<<<<<<<<
+ *     cdef bint accelerometer_ignored = True
+ *     cdef bint acc_accepted
+*/
+  __pyx_v_acceleration_error = 0.0;
+
+  /* "pyIMU/_fcore.pyx":106
+ *     cdef double half_acc_norm
+ *     cdef double acceleration_error = 0.0
+ *     cdef bint accelerometer_ignored = True             # <<<<<<<<<<<<<<
+ *     cdef bint acc_accepted
+ *     cdef int trigger_period, timeout_period
+*/
+  __pyx_v_accelerometer_ignored = 1;
+
+  /* "pyIMU/_fcore.pyx":119
+ *     cdef double half_mag_x, half_mag_y, half_mag_z
+ *     cdef double half_mag_norm
+ *     cdef double magnetic_error = 0.0             # <<<<<<<<<<<<<<
+ *     cdef bint magnetometer_ignored = True
+ *     cdef bint mag_strength_ok = True
+*/
+  __pyx_v_magnetic_error = 0.0;
+
+  /* "pyIMU/_fcore.pyx":120
+ *     cdef double half_mag_norm
+ *     cdef double magnetic_error = 0.0
+ *     cdef bint magnetometer_ignored = True             # <<<<<<<<<<<<<<
+ *     cdef bint mag_strength_ok = True
+ *     cdef bint mag_accepted
+*/
+  __pyx_v_magnetometer_ignored = 1;
+
+  /* "pyIMU/_fcore.pyx":121
+ *     cdef double magnetic_error = 0.0
+ *     cdef bint magnetometer_ignored = True
+ *     cdef bint mag_strength_ok = True             # <<<<<<<<<<<<<<
+ *     cdef bint mag_accepted
+ * 
+*/
+  __pyx_v_mag_strength_ok = 1;
+
+  /* "pyIMU/_fcore.pyx":138
+ * 
+ *     # initialisation ramp
+ *     if initialising and gain_ramp_rate > 0.0:             # <<<<<<<<<<<<<<
+ *         ramped_gain -= gain_ramp_rate * dt
+ *         if ramped_gain <= k_normal:
+*/
+  if (__pyx_v_initialising) {
+  } else {
+    __pyx_t_1 = __pyx_v_initialising;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_2 = (__pyx_v_gain_ramp_rate > 0.0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L4_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "pyIMU/_fcore.pyx":139
+ *     # initialisation ramp
+ *     if initialising and gain_ramp_rate > 0.0:
+ *         ramped_gain -= gain_ramp_rate * dt             # <<<<<<<<<<<<<<
+ *         if ramped_gain <= k_normal:
+ *             ramped_gain = k_normal
+*/
+    __pyx_v_ramped_gain = (__pyx_v_ramped_gain - (__pyx_v_gain_ramp_rate * __pyx_v_dt));
+
+    /* "pyIMU/_fcore.pyx":140
+ *     if initialising and gain_ramp_rate > 0.0:
+ *         ramped_gain -= gain_ramp_rate * dt
+ *         if ramped_gain <= k_normal:             # <<<<<<<<<<<<<<
+ *             ramped_gain = k_normal
+ *             initialising = False
+*/
+    __pyx_t_1 = (__pyx_v_ramped_gain <= __pyx_v_k_normal);
+    if (__pyx_t_1) {
+
+      /* "pyIMU/_fcore.pyx":141
+ *         ramped_gain -= gain_ramp_rate * dt
+ *         if ramped_gain <= k_normal:
+ *             ramped_gain = k_normal             # <<<<<<<<<<<<<<
+ *             initialising = False
+ * 
+*/
+      __pyx_v_ramped_gain = __pyx_v_k_normal;
+
+      /* "pyIMU/_fcore.pyx":142
+ *         if ramped_gain <= k_normal:
+ *             ramped_gain = k_normal
+ *             initialising = False             # <<<<<<<<<<<<<<
+ * 
+ *     # angular-rate recovery
+*/
+      __pyx_v_initialising = 0;
+
+      /* "pyIMU/_fcore.pyx":140
+ *     if initialising and gain_ramp_rate > 0.0:
+ *         ramped_gain -= gain_ramp_rate * dt
+ *         if ramped_gain <= k_normal:             # <<<<<<<<<<<<<<
+ *             ramped_gain = k_normal
+ *             initialising = False
+*/
+    }
+
+    /* "pyIMU/_fcore.pyx":138
+ * 
+ *     # initialisation ramp
+ *     if initialising and gain_ramp_rate > 0.0:             # <<<<<<<<<<<<<<
+ *         ramped_gain -= gain_ramp_rate * dt
+ *         if ramped_gain <= k_normal:
+*/
+  }
+
+  /* "pyIMU/_fcore.pyx":145
+ * 
+ *     # angular-rate recovery
+ *     rate_limit = 0.98 * gyr_range_rad             # <<<<<<<<<<<<<<
+ *     angular_rate_recovery = (fabs(gx) > rate_limit) or (fabs(gy) > rate_limit) or (fabs(gz) > rate_limit)
+ * 
+*/
+  __pyx_v_rate_limit = (0.98 * __pyx_v_gyr_range_rad);
+
+  /* "pyIMU/_fcore.pyx":146
+ *     # angular-rate recovery
+ *     rate_limit = 0.98 * gyr_range_rad
+ *     angular_rate_recovery = (fabs(gx) > rate_limit) or (fabs(gy) > rate_limit) or (fabs(gz) > rate_limit)             # <<<<<<<<<<<<<<
+ * 
+ *     # half gravity from quaternion
+*/
+  __pyx_t_2 = (fabs(__pyx_v_gx) > __pyx_v_rate_limit);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L7_bool_binop_done;
+  }
+  __pyx_t_2 = (fabs(__pyx_v_gy) > __pyx_v_rate_limit);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L7_bool_binop_done;
+  }
+  __pyx_t_2 = (fabs(__pyx_v_gz) > __pyx_v_rate_limit);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L7_bool_binop_done:;
+  __pyx_v_angular_rate_recovery = __pyx_t_1;
+
+  /* "pyIMU/_fcore.pyx":149
+ * 
+ *     # half gravity from quaternion
+ *     hgx = qx * qz - qw * qy             # <<<<<<<<<<<<<<
+ *     hgy = qw * qx + qy * qz
+ *     hgz = qw * qw - 0.5 + qz * qz
+*/
+  __pyx_v_hgx = ((__pyx_v_qx * __pyx_v_qz) - (__pyx_v_qw * __pyx_v_qy));
+
+  /* "pyIMU/_fcore.pyx":150
+ *     # half gravity from quaternion
+ *     hgx = qx * qz - qw * qy
+ *     hgy = qw * qx + qy * qz             # <<<<<<<<<<<<<<
+ *     hgz = qw * qw - 0.5 + qz * qz
+ * 
+*/
+  __pyx_v_hgy = ((__pyx_v_qw * __pyx_v_qx) + (__pyx_v_qy * __pyx_v_qz));
+
+  /* "pyIMU/_fcore.pyx":151
+ *     hgx = qx * qz - qw * qy
+ *     hgy = qw * qx + qy * qz
+ *     hgz = qw * qw - 0.5 + qz * qz             # <<<<<<<<<<<<<<
+ * 
+ *     # accelerometer rejection/recovery
+*/
+  __pyx_v_hgz = (((__pyx_v_qw * __pyx_v_qw) - 0.5) + (__pyx_v_qz * __pyx_v_qz));
+
+  /* "pyIMU/_fcore.pyx":154
+ * 
+ *     # accelerometer rejection/recovery
+ *     acc_norm = sqrt(ax * ax + ay * ay + az * az)             # <<<<<<<<<<<<<<
+ *     acc_mag_error = fabs(acc_norm - 1.0)
+ *     if acc_norm > EPSILON and not angular_rate_recovery:
+*/
+  __pyx_v_acc_norm = sqrt((((__pyx_v_ax * __pyx_v_ax) + (__pyx_v_ay * __pyx_v_ay)) + (__pyx_v_az * __pyx_v_az)));
+
+  /* "pyIMU/_fcore.pyx":155
+ *     # accelerometer rejection/recovery
+ *     acc_norm = sqrt(ax * ax + ay * ay + az * az)
+ *     acc_mag_error = fabs(acc_norm - 1.0)             # <<<<<<<<<<<<<<
+ *     if acc_norm > EPSILON and not angular_rate_recovery:
+ *         acc_ux = ax / acc_norm
+*/
+  __pyx_v_acc_mag_error = fabs((__pyx_v_acc_norm - 1.0));
+
+  /* "pyIMU/_fcore.pyx":156
+ *     acc_norm = sqrt(ax * ax + ay * ay + az * az)
+ *     acc_mag_error = fabs(acc_norm - 1.0)
+ *     if acc_norm > EPSILON and not angular_rate_recovery:             # <<<<<<<<<<<<<<
+ *         acc_ux = ax / acc_norm
+ *         acc_uy = ay / acc_norm
+*/
+  __pyx_t_2 = (__pyx_v_acc_norm > __pyx_v_5pyIMU_6_fcore_EPSILON);
+  if (__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L11_bool_binop_done;
+  }
+  __pyx_t_2 = (!__pyx_v_angular_rate_recovery);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L11_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "pyIMU/_fcore.pyx":157
+ *     acc_mag_error = fabs(acc_norm - 1.0)
+ *     if acc_norm > EPSILON and not angular_rate_recovery:
+ *         acc_ux = ax / acc_norm             # <<<<<<<<<<<<<<
+ *         acc_uy = ay / acc_norm
+ *         acc_uz = az / acc_norm
+*/
+    if (unlikely(__pyx_v_acc_norm == 0)) {
+      PyErr_SetString(PyExc_ZeroDivisionError, "float division");
+      __PYX_ERR(0, 157, __pyx_L1_error)
+    }
+    __pyx_v_acc_ux = (__pyx_v_ax / __pyx_v_acc_norm);
+
+    /* "pyIMU/_fcore.pyx":158
+ *     if acc_norm > EPSILON and not angular_rate_recovery:
+ *         acc_ux = ax / acc_norm
+ *         acc_uy = ay / acc_norm             # <<<<<<<<<<<<<<
+ *         acc_uz = az / acc_norm
+ * 
+*/
+    if (unlikely(__pyx_v_acc_norm == 0)) {
+      PyErr_SetString(PyExc_ZeroDivisionError, "float division");
+      __PYX_ERR(0, 158, __pyx_L1_error)
+    }
+    __pyx_v_acc_uy = (__pyx_v_ay / __pyx_v_acc_norm);
+
+    /* "pyIMU/_fcore.pyx":159
+ *         acc_ux = ax / acc_norm
+ *         acc_uy = ay / acc_norm
+ *         acc_uz = az / acc_norm             # <<<<<<<<<<<<<<
+ * 
+ *         half_acc_x = acc_uy * hgz - acc_uz * hgy
+*/
+    if (unlikely(__pyx_v_acc_norm == 0)) {
+      PyErr_SetString(PyExc_ZeroDivisionError, "float division");
+      __PYX_ERR(0, 159, __pyx_L1_error)
+    }
+    __pyx_v_acc_uz = (__pyx_v_az / __pyx_v_acc_norm);
+
+    /* "pyIMU/_fcore.pyx":161
+ *         acc_uz = az / acc_norm
+ * 
+ *         half_acc_x = acc_uy * hgz - acc_uz * hgy             # <<<<<<<<<<<<<<
+ *         half_acc_y = acc_uz * hgx - acc_ux * hgz
+ *         half_acc_z = acc_ux * hgy - acc_uy * hgx
+*/
+    __pyx_v_half_acc_x = ((__pyx_v_acc_uy * __pyx_v_hgz) - (__pyx_v_acc_uz * __pyx_v_hgy));
+
+    /* "pyIMU/_fcore.pyx":162
+ * 
+ *         half_acc_x = acc_uy * hgz - acc_uz * hgy
+ *         half_acc_y = acc_uz * hgx - acc_ux * hgz             # <<<<<<<<<<<<<<
+ *         half_acc_z = acc_ux * hgy - acc_uy * hgx
+ * 
+*/
+    __pyx_v_half_acc_y = ((__pyx_v_acc_uz * __pyx_v_hgx) - (__pyx_v_acc_ux * __pyx_v_hgz));
+
+    /* "pyIMU/_fcore.pyx":163
+ *         half_acc_x = acc_uy * hgz - acc_uz * hgy
+ *         half_acc_y = acc_uz * hgx - acc_ux * hgz
+ *         half_acc_z = acc_ux * hgy - acc_uy * hgx             # <<<<<<<<<<<<<<
+ * 
+ *         half_acc_norm = sqrt(half_acc_x * half_acc_x + half_acc_y * half_acc_y + half_acc_z * half_acc_z)
+*/
+    __pyx_v_half_acc_z = ((__pyx_v_acc_ux * __pyx_v_hgy) - (__pyx_v_acc_uy * __pyx_v_hgx));
+
+    /* "pyIMU/_fcore.pyx":165
+ *         half_acc_z = acc_ux * hgy - acc_uy * hgx
+ * 
+ *         half_acc_norm = sqrt(half_acc_x * half_acc_x + half_acc_y * half_acc_y + half_acc_z * half_acc_z)             # <<<<<<<<<<<<<<
+ *         acceleration_error = asin(clampd(2.0 * half_acc_norm, -1.0, 1.0))
+ * 
+*/
+    __pyx_v_half_acc_norm = sqrt((((__pyx_v_half_acc_x * __pyx_v_half_acc_x) + (__pyx_v_half_acc_y * __pyx_v_half_acc_y)) + (__pyx_v_half_acc_z * __pyx_v_half_acc_z)));
+
+    /* "pyIMU/_fcore.pyx":166
+ * 
+ *         half_acc_norm = sqrt(half_acc_x * half_acc_x + half_acc_y * half_acc_y + half_acc_z * half_acc_z)
+ *         acceleration_error = asin(clampd(2.0 * half_acc_norm, -1.0, 1.0))             # <<<<<<<<<<<<<<
+ * 
+ *         acc_accepted = (acc_mag_error <= g_deviation) and (acceleration_error <= acceleration_rejection)
+*/
+    __pyx_t_3 = __pyx_f_5pyIMU_6_fcore_clampd((2.0 * __pyx_v_half_acc_norm), -1.0, 1.0); if (unlikely(__pyx_t_3 == ((double)-1) && PyErr_Occurred())) __PYX_ERR(0, 166, __pyx_L1_error)
+    __pyx_v_acceleration_error = asin(__pyx_t_3);
+
+    /* "pyIMU/_fcore.pyx":168
+ *         acceleration_error = asin(clampd(2.0 * half_acc_norm, -1.0, 1.0))
+ * 
+ *         acc_accepted = (acc_mag_error <= g_deviation) and (acceleration_error <= acceleration_rejection)             # <<<<<<<<<<<<<<
+ *         trigger_period = <int>round(t_acc_reject / dt)
+ *         if trigger_period < 1:
+*/
+    __pyx_t_2 = (__pyx_v_acc_mag_error <= __pyx_v_g_deviation);
+    if (__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L13_bool_binop_done;
+    }
+    __pyx_t_2 = (__pyx_v_acceleration_error <= __pyx_v_acceleration_rejection);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L13_bool_binop_done:;
+    __pyx_v_acc_accepted = __pyx_t_1;
+
+    /* "pyIMU/_fcore.pyx":169
+ * 
+ *         acc_accepted = (acc_mag_error <= g_deviation) and (acceleration_error <= acceleration_rejection)
+ *         trigger_period = <int>round(t_acc_reject / dt)             # <<<<<<<<<<<<<<
+ *         if trigger_period < 1:
+ *             trigger_period = 1
+*/
+    if (unlikely(__pyx_v_dt == 0)) {
+      PyErr_SetString(PyExc_ZeroDivisionError, "float division");
+      __PYX_ERR(0, 169, __pyx_L1_error)
+    }
+    __pyx_v_trigger_period = ((int)round((__pyx_v_t_acc_reject / __pyx_v_dt)));
+
+    /* "pyIMU/_fcore.pyx":170
+ *         acc_accepted = (acc_mag_error <= g_deviation) and (acceleration_error <= acceleration_rejection)
+ *         trigger_period = <int>round(t_acc_reject / dt)
+ *         if trigger_period < 1:             # <<<<<<<<<<<<<<
+ *             trigger_period = 1
+ *         timeout_period = recovery_timeout_factor * trigger_period
+*/
+    __pyx_t_1 = (__pyx_v_trigger_period < 1);
+    if (__pyx_t_1) {
+
+      /* "pyIMU/_fcore.pyx":171
+ *         trigger_period = <int>round(t_acc_reject / dt)
+ *         if trigger_period < 1:
+ *             trigger_period = 1             # <<<<<<<<<<<<<<
+ *         timeout_period = recovery_timeout_factor * trigger_period
+ * 
+*/
+      __pyx_v_trigger_period = 1;
+
+      /* "pyIMU/_fcore.pyx":170
+ *         acc_accepted = (acc_mag_error <= g_deviation) and (acceleration_error <= acceleration_rejection)
+ *         trigger_period = <int>round(t_acc_reject / dt)
+ *         if trigger_period < 1:             # <<<<<<<<<<<<<<
+ *             trigger_period = 1
+ *         timeout_period = recovery_timeout_factor * trigger_period
+*/
+    }
+
+    /* "pyIMU/_fcore.pyx":172
+ *         if trigger_period < 1:
+ *             trigger_period = 1
+ *         timeout_period = recovery_timeout_factor * trigger_period             # <<<<<<<<<<<<<<
+ * 
+ *         if initialising or acc_accepted:
+*/
+    __pyx_v_timeout_period = (__pyx_v_recovery_timeout_factor * __pyx_v_trigger_period);
+
+    /* "pyIMU/_fcore.pyx":174
+ *         timeout_period = recovery_timeout_factor * trigger_period
+ * 
+ *         if initialising or acc_accepted:             # <<<<<<<<<<<<<<
+ *             acc_trigger -= 9
+ *             accelerometer_ignored = False
+*/
+    if (!__pyx_v_initialising) {
+    } else {
+      __pyx_t_1 = __pyx_v_initialising;
+      goto __pyx_L17_bool_binop_done;
+    }
+    __pyx_t_1 = __pyx_v_acc_accepted;
+    __pyx_L17_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "pyIMU/_fcore.pyx":175
+ * 
+ *         if initialising or acc_accepted:
+ *             acc_trigger -= 9             # <<<<<<<<<<<<<<
+ *             accelerometer_ignored = False
+ *         else:
+*/
+      __pyx_v_acc_trigger = (__pyx_v_acc_trigger - 9);
+
+      /* "pyIMU/_fcore.pyx":176
+ *         if initialising or acc_accepted:
+ *             acc_trigger -= 9
+ *             accelerometer_ignored = False             # <<<<<<<<<<<<<<
+ *         else:
+ *             acc_trigger += 1
+*/
+      __pyx_v_accelerometer_ignored = 0;
+
+      /* "pyIMU/_fcore.pyx":174
+ *         timeout_period = recovery_timeout_factor * trigger_period
+ * 
+ *         if initialising or acc_accepted:             # <<<<<<<<<<<<<<
+ *             acc_trigger -= 9
+ *             accelerometer_ignored = False
+*/
+      goto __pyx_L16;
+    }
+
+    /* "pyIMU/_fcore.pyx":178
+ *             accelerometer_ignored = False
+ *         else:
+ *             acc_trigger += 1             # <<<<<<<<<<<<<<
+ *             accelerometer_ignored = True
+ * 
+*/
+    /*else*/ {
+      __pyx_v_acc_trigger = (__pyx_v_acc_trigger + 1);
+
+      /* "pyIMU/_fcore.pyx":179
+ *         else:
+ *             acc_trigger += 1
+ *             accelerometer_ignored = True             # <<<<<<<<<<<<<<
+ * 
+ *         if acc_trigger > trigger_period:
+*/
+      __pyx_v_accelerometer_ignored = 1;
+    }
+    __pyx_L16:;
+
+    /* "pyIMU/_fcore.pyx":181
+ *             accelerometer_ignored = True
+ * 
+ *         if acc_trigger > trigger_period:             # <<<<<<<<<<<<<<
+ *             acc_timeout = 0
+ *             accelerometer_ignored = False
+*/
+    __pyx_t_1 = (__pyx_v_acc_trigger > __pyx_v_trigger_period);
+    if (__pyx_t_1) {
+
+      /* "pyIMU/_fcore.pyx":182
+ * 
+ *         if acc_trigger > trigger_period:
+ *             acc_timeout = 0             # <<<<<<<<<<<<<<
+ *             accelerometer_ignored = False
+ *         elif acc_timeout > timeout_period:
+*/
+      __pyx_v_acc_timeout = 0;
+
+      /* "pyIMU/_fcore.pyx":183
+ *         if acc_trigger > trigger_period:
+ *             acc_timeout = 0
+ *             accelerometer_ignored = False             # <<<<<<<<<<<<<<
+ *         elif acc_timeout > timeout_period:
+ *             acc_trigger = 0
+*/
+      __pyx_v_accelerometer_ignored = 0;
+
+      /* "pyIMU/_fcore.pyx":181
+ *             accelerometer_ignored = True
+ * 
+ *         if acc_trigger > trigger_period:             # <<<<<<<<<<<<<<
+ *             acc_timeout = 0
+ *             accelerometer_ignored = False
+*/
+      goto __pyx_L19;
+    }
+
+    /* "pyIMU/_fcore.pyx":184
+ *             acc_timeout = 0
+ *             accelerometer_ignored = False
+ *         elif acc_timeout > timeout_period:             # <<<<<<<<<<<<<<
+ *             acc_trigger = 0
+ *             accelerometer_ignored = False
+*/
+    __pyx_t_1 = (__pyx_v_acc_timeout > __pyx_v_timeout_period);
+    if (__pyx_t_1) {
+
+      /* "pyIMU/_fcore.pyx":185
+ *             accelerometer_ignored = False
+ *         elif acc_timeout > timeout_period:
+ *             acc_trigger = 0             # <<<<<<<<<<<<<<
+ *             accelerometer_ignored = False
+ *         else:
+*/
+      __pyx_v_acc_trigger = 0;
+
+      /* "pyIMU/_fcore.pyx":186
+ *         elif acc_timeout > timeout_period:
+ *             acc_trigger = 0
+ *             accelerometer_ignored = False             # <<<<<<<<<<<<<<
+ *         else:
+ *             acc_timeout += 1
+*/
+      __pyx_v_accelerometer_ignored = 0;
+
+      /* "pyIMU/_fcore.pyx":184
+ *             acc_timeout = 0
+ *             accelerometer_ignored = False
+ *         elif acc_timeout > timeout_period:             # <<<<<<<<<<<<<<
+ *             acc_trigger = 0
+ *             accelerometer_ignored = False
+*/
+      goto __pyx_L19;
+    }
+
+    /* "pyIMU/_fcore.pyx":188
+ *             accelerometer_ignored = False
+ *         else:
+ *             acc_timeout += 1             # <<<<<<<<<<<<<<
+ * 
+ *         if not initialising:
+*/
+    /*else*/ {
+      __pyx_v_acc_timeout = (__pyx_v_acc_timeout + 1);
+    }
+    __pyx_L19:;
+
+    /* "pyIMU/_fcore.pyx":190
+ *             acc_timeout += 1
+ * 
+ *         if not initialising:             # <<<<<<<<<<<<<<
+ *             acc_trigger = clipi(acc_trigger, trigger_period)
+ *             acc_timeout = clipi(acc_timeout, timeout_period)
+*/
+    __pyx_t_1 = (!__pyx_v_initialising);
+    if (__pyx_t_1) {
+
+      /* "pyIMU/_fcore.pyx":191
+ * 
+ *         if not initialising:
+ *             acc_trigger = clipi(acc_trigger, trigger_period)             # <<<<<<<<<<<<<<
+ *             acc_timeout = clipi(acc_timeout, timeout_period)
+ * 
+*/
+      __pyx_t_4 = __pyx_f_5pyIMU_6_fcore_clipi(__pyx_v_acc_trigger, __pyx_v_trigger_period); if (unlikely(__pyx_t_4 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 191, __pyx_L1_error)
+      __pyx_v_acc_trigger = __pyx_t_4;
+
+      /* "pyIMU/_fcore.pyx":192
+ *         if not initialising:
+ *             acc_trigger = clipi(acc_trigger, trigger_period)
+ *             acc_timeout = clipi(acc_timeout, timeout_period)             # <<<<<<<<<<<<<<
+ * 
+ *         if not accelerometer_ignored:
+*/
+      __pyx_t_4 = __pyx_f_5pyIMU_6_fcore_clipi(__pyx_v_acc_timeout, __pyx_v_timeout_period); if (unlikely(__pyx_t_4 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 192, __pyx_L1_error)
+      __pyx_v_acc_timeout = __pyx_t_4;
+
+      /* "pyIMU/_fcore.pyx":190
+ *             acc_timeout += 1
+ * 
+ *         if not initialising:             # <<<<<<<<<<<<<<
+ *             acc_trigger = clipi(acc_trigger, trigger_period)
+ *             acc_timeout = clipi(acc_timeout, timeout_period)
+*/
+    }
+
+    /* "pyIMU/_fcore.pyx":194
+ *             acc_timeout = clipi(acc_timeout, timeout_period)
+ * 
+ *         if not accelerometer_ignored:             # <<<<<<<<<<<<<<
+ *             fbx += half_acc_x
+ *             fby += half_acc_y
+*/
+    __pyx_t_1 = (!__pyx_v_accelerometer_ignored);
+    if (__pyx_t_1) {
+
+      /* "pyIMU/_fcore.pyx":195
+ * 
+ *         if not accelerometer_ignored:
+ *             fbx += half_acc_x             # <<<<<<<<<<<<<<
+ *             fby += half_acc_y
+ *             fbz += half_acc_z
+*/
+      __pyx_v_fbx = (__pyx_v_fbx + __pyx_v_half_acc_x);
+
+      /* "pyIMU/_fcore.pyx":196
+ *         if not accelerometer_ignored:
+ *             fbx += half_acc_x
+ *             fby += half_acc_y             # <<<<<<<<<<<<<<
+ *             fbz += half_acc_z
+ *     else:
+*/
+      __pyx_v_fby = (__pyx_v_fby + __pyx_v_half_acc_y);
+
+      /* "pyIMU/_fcore.pyx":197
+ *             fbx += half_acc_x
+ *             fby += half_acc_y
+ *             fbz += half_acc_z             # <<<<<<<<<<<<<<
+ *     else:
+ *         accelerometer_ignored = True
+*/
+      __pyx_v_fbz = (__pyx_v_fbz + __pyx_v_half_acc_z);
+
+      /* "pyIMU/_fcore.pyx":194
+ *             acc_timeout = clipi(acc_timeout, timeout_period)
+ * 
+ *         if not accelerometer_ignored:             # <<<<<<<<<<<<<<
+ *             fbx += half_acc_x
+ *             fby += half_acc_y
+*/
+    }
+
+    /* "pyIMU/_fcore.pyx":156
+ *     acc_norm = sqrt(ax * ax + ay * ay + az * az)
+ *     acc_mag_error = fabs(acc_norm - 1.0)
+ *     if acc_norm > EPSILON and not angular_rate_recovery:             # <<<<<<<<<<<<<<
+ *         acc_ux = ax / acc_norm
+ *         acc_uy = ay / acc_norm
+*/
+    goto __pyx_L10;
+  }
+
+  /* "pyIMU/_fcore.pyx":199
+ *             fbz += half_acc_z
+ *     else:
+ *         accelerometer_ignored = True             # <<<<<<<<<<<<<<
+ *         acceleration_error = 0.0
+ * 
+*/
+  /*else*/ {
+    __pyx_v_accelerometer_ignored = 1;
+
+    /* "pyIMU/_fcore.pyx":200
+ *     else:
+ *         accelerometer_ignored = True
+ *         acceleration_error = 0.0             # <<<<<<<<<<<<<<
+ * 
+ *     # magnetometer rejection/recovery
+*/
+    __pyx_v_acceleration_error = 0.0;
+  }
+  __pyx_L10:;
+
+  /* "pyIMU/_fcore.pyx":203
+ * 
+ *     # magnetometer rejection/recovery
+ *     if mag_present and not angular_rate_recovery:             # <<<<<<<<<<<<<<
+ *         mag_norm_raw = sqrt(mx * mx + my * my + mz * mz)
+ *         if mag_norm_raw > EPSILON:
+*/
+  if (__pyx_v_mag_present) {
+  } else {
+    __pyx_t_1 = __pyx_v_mag_present;
+    goto __pyx_L23_bool_binop_done;
+  }
+  __pyx_t_2 = (!__pyx_v_angular_rate_recovery);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L23_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "pyIMU/_fcore.pyx":204
+ *     # magnetometer rejection/recovery
+ *     if mag_present and not angular_rate_recovery:
+ *         mag_norm_raw = sqrt(mx * mx + my * my + mz * mz)             # <<<<<<<<<<<<<<
+ *         if mag_norm_raw > EPSILON:
+ *             mag_ux = mx / mag_norm_raw
+*/
+    __pyx_v_mag_norm_raw = sqrt((((__pyx_v_mx * __pyx_v_mx) + (__pyx_v_my * __pyx_v_my)) + (__pyx_v_mz * __pyx_v_mz)));
+
+    /* "pyIMU/_fcore.pyx":205
+ *     if mag_present and not angular_rate_recovery:
+ *         mag_norm_raw = sqrt(mx * mx + my * my + mz * mz)
+ *         if mag_norm_raw > EPSILON:             # <<<<<<<<<<<<<<
+ *             mag_ux = mx / mag_norm_raw
+ *             mag_uy = my / mag_norm_raw
+*/
+    __pyx_t_1 = (__pyx_v_mag_norm_raw > __pyx_v_5pyIMU_6_fcore_EPSILON);
+    if (__pyx_t_1) {
+
+      /* "pyIMU/_fcore.pyx":206
+ *         mag_norm_raw = sqrt(mx * mx + my * my + mz * mz)
+ *         if mag_norm_raw > EPSILON:
+ *             mag_ux = mx / mag_norm_raw             # <<<<<<<<<<<<<<
+ *             mag_uy = my / mag_norm_raw
+ *             mag_uz = mz / mag_norm_raw
+*/
+      if (unlikely(__pyx_v_mag_norm_raw == 0)) {
+        PyErr_SetString(PyExc_ZeroDivisionError, "float division");
+        __PYX_ERR(0, 206, __pyx_L1_error)
+      }
+      __pyx_v_mag_ux = (__pyx_v_mx / __pyx_v_mag_norm_raw);
+
+      /* "pyIMU/_fcore.pyx":207
+ *         if mag_norm_raw > EPSILON:
+ *             mag_ux = mx / mag_norm_raw
+ *             mag_uy = my / mag_norm_raw             # <<<<<<<<<<<<<<
+ *             mag_uz = mz / mag_norm_raw
+ * 
+*/
+      if (unlikely(__pyx_v_mag_norm_raw == 0)) {
+        PyErr_SetString(PyExc_ZeroDivisionError, "float division");
+        __PYX_ERR(0, 207, __pyx_L1_error)
+      }
+      __pyx_v_mag_uy = (__pyx_v_my / __pyx_v_mag_norm_raw);
+
+      /* "pyIMU/_fcore.pyx":208
+ *             mag_ux = mx / mag_norm_raw
+ *             mag_uy = my / mag_norm_raw
+ *             mag_uz = mz / mag_norm_raw             # <<<<<<<<<<<<<<
+ * 
+ *             # h = q.conjugate * [0,mag] * q
+*/
+      if (unlikely(__pyx_v_mag_norm_raw == 0)) {
+        PyErr_SetString(PyExc_ZeroDivisionError, "float division");
+        __PYX_ERR(0, 208, __pyx_L1_error)
+      }
+      __pyx_v_mag_uz = (__pyx_v_mz / __pyx_v_mag_norm_raw);
+
+      /* "pyIMU/_fcore.pyx":211
+ * 
+ *             # h = q.conjugate * [0,mag] * q
+ *             qcw = qw             # <<<<<<<<<<<<<<
+ *             qcx = -qx
+ *             qcy = -qy
+*/
+      __pyx_v_qcw = __pyx_v_qw;
+
+      /* "pyIMU/_fcore.pyx":212
+ *             # h = q.conjugate * [0,mag] * q
+ *             qcw = qw
+ *             qcx = -qx             # <<<<<<<<<<<<<<
+ *             qcy = -qy
+ *             qcz = -qz
+*/
+      __pyx_v_qcx = (-__pyx_v_qx);
+
+      /* "pyIMU/_fcore.pyx":213
+ *             qcw = qw
+ *             qcx = -qx
+ *             qcy = -qy             # <<<<<<<<<<<<<<
+ *             qcz = -qz
+ * 
+*/
+      __pyx_v_qcy = (-__pyx_v_qy);
+
+      /* "pyIMU/_fcore.pyx":214
+ *             qcx = -qx
+ *             qcy = -qy
+ *             qcz = -qz             # <<<<<<<<<<<<<<
+ * 
+ *             tw = -(qcx * mag_ux + qcy * mag_uy + qcz * mag_uz)
+*/
+      __pyx_v_qcz = (-__pyx_v_qz);
+
+      /* "pyIMU/_fcore.pyx":216
+ *             qcz = -qz
+ * 
+ *             tw = -(qcx * mag_ux + qcy * mag_uy + qcz * mag_uz)             # <<<<<<<<<<<<<<
+ *             tx = qcw * mag_ux + qcy * mag_uz - qcz * mag_uy
+ *             ty = qcw * mag_uy - qcx * mag_uz + qcz * mag_ux
+*/
+      __pyx_v_tw = (-(((__pyx_v_qcx * __pyx_v_mag_ux) + (__pyx_v_qcy * __pyx_v_mag_uy)) + (__pyx_v_qcz * __pyx_v_mag_uz)));
+
+      /* "pyIMU/_fcore.pyx":217
+ * 
+ *             tw = -(qcx * mag_ux + qcy * mag_uy + qcz * mag_uz)
+ *             tx = qcw * mag_ux + qcy * mag_uz - qcz * mag_uy             # <<<<<<<<<<<<<<
+ *             ty = qcw * mag_uy - qcx * mag_uz + qcz * mag_ux
+ *             tz = qcw * mag_uz + qcx * mag_uy - qcy * mag_ux
+*/
+      __pyx_v_tx = (((__pyx_v_qcw * __pyx_v_mag_ux) + (__pyx_v_qcy * __pyx_v_mag_uz)) - (__pyx_v_qcz * __pyx_v_mag_uy));
+
+      /* "pyIMU/_fcore.pyx":218
+ *             tw = -(qcx * mag_ux + qcy * mag_uy + qcz * mag_uz)
+ *             tx = qcw * mag_ux + qcy * mag_uz - qcz * mag_uy
+ *             ty = qcw * mag_uy - qcx * mag_uz + qcz * mag_ux             # <<<<<<<<<<<<<<
+ *             tz = qcw * mag_uz + qcx * mag_uy - qcy * mag_ux
+ * 
+*/
+      __pyx_v_ty = (((__pyx_v_qcw * __pyx_v_mag_uy) - (__pyx_v_qcx * __pyx_v_mag_uz)) + (__pyx_v_qcz * __pyx_v_mag_ux));
+
+      /* "pyIMU/_fcore.pyx":219
+ *             tx = qcw * mag_ux + qcy * mag_uz - qcz * mag_uy
+ *             ty = qcw * mag_uy - qcx * mag_uz + qcz * mag_ux
+ *             tz = qcw * mag_uz + qcx * mag_uy - qcy * mag_ux             # <<<<<<<<<<<<<<
+ * 
+ *             hw = tw * qw - tx * qx - ty * qy - tz * qz
+*/
+      __pyx_v_tz = (((__pyx_v_qcw * __pyx_v_mag_uz) + (__pyx_v_qcx * __pyx_v_mag_uy)) - (__pyx_v_qcy * __pyx_v_mag_ux));
+
+      /* "pyIMU/_fcore.pyx":221
+ *             tz = qcw * mag_uz + qcx * mag_uy - qcy * mag_ux
+ * 
+ *             hw = tw * qw - tx * qx - ty * qy - tz * qz             # <<<<<<<<<<<<<<
+ *             hx = tw * qx + tx * qw + ty * qz - tz * qy
+ *             hy = tw * qy - tx * qz + ty * qw + tz * qx
+*/
+      __pyx_v_hw = ((((__pyx_v_tw * __pyx_v_qw) - (__pyx_v_tx * __pyx_v_qx)) - (__pyx_v_ty * __pyx_v_qy)) - (__pyx_v_tz * __pyx_v_qz));
+
+      /* "pyIMU/_fcore.pyx":222
+ * 
+ *             hw = tw * qw - tx * qx - ty * qy - tz * qz
+ *             hx = tw * qx + tx * qw + ty * qz - tz * qy             # <<<<<<<<<<<<<<
+ *             hy = tw * qy - tx * qz + ty * qw + tz * qx
+ *             hz = tw * qz + tx * qy - ty * qx + tz * qw
+*/
+      __pyx_v_hx = ((((__pyx_v_tw * __pyx_v_qx) + (__pyx_v_tx * __pyx_v_qw)) + (__pyx_v_ty * __pyx_v_qz)) - (__pyx_v_tz * __pyx_v_qy));
+
+      /* "pyIMU/_fcore.pyx":223
+ *             hw = tw * qw - tx * qx - ty * qy - tz * qz
+ *             hx = tw * qx + tx * qw + ty * qz - tz * qy
+ *             hy = tw * qy - tx * qz + ty * qw + tz * qx             # <<<<<<<<<<<<<<
+ *             hz = tw * qz + tx * qy - ty * qx + tz * qw
+ * 
+*/
+      __pyx_v_hy = ((((__pyx_v_tw * __pyx_v_qy) - (__pyx_v_tx * __pyx_v_qz)) + (__pyx_v_ty * __pyx_v_qw)) + (__pyx_v_tz * __pyx_v_qx));
+
+      /* "pyIMU/_fcore.pyx":224
+ *             hx = tw * qx + tx * qw + ty * qz - tz * qy
+ *             hy = tw * qy - tx * qz + ty * qw + tz * qx
+ *             hz = tw * qz + tx * qy - ty * qx + tz * qw             # <<<<<<<<<<<<<<
+ * 
+ *             bx = sqrt(hx * hx + hy * hy)
+*/
+      __pyx_v_hz = ((((__pyx_v_tw * __pyx_v_qz) + (__pyx_v_tx * __pyx_v_qy)) - (__pyx_v_ty * __pyx_v_qx)) + (__pyx_v_tz * __pyx_v_qw));
+
+      /* "pyIMU/_fcore.pyx":226
+ *             hz = tw * qz + tx * qy - ty * qx + tz * qw
+ * 
+ *             bx = sqrt(hx * hx + hy * hy)             # <<<<<<<<<<<<<<
+ *             bz = hz
+ * 
+*/
+      __pyx_v_bx = sqrt(((__pyx_v_hx * __pyx_v_hx) + (__pyx_v_hy * __pyx_v_hy)));
+
+      /* "pyIMU/_fcore.pyx":227
+ * 
+ *             bx = sqrt(hx * hx + hy * hy)
+ *             bz = hz             # <<<<<<<<<<<<<<
+ * 
+ *             refx = 2.0 * bx * (0.5 - qy * qy - qz * qz) + 2.0 * bz * (qx * qz - qw * qy)
+*/
+      __pyx_v_bz = __pyx_v_hz;
+
+      /* "pyIMU/_fcore.pyx":229
+ *             bz = hz
+ * 
+ *             refx = 2.0 * bx * (0.5 - qy * qy - qz * qz) + 2.0 * bz * (qx * qz - qw * qy)             # <<<<<<<<<<<<<<
+ *             refy = 2.0 * bx * (qx * qy - qw * qz) + 2.0 * bz * (qw * qx + qy * qz)
+ *             refz = 2.0 * bx * (qw * qy + qx * qz) + 2.0 * bz * (0.5 - qx * qx - qy * qy)
+*/
+      __pyx_v_refx = (((2.0 * __pyx_v_bx) * ((0.5 - (__pyx_v_qy * __pyx_v_qy)) - (__pyx_v_qz * __pyx_v_qz))) + ((2.0 * __pyx_v_bz) * ((__pyx_v_qx * __pyx_v_qz) - (__pyx_v_qw * __pyx_v_qy))));
+
+      /* "pyIMU/_fcore.pyx":230
+ * 
+ *             refx = 2.0 * bx * (0.5 - qy * qy - qz * qz) + 2.0 * bz * (qx * qz - qw * qy)
+ *             refy = 2.0 * bx * (qx * qy - qw * qz) + 2.0 * bz * (qw * qx + qy * qz)             # <<<<<<<<<<<<<<
+ *             refz = 2.0 * bx * (qw * qy + qx * qz) + 2.0 * bz * (0.5 - qx * qx - qy * qy)
+ * 
+*/
+      __pyx_v_refy = (((2.0 * __pyx_v_bx) * ((__pyx_v_qx * __pyx_v_qy) - (__pyx_v_qw * __pyx_v_qz))) + ((2.0 * __pyx_v_bz) * ((__pyx_v_qw * __pyx_v_qx) + (__pyx_v_qy * __pyx_v_qz))));
+
+      /* "pyIMU/_fcore.pyx":231
+ *             refx = 2.0 * bx * (0.5 - qy * qy - qz * qz) + 2.0 * bz * (qx * qz - qw * qy)
+ *             refy = 2.0 * bx * (qx * qy - qw * qz) + 2.0 * bz * (qw * qx + qy * qz)
+ *             refz = 2.0 * bx * (qw * qy + qx * qz) + 2.0 * bz * (0.5 - qx * qx - qy * qy)             # <<<<<<<<<<<<<<
+ * 
+ *             ref_norm = sqrt(refx * refx + refy * refy + refz * refz)
+*/
+      __pyx_v_refz = (((2.0 * __pyx_v_bx) * ((__pyx_v_qw * __pyx_v_qy) + (__pyx_v_qx * __pyx_v_qz))) + ((2.0 * __pyx_v_bz) * ((0.5 - (__pyx_v_qx * __pyx_v_qx)) - (__pyx_v_qy * __pyx_v_qy))));
+
+      /* "pyIMU/_fcore.pyx":233
+ *             refz = 2.0 * bx * (qw * qy + qx * qz) + 2.0 * bz * (0.5 - qx * qx - qy * qy)
+ * 
+ *             ref_norm = sqrt(refx * refx + refy * refy + refz * refz)             # <<<<<<<<<<<<<<
+ *             if ref_norm > EPSILON:
+ *                 refx /= ref_norm
+*/
+      __pyx_v_ref_norm = sqrt((((__pyx_v_refx * __pyx_v_refx) + (__pyx_v_refy * __pyx_v_refy)) + (__pyx_v_refz * __pyx_v_refz)));
+
+      /* "pyIMU/_fcore.pyx":234
+ * 
+ *             ref_norm = sqrt(refx * refx + refy * refy + refz * refz)
+ *             if ref_norm > EPSILON:             # <<<<<<<<<<<<<<
+ *                 refx /= ref_norm
+ *                 refy /= ref_norm
+*/
+      __pyx_t_1 = (__pyx_v_ref_norm > __pyx_v_5pyIMU_6_fcore_EPSILON);
+      if (__pyx_t_1) {
+
+        /* "pyIMU/_fcore.pyx":235
+ *             ref_norm = sqrt(refx * refx + refy * refy + refz * refz)
+ *             if ref_norm > EPSILON:
+ *                 refx /= ref_norm             # <<<<<<<<<<<<<<
+ *                 refy /= ref_norm
+ *                 refz /= ref_norm
+*/
+        if (unlikely(__pyx_v_ref_norm == 0)) {
+          PyErr_SetString(PyExc_ZeroDivisionError, "float division");
+          __PYX_ERR(0, 235, __pyx_L1_error)
+        }
+        __pyx_v_refx = (__pyx_v_refx / __pyx_v_ref_norm);
+
+        /* "pyIMU/_fcore.pyx":236
+ *             if ref_norm > EPSILON:
+ *                 refx /= ref_norm
+ *                 refy /= ref_norm             # <<<<<<<<<<<<<<
+ *                 refz /= ref_norm
+ * 
+*/
+        if (unlikely(__pyx_v_ref_norm == 0)) {
+          PyErr_SetString(PyExc_ZeroDivisionError, "float division");
+          __PYX_ERR(0, 236, __pyx_L1_error)
+        }
+        __pyx_v_refy = (__pyx_v_refy / __pyx_v_ref_norm);
+
+        /* "pyIMU/_fcore.pyx":237
+ *                 refx /= ref_norm
+ *                 refy /= ref_norm
+ *                 refz /= ref_norm             # <<<<<<<<<<<<<<
+ * 
+ *             half_mag_x = mag_uy * refz - mag_uz * refy
+*/
+        if (unlikely(__pyx_v_ref_norm == 0)) {
+          PyErr_SetString(PyExc_ZeroDivisionError, "float division");
+          __PYX_ERR(0, 237, __pyx_L1_error)
+        }
+        __pyx_v_refz = (__pyx_v_refz / __pyx_v_ref_norm);
+
+        /* "pyIMU/_fcore.pyx":234
+ * 
+ *             ref_norm = sqrt(refx * refx + refy * refy + refz * refz)
+ *             if ref_norm > EPSILON:             # <<<<<<<<<<<<<<
+ *                 refx /= ref_norm
+ *                 refy /= ref_norm
+*/
+      }
+
+      /* "pyIMU/_fcore.pyx":239
+ *                 refz /= ref_norm
+ * 
+ *             half_mag_x = mag_uy * refz - mag_uz * refy             # <<<<<<<<<<<<<<
+ *             half_mag_y = mag_uz * refx - mag_ux * refz
+ *             half_mag_z = mag_ux * refy - mag_uy * refx
+*/
+      __pyx_v_half_mag_x = ((__pyx_v_mag_uy * __pyx_v_refz) - (__pyx_v_mag_uz * __pyx_v_refy));
+
+      /* "pyIMU/_fcore.pyx":240
+ * 
+ *             half_mag_x = mag_uy * refz - mag_uz * refy
+ *             half_mag_y = mag_uz * refx - mag_ux * refz             # <<<<<<<<<<<<<<
+ *             half_mag_z = mag_ux * refy - mag_uy * refx
+ * 
+*/
+      __pyx_v_half_mag_y = ((__pyx_v_mag_uz * __pyx_v_refx) - (__pyx_v_mag_ux * __pyx_v_refz));
+
+      /* "pyIMU/_fcore.pyx":241
+ *             half_mag_x = mag_uy * refz - mag_uz * refy
+ *             half_mag_y = mag_uz * refx - mag_ux * refz
+ *             half_mag_z = mag_ux * refy - mag_uy * refx             # <<<<<<<<<<<<<<
+ * 
+ *             half_mag_norm = sqrt(half_mag_x * half_mag_x + half_mag_y * half_mag_y + half_mag_z * half_mag_z)
+*/
+      __pyx_v_half_mag_z = ((__pyx_v_mag_ux * __pyx_v_refy) - (__pyx_v_mag_uy * __pyx_v_refx));
+
+      /* "pyIMU/_fcore.pyx":243
+ *             half_mag_z = mag_ux * refy - mag_uy * refx
+ * 
+ *             half_mag_norm = sqrt(half_mag_x * half_mag_x + half_mag_y * half_mag_y + half_mag_z * half_mag_z)             # <<<<<<<<<<<<<<
+ *             magnetic_error = asin(clampd(2.0 * half_mag_norm, -1.0, 1.0))
+ * 
+*/
+      __pyx_v_half_mag_norm = sqrt((((__pyx_v_half_mag_x * __pyx_v_half_mag_x) + (__pyx_v_half_mag_y * __pyx_v_half_mag_y)) + (__pyx_v_half_mag_z * __pyx_v_half_mag_z)));
+
+      /* "pyIMU/_fcore.pyx":244
+ * 
+ *             half_mag_norm = sqrt(half_mag_x * half_mag_x + half_mag_y * half_mag_y + half_mag_z * half_mag_z)
+ *             magnetic_error = asin(clampd(2.0 * half_mag_norm, -1.0, 1.0))             # <<<<<<<<<<<<<<
+ * 
+ *             mag_strength_ok = True
+*/
+      __pyx_t_3 = __pyx_f_5pyIMU_6_fcore_clampd((2.0 * __pyx_v_half_mag_norm), -1.0, 1.0); if (unlikely(__pyx_t_3 == ((double)-1) && PyErr_Occurred())) __PYX_ERR(0, 244, __pyx_L1_error)
+      __pyx_v_magnetic_error = asin(__pyx_t_3);
+
+      /* "pyIMU/_fcore.pyx":246
+ *             magnetic_error = asin(clampd(2.0 * half_mag_norm, -1.0, 1.0))
+ * 
+ *             mag_strength_ok = True             # <<<<<<<<<<<<<<
+ *             if mag_min_enabled and mag_norm_raw < mag_min:
+ *                 mag_strength_ok = False
+*/
+      __pyx_v_mag_strength_ok = 1;
+
+      /* "pyIMU/_fcore.pyx":247
+ * 
+ *             mag_strength_ok = True
+ *             if mag_min_enabled and mag_norm_raw < mag_min:             # <<<<<<<<<<<<<<
+ *                 mag_strength_ok = False
+ *             if mag_max_enabled and mag_norm_raw > mag_max:
+*/
+      if (__pyx_v_mag_min_enabled) {
+      } else {
+        __pyx_t_1 = __pyx_v_mag_min_enabled;
+        goto __pyx_L28_bool_binop_done;
+      }
+      __pyx_t_2 = (__pyx_v_mag_norm_raw < __pyx_v_mag_min);
+      __pyx_t_1 = __pyx_t_2;
+      __pyx_L28_bool_binop_done:;
+      if (__pyx_t_1) {
+
+        /* "pyIMU/_fcore.pyx":248
+ *             mag_strength_ok = True
+ *             if mag_min_enabled and mag_norm_raw < mag_min:
+ *                 mag_strength_ok = False             # <<<<<<<<<<<<<<
+ *             if mag_max_enabled and mag_norm_raw > mag_max:
+ *                 mag_strength_ok = False
+*/
+        __pyx_v_mag_strength_ok = 0;
+
+        /* "pyIMU/_fcore.pyx":247
+ * 
+ *             mag_strength_ok = True
+ *             if mag_min_enabled and mag_norm_raw < mag_min:             # <<<<<<<<<<<<<<
+ *                 mag_strength_ok = False
+ *             if mag_max_enabled and mag_norm_raw > mag_max:
+*/
+      }
+
+      /* "pyIMU/_fcore.pyx":249
+ *             if mag_min_enabled and mag_norm_raw < mag_min:
+ *                 mag_strength_ok = False
+ *             if mag_max_enabled and mag_norm_raw > mag_max:             # <<<<<<<<<<<<<<
+ *                 mag_strength_ok = False
+ * 
+*/
+      if (__pyx_v_mag_max_enabled) {
+      } else {
+        __pyx_t_1 = __pyx_v_mag_max_enabled;
+        goto __pyx_L31_bool_binop_done;
+      }
+      __pyx_t_2 = (__pyx_v_mag_norm_raw > __pyx_v_mag_max);
+      __pyx_t_1 = __pyx_t_2;
+      __pyx_L31_bool_binop_done:;
+      if (__pyx_t_1) {
+
+        /* "pyIMU/_fcore.pyx":250
+ *                 mag_strength_ok = False
+ *             if mag_max_enabled and mag_norm_raw > mag_max:
+ *                 mag_strength_ok = False             # <<<<<<<<<<<<<<
+ * 
+ *             mag_accepted = mag_strength_ok and (magnetic_error <= magnetic_rejection)
+*/
+        __pyx_v_mag_strength_ok = 0;
+
+        /* "pyIMU/_fcore.pyx":249
+ *             if mag_min_enabled and mag_norm_raw < mag_min:
+ *                 mag_strength_ok = False
+ *             if mag_max_enabled and mag_norm_raw > mag_max:             # <<<<<<<<<<<<<<
+ *                 mag_strength_ok = False
+ * 
+*/
+      }
+
+      /* "pyIMU/_fcore.pyx":252
+ *                 mag_strength_ok = False
+ * 
+ *             mag_accepted = mag_strength_ok and (magnetic_error <= magnetic_rejection)             # <<<<<<<<<<<<<<
+ *             trigger_period = <int>round(t_mag_reject / dt)
+ *             if trigger_period < 1:
+*/
+      if (__pyx_v_mag_strength_ok) {
+      } else {
+        __pyx_t_1 = __pyx_v_mag_strength_ok;
+        goto __pyx_L33_bool_binop_done;
+      }
+      __pyx_t_2 = (__pyx_v_magnetic_error <= __pyx_v_magnetic_rejection);
+      __pyx_t_1 = __pyx_t_2;
+      __pyx_L33_bool_binop_done:;
+      __pyx_v_mag_accepted = __pyx_t_1;
+
+      /* "pyIMU/_fcore.pyx":253
+ * 
+ *             mag_accepted = mag_strength_ok and (magnetic_error <= magnetic_rejection)
+ *             trigger_period = <int>round(t_mag_reject / dt)             # <<<<<<<<<<<<<<
+ *             if trigger_period < 1:
+ *                 trigger_period = 1
+*/
+      if (unlikely(__pyx_v_dt == 0)) {
+        PyErr_SetString(PyExc_ZeroDivisionError, "float division");
+        __PYX_ERR(0, 253, __pyx_L1_error)
+      }
+      __pyx_v_trigger_period = ((int)round((__pyx_v_t_mag_reject / __pyx_v_dt)));
+
+      /* "pyIMU/_fcore.pyx":254
+ *             mag_accepted = mag_strength_ok and (magnetic_error <= magnetic_rejection)
+ *             trigger_period = <int>round(t_mag_reject / dt)
+ *             if trigger_period < 1:             # <<<<<<<<<<<<<<
+ *                 trigger_period = 1
+ *             timeout_period = recovery_timeout_factor * trigger_period
+*/
+      __pyx_t_1 = (__pyx_v_trigger_period < 1);
+      if (__pyx_t_1) {
+
+        /* "pyIMU/_fcore.pyx":255
+ *             trigger_period = <int>round(t_mag_reject / dt)
+ *             if trigger_period < 1:
+ *                 trigger_period = 1             # <<<<<<<<<<<<<<
+ *             timeout_period = recovery_timeout_factor * trigger_period
+ * 
+*/
+        __pyx_v_trigger_period = 1;
+
+        /* "pyIMU/_fcore.pyx":254
+ *             mag_accepted = mag_strength_ok and (magnetic_error <= magnetic_rejection)
+ *             trigger_period = <int>round(t_mag_reject / dt)
+ *             if trigger_period < 1:             # <<<<<<<<<<<<<<
+ *                 trigger_period = 1
+ *             timeout_period = recovery_timeout_factor * trigger_period
+*/
+      }
+
+      /* "pyIMU/_fcore.pyx":256
+ *             if trigger_period < 1:
+ *                 trigger_period = 1
+ *             timeout_period = recovery_timeout_factor * trigger_period             # <<<<<<<<<<<<<<
+ * 
+ *             if initialising or mag_accepted:
+*/
+      __pyx_v_timeout_period = (__pyx_v_recovery_timeout_factor * __pyx_v_trigger_period);
+
+      /* "pyIMU/_fcore.pyx":258
+ *             timeout_period = recovery_timeout_factor * trigger_period
+ * 
+ *             if initialising or mag_accepted:             # <<<<<<<<<<<<<<
+ *                 mag_trigger -= 9
+ *                 magnetometer_ignored = False
+*/
+      if (!__pyx_v_initialising) {
+      } else {
+        __pyx_t_1 = __pyx_v_initialising;
+        goto __pyx_L37_bool_binop_done;
+      }
+      __pyx_t_1 = __pyx_v_mag_accepted;
+      __pyx_L37_bool_binop_done:;
+      if (__pyx_t_1) {
+
+        /* "pyIMU/_fcore.pyx":259
+ * 
+ *             if initialising or mag_accepted:
+ *                 mag_trigger -= 9             # <<<<<<<<<<<<<<
+ *                 magnetometer_ignored = False
+ *             else:
+*/
+        __pyx_v_mag_trigger = (__pyx_v_mag_trigger - 9);
+
+        /* "pyIMU/_fcore.pyx":260
+ *             if initialising or mag_accepted:
+ *                 mag_trigger -= 9
+ *                 magnetometer_ignored = False             # <<<<<<<<<<<<<<
+ *             else:
+ *                 mag_trigger += 1
+*/
+        __pyx_v_magnetometer_ignored = 0;
+
+        /* "pyIMU/_fcore.pyx":258
+ *             timeout_period = recovery_timeout_factor * trigger_period
+ * 
+ *             if initialising or mag_accepted:             # <<<<<<<<<<<<<<
+ *                 mag_trigger -= 9
+ *                 magnetometer_ignored = False
+*/
+        goto __pyx_L36;
+      }
+
+      /* "pyIMU/_fcore.pyx":262
+ *                 magnetometer_ignored = False
+ *             else:
+ *                 mag_trigger += 1             # <<<<<<<<<<<<<<
+ *                 magnetometer_ignored = True
+ * 
+*/
+      /*else*/ {
+        __pyx_v_mag_trigger = (__pyx_v_mag_trigger + 1);
+
+        /* "pyIMU/_fcore.pyx":263
+ *             else:
+ *                 mag_trigger += 1
+ *                 magnetometer_ignored = True             # <<<<<<<<<<<<<<
+ * 
+ *             if mag_trigger > trigger_period:
+*/
+        __pyx_v_magnetometer_ignored = 1;
+      }
+      __pyx_L36:;
+
+      /* "pyIMU/_fcore.pyx":265
+ *                 magnetometer_ignored = True
+ * 
+ *             if mag_trigger > trigger_period:             # <<<<<<<<<<<<<<
+ *                 mag_timeout = 0
+ *                 magnetometer_ignored = False
+*/
+      __pyx_t_1 = (__pyx_v_mag_trigger > __pyx_v_trigger_period);
+      if (__pyx_t_1) {
+
+        /* "pyIMU/_fcore.pyx":266
+ * 
+ *             if mag_trigger > trigger_period:
+ *                 mag_timeout = 0             # <<<<<<<<<<<<<<
+ *                 magnetometer_ignored = False
+ *             elif mag_timeout > timeout_period:
+*/
+        __pyx_v_mag_timeout = 0;
+
+        /* "pyIMU/_fcore.pyx":267
+ *             if mag_trigger > trigger_period:
+ *                 mag_timeout = 0
+ *                 magnetometer_ignored = False             # <<<<<<<<<<<<<<
+ *             elif mag_timeout > timeout_period:
+ *                 mag_trigger = 0
+*/
+        __pyx_v_magnetometer_ignored = 0;
+
+        /* "pyIMU/_fcore.pyx":265
+ *                 magnetometer_ignored = True
+ * 
+ *             if mag_trigger > trigger_period:             # <<<<<<<<<<<<<<
+ *                 mag_timeout = 0
+ *                 magnetometer_ignored = False
+*/
+        goto __pyx_L39;
+      }
+
+      /* "pyIMU/_fcore.pyx":268
+ *                 mag_timeout = 0
+ *                 magnetometer_ignored = False
+ *             elif mag_timeout > timeout_period:             # <<<<<<<<<<<<<<
+ *                 mag_trigger = 0
+ *                 magnetometer_ignored = False
+*/
+      __pyx_t_1 = (__pyx_v_mag_timeout > __pyx_v_timeout_period);
+      if (__pyx_t_1) {
+
+        /* "pyIMU/_fcore.pyx":269
+ *                 magnetometer_ignored = False
+ *             elif mag_timeout > timeout_period:
+ *                 mag_trigger = 0             # <<<<<<<<<<<<<<
+ *                 magnetometer_ignored = False
+ *             else:
+*/
+        __pyx_v_mag_trigger = 0;
+
+        /* "pyIMU/_fcore.pyx":270
+ *             elif mag_timeout > timeout_period:
+ *                 mag_trigger = 0
+ *                 magnetometer_ignored = False             # <<<<<<<<<<<<<<
+ *             else:
+ *                 mag_timeout += 1
+*/
+        __pyx_v_magnetometer_ignored = 0;
+
+        /* "pyIMU/_fcore.pyx":268
+ *                 mag_timeout = 0
+ *                 magnetometer_ignored = False
+ *             elif mag_timeout > timeout_period:             # <<<<<<<<<<<<<<
+ *                 mag_trigger = 0
+ *                 magnetometer_ignored = False
+*/
+        goto __pyx_L39;
+      }
+
+      /* "pyIMU/_fcore.pyx":272
+ *                 magnetometer_ignored = False
+ *             else:
+ *                 mag_timeout += 1             # <<<<<<<<<<<<<<
+ * 
+ *             if not initialising:
+*/
+      /*else*/ {
+        __pyx_v_mag_timeout = (__pyx_v_mag_timeout + 1);
+      }
+      __pyx_L39:;
+
+      /* "pyIMU/_fcore.pyx":274
+ *                 mag_timeout += 1
+ * 
+ *             if not initialising:             # <<<<<<<<<<<<<<
+ *                 mag_trigger = clipi(mag_trigger, trigger_period)
+ *                 mag_timeout = clipi(mag_timeout, timeout_period)
+*/
+      __pyx_t_1 = (!__pyx_v_initialising);
+      if (__pyx_t_1) {
+
+        /* "pyIMU/_fcore.pyx":275
+ * 
+ *             if not initialising:
+ *                 mag_trigger = clipi(mag_trigger, trigger_period)             # <<<<<<<<<<<<<<
+ *                 mag_timeout = clipi(mag_timeout, timeout_period)
+ * 
+*/
+        __pyx_t_4 = __pyx_f_5pyIMU_6_fcore_clipi(__pyx_v_mag_trigger, __pyx_v_trigger_period); if (unlikely(__pyx_t_4 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 275, __pyx_L1_error)
+        __pyx_v_mag_trigger = __pyx_t_4;
+
+        /* "pyIMU/_fcore.pyx":276
+ *             if not initialising:
+ *                 mag_trigger = clipi(mag_trigger, trigger_period)
+ *                 mag_timeout = clipi(mag_timeout, timeout_period)             # <<<<<<<<<<<<<<
+ * 
+ *             if not magnetometer_ignored:
+*/
+        __pyx_t_4 = __pyx_f_5pyIMU_6_fcore_clipi(__pyx_v_mag_timeout, __pyx_v_timeout_period); if (unlikely(__pyx_t_4 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 276, __pyx_L1_error)
+        __pyx_v_mag_timeout = __pyx_t_4;
+
+        /* "pyIMU/_fcore.pyx":274
+ *                 mag_timeout += 1
+ * 
+ *             if not initialising:             # <<<<<<<<<<<<<<
+ *                 mag_trigger = clipi(mag_trigger, trigger_period)
+ *                 mag_timeout = clipi(mag_timeout, timeout_period)
+*/
+      }
+
+      /* "pyIMU/_fcore.pyx":278
+ *                 mag_timeout = clipi(mag_timeout, timeout_period)
+ * 
+ *             if not magnetometer_ignored:             # <<<<<<<<<<<<<<
+ *                 fbx += half_mag_x
+ *                 fby += half_mag_y
+*/
+      __pyx_t_1 = (!__pyx_v_magnetometer_ignored);
+      if (__pyx_t_1) {
+
+        /* "pyIMU/_fcore.pyx":279
+ * 
+ *             if not magnetometer_ignored:
+ *                 fbx += half_mag_x             # <<<<<<<<<<<<<<
+ *                 fby += half_mag_y
+ *                 fbz += half_mag_z
+*/
+        __pyx_v_fbx = (__pyx_v_fbx + __pyx_v_half_mag_x);
+
+        /* "pyIMU/_fcore.pyx":280
+ *             if not magnetometer_ignored:
+ *                 fbx += half_mag_x
+ *                 fby += half_mag_y             # <<<<<<<<<<<<<<
+ *                 fbz += half_mag_z
+ * 
+*/
+        __pyx_v_fby = (__pyx_v_fby + __pyx_v_half_mag_y);
+
+        /* "pyIMU/_fcore.pyx":281
+ *                 fbx += half_mag_x
+ *                 fby += half_mag_y
+ *                 fbz += half_mag_z             # <<<<<<<<<<<<<<
+ * 
+ *     if angular_rate_recovery:
+*/
+        __pyx_v_fbz = (__pyx_v_fbz + __pyx_v_half_mag_z);
+
+        /* "pyIMU/_fcore.pyx":278
+ *                 mag_timeout = clipi(mag_timeout, timeout_period)
+ * 
+ *             if not magnetometer_ignored:             # <<<<<<<<<<<<<<
+ *                 fbx += half_mag_x
+ *                 fby += half_mag_y
+*/
+      }
+
+      /* "pyIMU/_fcore.pyx":205
+ *     if mag_present and not angular_rate_recovery:
+ *         mag_norm_raw = sqrt(mx * mx + my * my + mz * mz)
+ *         if mag_norm_raw > EPSILON:             # <<<<<<<<<<<<<<
+ *             mag_ux = mx / mag_norm_raw
+ *             mag_uy = my / mag_norm_raw
+*/
+    }
+
+    /* "pyIMU/_fcore.pyx":203
+ * 
+ *     # magnetometer rejection/recovery
+ *     if mag_present and not angular_rate_recovery:             # <<<<<<<<<<<<<<
+ *         mag_norm_raw = sqrt(mx * mx + my * my + mz * mz)
+ *         if mag_norm_raw > EPSILON:
+*/
+  }
+
+  /* "pyIMU/_fcore.pyx":283
+ *                 fbz += half_mag_z
+ * 
+ *     if angular_rate_recovery:             # <<<<<<<<<<<<<<
+ *         accelerometer_ignored = True
+ *         magnetometer_ignored = True
+*/
+  if (__pyx_v_angular_rate_recovery) {
+
+    /* "pyIMU/_fcore.pyx":284
+ * 
+ *     if angular_rate_recovery:
+ *         accelerometer_ignored = True             # <<<<<<<<<<<<<<
+ *         magnetometer_ignored = True
+ * 
+*/
+    __pyx_v_accelerometer_ignored = 1;
+
+    /* "pyIMU/_fcore.pyx":285
+ *     if angular_rate_recovery:
+ *         accelerometer_ignored = True
+ *         magnetometer_ignored = True             # <<<<<<<<<<<<<<
+ * 
+ *     # bias update
+*/
+    __pyx_v_magnetometer_ignored = 1;
+
+    /* "pyIMU/_fcore.pyx":283
+ *                 fbz += half_mag_z
+ * 
+ *     if angular_rate_recovery:             # <<<<<<<<<<<<<<
+ *         accelerometer_ignored = True
+ *         magnetometer_ignored = True
+*/
+  }
+
+  /* "pyIMU/_fcore.pyx":288
+ * 
+ *     # bias update
+ *     gyr_norm = sqrt(gx * gx + gy * gy + gz * gz)             # <<<<<<<<<<<<<<
+ *     is_stationary = (gyr_norm <= omega_min) and (acc_mag_error <= g_deviation)
+ *     if is_stationary:
+*/
+  __pyx_v_gyr_norm = sqrt((((__pyx_v_gx * __pyx_v_gx) + (__pyx_v_gy * __pyx_v_gy)) + (__pyx_v_gz * __pyx_v_gz)));
+
+  /* "pyIMU/_fcore.pyx":289
+ *     # bias update
+ *     gyr_norm = sqrt(gx * gx + gy * gy + gz * gz)
+ *     is_stationary = (gyr_norm <= omega_min) and (acc_mag_error <= g_deviation)             # <<<<<<<<<<<<<<
+ *     if is_stationary:
+ *         stationary_time += dt
+*/
+  __pyx_t_2 = (__pyx_v_gyr_norm <= __pyx_v_omega_min);
+  if (__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L43_bool_binop_done;
+  }
+  __pyx_t_2 = (__pyx_v_acc_mag_error <= __pyx_v_g_deviation);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L43_bool_binop_done:;
+  __pyx_v_is_stationary = __pyx_t_1;
+
+  /* "pyIMU/_fcore.pyx":290
+ *     gyr_norm = sqrt(gx * gx + gy * gy + gz * gz)
+ *     is_stationary = (gyr_norm <= omega_min) and (acc_mag_error <= g_deviation)
+ *     if is_stationary:             # <<<<<<<<<<<<<<
+ *         stationary_time += dt
+ *     else:
+*/
+  if (__pyx_v_is_stationary) {
+
+    /* "pyIMU/_fcore.pyx":291
+ *     is_stationary = (gyr_norm <= omega_min) and (acc_mag_error <= g_deviation)
+ *     if is_stationary:
+ *         stationary_time += dt             # <<<<<<<<<<<<<<
+ *     else:
+ *         stationary_time = 0.0
+*/
+    __pyx_v_stationary_time = (__pyx_v_stationary_time + __pyx_v_dt);
+
+    /* "pyIMU/_fcore.pyx":290
+ *     gyr_norm = sqrt(gx * gx + gy * gy + gz * gz)
+ *     is_stationary = (gyr_norm <= omega_min) and (acc_mag_error <= g_deviation)
+ *     if is_stationary:             # <<<<<<<<<<<<<<
+ *         stationary_time += dt
+ *     else:
+*/
+    goto __pyx_L45;
+  }
+
+  /* "pyIMU/_fcore.pyx":293
+ *         stationary_time += dt
+ *     else:
+ *         stationary_time = 0.0             # <<<<<<<<<<<<<<
+ * 
+ *     if stationary_time >= t_bias:
+*/
+  /*else*/ {
+    __pyx_v_stationary_time = 0.0;
+  }
+  __pyx_L45:;
+
+  /* "pyIMU/_fcore.pyx":295
+ *         stationary_time = 0.0
+ * 
+ *     if stationary_time >= t_bias:             # <<<<<<<<<<<<<<
+ *         alpha = clampd(TWO_PI * fc_bias * dt, 0.0, 1.0)
+ *         bias_x += alpha * (gx - bias_x)
+*/
+  __pyx_t_1 = (__pyx_v_stationary_time >= __pyx_v_t_bias);
+  if (__pyx_t_1) {
+
+    /* "pyIMU/_fcore.pyx":296
+ * 
+ *     if stationary_time >= t_bias:
+ *         alpha = clampd(TWO_PI * fc_bias * dt, 0.0, 1.0)             # <<<<<<<<<<<<<<
+ *         bias_x += alpha * (gx - bias_x)
+ *         bias_y += alpha * (gy - bias_y)
+*/
+    __pyx_t_3 = __pyx_f_5pyIMU_6_fcore_clampd(((__pyx_v_5pyIMU_6_fcore_TWO_PI * __pyx_v_fc_bias) * __pyx_v_dt), 0.0, 1.0); if (unlikely(__pyx_t_3 == ((double)-1) && PyErr_Occurred())) __PYX_ERR(0, 296, __pyx_L1_error)
+    __pyx_v_alpha = __pyx_t_3;
+
+    /* "pyIMU/_fcore.pyx":297
+ *     if stationary_time >= t_bias:
+ *         alpha = clampd(TWO_PI * fc_bias * dt, 0.0, 1.0)
+ *         bias_x += alpha * (gx - bias_x)             # <<<<<<<<<<<<<<
+ *         bias_y += alpha * (gy - bias_y)
+ *         bias_z += alpha * (gz - bias_z)
+*/
+    __pyx_v_bias_x = (__pyx_v_bias_x + (__pyx_v_alpha * (__pyx_v_gx - __pyx_v_bias_x)));
+
+    /* "pyIMU/_fcore.pyx":298
+ *         alpha = clampd(TWO_PI * fc_bias * dt, 0.0, 1.0)
+ *         bias_x += alpha * (gx - bias_x)
+ *         bias_y += alpha * (gy - bias_y)             # <<<<<<<<<<<<<<
+ *         bias_z += alpha * (gz - bias_z)
+ * 
+*/
+    __pyx_v_bias_y = (__pyx_v_bias_y + (__pyx_v_alpha * (__pyx_v_gy - __pyx_v_bias_y)));
+
+    /* "pyIMU/_fcore.pyx":299
+ *         bias_x += alpha * (gx - bias_x)
+ *         bias_y += alpha * (gy - bias_y)
+ *         bias_z += alpha * (gz - bias_z)             # <<<<<<<<<<<<<<
+ * 
+ *     gain = ramped_gain if initialising else k_normal
+*/
+    __pyx_v_bias_z = (__pyx_v_bias_z + (__pyx_v_alpha * (__pyx_v_gz - __pyx_v_bias_z)));
+
+    /* "pyIMU/_fcore.pyx":295
+ *         stationary_time = 0.0
+ * 
+ *     if stationary_time >= t_bias:             # <<<<<<<<<<<<<<
+ *         alpha = clampd(TWO_PI * fc_bias * dt, 0.0, 1.0)
+ *         bias_x += alpha * (gx - bias_x)
+*/
+  }
+
+  /* "pyIMU/_fcore.pyx":301
+ *         bias_z += alpha * (gz - bias_z)
+ * 
+ *     gain = ramped_gain if initialising else k_normal             # <<<<<<<<<<<<<<
+ * 
+ *     # integrate quaternion
+*/
+  if (__pyx_v_initialising) {
+    __pyx_t_3 = __pyx_v_ramped_gain;
+  } else {
+    __pyx_t_3 = __pyx_v_k_normal;
+  }
+  __pyx_v_gain = __pyx_t_3;
+
+  /* "pyIMU/_fcore.pyx":304
+ * 
+ *     # integrate quaternion
+ *     cgx = 0.5 * (gx - bias_x) + gain * fbx             # <<<<<<<<<<<<<<
+ *     cgy = 0.5 * (gy - bias_y) + gain * fby
+ *     cgz = 0.5 * (gz - bias_z) + gain * fbz
+*/
+  __pyx_v_cgx = ((0.5 * (__pyx_v_gx - __pyx_v_bias_x)) + (__pyx_v_gain * __pyx_v_fbx));
+
+  /* "pyIMU/_fcore.pyx":305
+ *     # integrate quaternion
+ *     cgx = 0.5 * (gx - bias_x) + gain * fbx
+ *     cgy = 0.5 * (gy - bias_y) + gain * fby             # <<<<<<<<<<<<<<
+ *     cgz = 0.5 * (gz - bias_z) + gain * fbz
+ * 
+*/
+  __pyx_v_cgy = ((0.5 * (__pyx_v_gy - __pyx_v_bias_y)) + (__pyx_v_gain * __pyx_v_fby));
+
+  /* "pyIMU/_fcore.pyx":306
+ *     cgx = 0.5 * (gx - bias_x) + gain * fbx
+ *     cgy = 0.5 * (gy - bias_y) + gain * fby
+ *     cgz = 0.5 * (gz - bias_z) + gain * fbz             # <<<<<<<<<<<<<<
+ * 
+ *     qdw = -qx * cgx - qy * cgy - qz * cgz
+*/
+  __pyx_v_cgz = ((0.5 * (__pyx_v_gz - __pyx_v_bias_z)) + (__pyx_v_gain * __pyx_v_fbz));
+
+  /* "pyIMU/_fcore.pyx":308
+ *     cgz = 0.5 * (gz - bias_z) + gain * fbz
+ * 
+ *     qdw = -qx * cgx - qy * cgy - qz * cgz             # <<<<<<<<<<<<<<
+ *     qdx =  qw * cgx + qy * cgz - qz * cgy
+ *     qdy =  qw * cgy - qx * cgz + qz * cgx
+*/
+  __pyx_v_qdw = ((((-__pyx_v_qx) * __pyx_v_cgx) - (__pyx_v_qy * __pyx_v_cgy)) - (__pyx_v_qz * __pyx_v_cgz));
+
+  /* "pyIMU/_fcore.pyx":309
+ * 
+ *     qdw = -qx * cgx - qy * cgy - qz * cgz
+ *     qdx =  qw * cgx + qy * cgz - qz * cgy             # <<<<<<<<<<<<<<
+ *     qdy =  qw * cgy - qx * cgz + qz * cgx
+ *     qdz =  qw * cgz + qx * cgy - qy * cgx
+*/
+  __pyx_v_qdx = (((__pyx_v_qw * __pyx_v_cgx) + (__pyx_v_qy * __pyx_v_cgz)) - (__pyx_v_qz * __pyx_v_cgy));
+
+  /* "pyIMU/_fcore.pyx":310
+ *     qdw = -qx * cgx - qy * cgy - qz * cgz
+ *     qdx =  qw * cgx + qy * cgz - qz * cgy
+ *     qdy =  qw * cgy - qx * cgz + qz * cgx             # <<<<<<<<<<<<<<
+ *     qdz =  qw * cgz + qx * cgy - qy * cgx
+ * 
+*/
+  __pyx_v_qdy = (((__pyx_v_qw * __pyx_v_cgy) - (__pyx_v_qx * __pyx_v_cgz)) + (__pyx_v_qz * __pyx_v_cgx));
+
+  /* "pyIMU/_fcore.pyx":311
+ *     qdx =  qw * cgx + qy * cgz - qz * cgy
+ *     qdy =  qw * cgy - qx * cgz + qz * cgx
+ *     qdz =  qw * cgz + qx * cgy - qy * cgx             # <<<<<<<<<<<<<<
+ * 
+ *     qw += qdw * dt
+*/
+  __pyx_v_qdz = (((__pyx_v_qw * __pyx_v_cgz) + (__pyx_v_qx * __pyx_v_cgy)) - (__pyx_v_qy * __pyx_v_cgx));
+
+  /* "pyIMU/_fcore.pyx":313
+ *     qdz =  qw * cgz + qx * cgy - qy * cgx
+ * 
+ *     qw += qdw * dt             # <<<<<<<<<<<<<<
+ *     qx += qdx * dt
+ *     qy += qdy * dt
+*/
+  __pyx_v_qw = (__pyx_v_qw + (__pyx_v_qdw * __pyx_v_dt));
+
+  /* "pyIMU/_fcore.pyx":314
+ * 
+ *     qw += qdw * dt
+ *     qx += qdx * dt             # <<<<<<<<<<<<<<
+ *     qy += qdy * dt
+ *     qz += qdz * dt
+*/
+  __pyx_v_qx = (__pyx_v_qx + (__pyx_v_qdx * __pyx_v_dt));
+
+  /* "pyIMU/_fcore.pyx":315
+ *     qw += qdw * dt
+ *     qx += qdx * dt
+ *     qy += qdy * dt             # <<<<<<<<<<<<<<
+ *     qz += qdz * dt
+ * 
+*/
+  __pyx_v_qy = (__pyx_v_qy + (__pyx_v_qdy * __pyx_v_dt));
+
+  /* "pyIMU/_fcore.pyx":316
+ *     qx += qdx * dt
+ *     qy += qdy * dt
+ *     qz += qdz * dt             # <<<<<<<<<<<<<<
+ * 
+ *     qnorm = sqrt(qw * qw + qx * qx + qy * qy + qz * qz)
+*/
+  __pyx_v_qz = (__pyx_v_qz + (__pyx_v_qdz * __pyx_v_dt));
+
+  /* "pyIMU/_fcore.pyx":318
+ *     qz += qdz * dt
+ * 
+ *     qnorm = sqrt(qw * qw + qx * qx + qy * qy + qz * qz)             # <<<<<<<<<<<<<<
+ *     if qnorm > 0.0:
+ *         inv_qnorm = 1.0 / qnorm
+*/
+  __pyx_v_qnorm = sqrt(((((__pyx_v_qw * __pyx_v_qw) + (__pyx_v_qx * __pyx_v_qx)) + (__pyx_v_qy * __pyx_v_qy)) + (__pyx_v_qz * __pyx_v_qz)));
+
+  /* "pyIMU/_fcore.pyx":319
+ * 
+ *     qnorm = sqrt(qw * qw + qx * qx + qy * qy + qz * qz)
+ *     if qnorm > 0.0:             # <<<<<<<<<<<<<<
+ *         inv_qnorm = 1.0 / qnorm
+ *         qw *= inv_qnorm
+*/
+  __pyx_t_1 = (__pyx_v_qnorm > 0.0);
+  if (__pyx_t_1) {
+
+    /* "pyIMU/_fcore.pyx":320
+ *     qnorm = sqrt(qw * qw + qx * qx + qy * qy + qz * qz)
+ *     if qnorm > 0.0:
+ *         inv_qnorm = 1.0 / qnorm             # <<<<<<<<<<<<<<
+ *         qw *= inv_qnorm
+ *         qx *= inv_qnorm
+*/
+    if (unlikely(__pyx_v_qnorm == 0)) {
+      PyErr_SetString(PyExc_ZeroDivisionError, "float division");
+      __PYX_ERR(0, 320, __pyx_L1_error)
+    }
+    __pyx_v_inv_qnorm = (1.0 / __pyx_v_qnorm);
+
+    /* "pyIMU/_fcore.pyx":321
+ *     if qnorm > 0.0:
+ *         inv_qnorm = 1.0 / qnorm
+ *         qw *= inv_qnorm             # <<<<<<<<<<<<<<
+ *         qx *= inv_qnorm
+ *         qy *= inv_qnorm
+*/
+    __pyx_v_qw = (__pyx_v_qw * __pyx_v_inv_qnorm);
+
+    /* "pyIMU/_fcore.pyx":322
+ *         inv_qnorm = 1.0 / qnorm
+ *         qw *= inv_qnorm
+ *         qx *= inv_qnorm             # <<<<<<<<<<<<<<
+ *         qy *= inv_qnorm
+ *         qz *= inv_qnorm
+*/
+    __pyx_v_qx = (__pyx_v_qx * __pyx_v_inv_qnorm);
+
+    /* "pyIMU/_fcore.pyx":323
+ *         qw *= inv_qnorm
+ *         qx *= inv_qnorm
+ *         qy *= inv_qnorm             # <<<<<<<<<<<<<<
+ *         qz *= inv_qnorm
+ * 
+*/
+    __pyx_v_qy = (__pyx_v_qy * __pyx_v_inv_qnorm);
+
+    /* "pyIMU/_fcore.pyx":324
+ *         qx *= inv_qnorm
+ *         qy *= inv_qnorm
+ *         qz *= inv_qnorm             # <<<<<<<<<<<<<<
+ * 
+ *     # optional acceleration outputs
+*/
+    __pyx_v_qz = (__pyx_v_qz * __pyx_v_inv_qnorm);
+
+    /* "pyIMU/_fcore.pyx":319
+ * 
+ *     qnorm = sqrt(qw * qw + qx * qx + qy * qy + qz * qz)
+ *     if qnorm > 0.0:             # <<<<<<<<<<<<<<
+ *         inv_qnorm = 1.0 / qnorm
+ *         qw *= inv_qnorm
+*/
+  }
+
+  /* "pyIMU/_fcore.pyx":327
+ * 
+ *     # optional acceleration outputs
+ *     gsx = 2.0 * (qx * qz - qw * qy)             # <<<<<<<<<<<<<<
+ *     gsy = 2.0 * (qw * qx + qy * qz)
+ *     gsz = qw * qw - qx * qx - qy * qy + qz * qz
+*/
+  __pyx_v_gsx = (2.0 * ((__pyx_v_qx * __pyx_v_qz) - (__pyx_v_qw * __pyx_v_qy)));
+
+  /* "pyIMU/_fcore.pyx":328
+ *     # optional acceleration outputs
+ *     gsx = 2.0 * (qx * qz - qw * qy)
+ *     gsy = 2.0 * (qw * qx + qy * qz)             # <<<<<<<<<<<<<<
+ *     gsz = qw * qw - qx * qx - qy * qy + qz * qz
+ * 
+*/
+  __pyx_v_gsy = (2.0 * ((__pyx_v_qw * __pyx_v_qx) + (__pyx_v_qy * __pyx_v_qz)));
+
+  /* "pyIMU/_fcore.pyx":329
+ *     gsx = 2.0 * (qx * qz - qw * qy)
+ *     gsy = 2.0 * (qw * qx + qy * qz)
+ *     gsz = qw * qw - qx * qx - qy * qy + qz * qz             # <<<<<<<<<<<<<<
+ * 
+ *     azx = ax - gsx
+*/
+  __pyx_v_gsz = ((((__pyx_v_qw * __pyx_v_qw) - (__pyx_v_qx * __pyx_v_qx)) - (__pyx_v_qy * __pyx_v_qy)) + (__pyx_v_qz * __pyx_v_qz));
+
+  /* "pyIMU/_fcore.pyx":331
+ *     gsz = qw * qw - qx * qx - qy * qy + qz * qz
+ * 
+ *     azx = ax - gsx             # <<<<<<<<<<<<<<
+ *     azy = ay - gsy
+ *     azz = az - gsz
+*/
+  __pyx_v_azx = (__pyx_v_ax - __pyx_v_gsx);
+
+  /* "pyIMU/_fcore.pyx":332
+ * 
+ *     azx = ax - gsx
+ *     azy = ay - gsy             # <<<<<<<<<<<<<<
+ *     azz = az - gsz
+ * 
+*/
+  __pyx_v_azy = (__pyx_v_ay - __pyx_v_gsy);
+
+  /* "pyIMU/_fcore.pyx":333
+ *     azx = ax - gsx
+ *     azy = ay - gsy
+ *     azz = az - gsz             # <<<<<<<<<<<<<<
+ * 
+ *     # aglobal = q.conjugate * [0,azero] * q
+*/
+  __pyx_v_azz = (__pyx_v_az - __pyx_v_gsz);
+
+  /* "pyIMU/_fcore.pyx":336
+ * 
+ *     # aglobal = q.conjugate * [0,azero] * q
+ *     qcw = qw             # <<<<<<<<<<<<<<
+ *     qcx = -qx
+ *     qcy = -qy
+*/
+  __pyx_v_qcw = __pyx_v_qw;
+
+  /* "pyIMU/_fcore.pyx":337
+ *     # aglobal = q.conjugate * [0,azero] * q
+ *     qcw = qw
+ *     qcx = -qx             # <<<<<<<<<<<<<<
+ *     qcy = -qy
+ *     qcz = -qz
+*/
+  __pyx_v_qcx = (-__pyx_v_qx);
+
+  /* "pyIMU/_fcore.pyx":338
+ *     qcw = qw
+ *     qcx = -qx
+ *     qcy = -qy             # <<<<<<<<<<<<<<
+ *     qcz = -qz
+ * 
+*/
+  __pyx_v_qcy = (-__pyx_v_qy);
+
+  /* "pyIMU/_fcore.pyx":339
+ *     qcx = -qx
+ *     qcy = -qy
+ *     qcz = -qz             # <<<<<<<<<<<<<<
+ * 
+ *     tw = -(qcx * azx + qcy * azy + qcz * azz)
+*/
+  __pyx_v_qcz = (-__pyx_v_qz);
+
+  /* "pyIMU/_fcore.pyx":341
+ *     qcz = -qz
+ * 
+ *     tw = -(qcx * azx + qcy * azy + qcz * azz)             # <<<<<<<<<<<<<<
+ *     tx = qcw * azx + qcy * azz - qcz * azy
+ *     ty = qcw * azy - qcx * azz + qcz * azx
+*/
+  __pyx_v_tw = (-(((__pyx_v_qcx * __pyx_v_azx) + (__pyx_v_qcy * __pyx_v_azy)) + (__pyx_v_qcz * __pyx_v_azz)));
+
+  /* "pyIMU/_fcore.pyx":342
+ * 
+ *     tw = -(qcx * azx + qcy * azy + qcz * azz)
+ *     tx = qcw * azx + qcy * azz - qcz * azy             # <<<<<<<<<<<<<<
+ *     ty = qcw * azy - qcx * azz + qcz * azx
+ *     tz = qcw * azz + qcx * azy - qcy * azx
+*/
+  __pyx_v_tx = (((__pyx_v_qcw * __pyx_v_azx) + (__pyx_v_qcy * __pyx_v_azz)) - (__pyx_v_qcz * __pyx_v_azy));
+
+  /* "pyIMU/_fcore.pyx":343
+ *     tw = -(qcx * azx + qcy * azy + qcz * azz)
+ *     tx = qcw * azx + qcy * azz - qcz * azy
+ *     ty = qcw * azy - qcx * azz + qcz * azx             # <<<<<<<<<<<<<<
+ *     tz = qcw * azz + qcx * azy - qcy * azx
+ * 
+*/
+  __pyx_v_ty = (((__pyx_v_qcw * __pyx_v_azy) - (__pyx_v_qcx * __pyx_v_azz)) + (__pyx_v_qcz * __pyx_v_azx));
+
+  /* "pyIMU/_fcore.pyx":344
+ *     tx = qcw * azx + qcy * azz - qcz * azy
+ *     ty = qcw * azy - qcx * azz + qcz * azx
+ *     tz = qcw * azz + qcx * azy - qcy * azx             # <<<<<<<<<<<<<<
+ * 
+ *     agx = tw * qx + tx * qw + ty * qz - tz * qy
+*/
+  __pyx_v_tz = (((__pyx_v_qcw * __pyx_v_azz) + (__pyx_v_qcx * __pyx_v_azy)) - (__pyx_v_qcy * __pyx_v_azx));
+
+  /* "pyIMU/_fcore.pyx":346
+ *     tz = qcw * azz + qcx * azy - qcy * azx
+ * 
+ *     agx = tw * qx + tx * qw + ty * qz - tz * qy             # <<<<<<<<<<<<<<
+ *     agy = tw * qy - tx * qz + ty * qw + tz * qx
+ *     agz = tw * qz + tx * qy - ty * qx + tz * qw
+*/
+  __pyx_v_agx = ((((__pyx_v_tw * __pyx_v_qx) + (__pyx_v_tx * __pyx_v_qw)) + (__pyx_v_ty * __pyx_v_qz)) - (__pyx_v_tz * __pyx_v_qy));
+
+  /* "pyIMU/_fcore.pyx":347
+ * 
+ *     agx = tw * qx + tx * qw + ty * qz - tz * qy
+ *     agy = tw * qy - tx * qz + ty * qw + tz * qx             # <<<<<<<<<<<<<<
+ *     agz = tw * qz + tx * qy - ty * qx + tz * qw
+ * 
+*/
+  __pyx_v_agy = ((((__pyx_v_tw * __pyx_v_qy) - (__pyx_v_tx * __pyx_v_qz)) + (__pyx_v_ty * __pyx_v_qw)) + (__pyx_v_tz * __pyx_v_qx));
+
+  /* "pyIMU/_fcore.pyx":348
+ *     agx = tw * qx + tx * qw + ty * qz - tz * qy
+ *     agy = tw * qy - tx * qz + ty * qw + tz * qx
+ *     agz = tw * qz + tx * qy - ty * qx + tz * qw             # <<<<<<<<<<<<<<
+ * 
+ *     return (
+*/
+  __pyx_v_agz = ((((__pyx_v_tw * __pyx_v_qz) + (__pyx_v_tx * __pyx_v_qy)) - (__pyx_v_ty * __pyx_v_qx)) + (__pyx_v_tz * __pyx_v_qw));
+
+  /* "pyIMU/_fcore.pyx":350
+ *     agz = tw * qz + tx * qy - ty * qx + tz * qw
+ * 
+ *     return (             # <<<<<<<<<<<<<<
+ *         qw, qx, qy, qz,
+ *         bias_x, bias_y, bias_z,
+*/
+  __Pyx_XDECREF(__pyx_r);
+
+  /* "pyIMU/_fcore.pyx":351
+ * 
+ *     return (
+ *         qw, qx, qy, qz,             # <<<<<<<<<<<<<<
+ *         bias_x, bias_y, bias_z,
+ *         acc_trigger, acc_timeout, mag_trigger, mag_timeout,
+*/
+  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_qw); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 351, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_qx); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 351, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_7 = PyFloat_FromDouble(__pyx_v_qy); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 351, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __pyx_t_8 = PyFloat_FromDouble(__pyx_v_qz); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 351, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+
+  /* "pyIMU/_fcore.pyx":352
+ *     return (
+ *         qw, qx, qy, qz,
+ *         bias_x, bias_y, bias_z,             # <<<<<<<<<<<<<<
+ *         acc_trigger, acc_timeout, mag_trigger, mag_timeout,
+ *         stationary_time, ramped_gain, <int>initialising,
+*/
+  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_bias_x); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 352, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_10 = PyFloat_FromDouble(__pyx_v_bias_y); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 352, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_10);
+  __pyx_t_11 = PyFloat_FromDouble(__pyx_v_bias_z); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 352, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+
+  /* "pyIMU/_fcore.pyx":353
+ *         qw, qx, qy, qz,
+ *         bias_x, bias_y, bias_z,
+ *         acc_trigger, acc_timeout, mag_trigger, mag_timeout,             # <<<<<<<<<<<<<<
+ *         stationary_time, ramped_gain, <int>initialising,
+ *         <int>angular_rate_recovery, <int>accelerometer_ignored, <int>magnetometer_ignored,
+*/
+  __pyx_t_12 = __Pyx_PyLong_From_int(__pyx_v_acc_trigger); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 353, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_12);
+  __pyx_t_13 = __Pyx_PyLong_From_int(__pyx_v_acc_timeout); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 353, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_14 = __Pyx_PyLong_From_int(__pyx_v_mag_trigger); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 353, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_15 = __Pyx_PyLong_From_int(__pyx_v_mag_timeout); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 353, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+
+  /* "pyIMU/_fcore.pyx":354
+ *         bias_x, bias_y, bias_z,
+ *         acc_trigger, acc_timeout, mag_trigger, mag_timeout,
+ *         stationary_time, ramped_gain, <int>initialising,             # <<<<<<<<<<<<<<
+ *         <int>angular_rate_recovery, <int>accelerometer_ignored, <int>magnetometer_ignored,
+ *         acceleration_error, magnetic_error,
+*/
+  __pyx_t_16 = PyFloat_FromDouble(__pyx_v_stationary_time); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 354, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __pyx_t_17 = PyFloat_FromDouble(__pyx_v_ramped_gain); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 354, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_17);
+  __pyx_t_18 = __Pyx_PyLong_From_int(((int)__pyx_v_initialising)); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 354, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_18);
+
+  /* "pyIMU/_fcore.pyx":355
+ *         acc_trigger, acc_timeout, mag_trigger, mag_timeout,
+ *         stationary_time, ramped_gain, <int>initialising,
+ *         <int>angular_rate_recovery, <int>accelerometer_ignored, <int>magnetometer_ignored,             # <<<<<<<<<<<<<<
+ *         acceleration_error, magnetic_error,
+ *         azx, azy, azz, agx, agy, agz
+*/
+  __pyx_t_19 = __Pyx_PyLong_From_int(((int)__pyx_v_angular_rate_recovery)); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_19);
+  __pyx_t_20 = __Pyx_PyLong_From_int(((int)__pyx_v_accelerometer_ignored)); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_20);
+  __pyx_t_21 = __Pyx_PyLong_From_int(((int)__pyx_v_magnetometer_ignored)); if (unlikely(!__pyx_t_21)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_21);
+
+  /* "pyIMU/_fcore.pyx":356
+ *         stationary_time, ramped_gain, <int>initialising,
+ *         <int>angular_rate_recovery, <int>accelerometer_ignored, <int>magnetometer_ignored,
+ *         acceleration_error, magnetic_error,             # <<<<<<<<<<<<<<
+ *         azx, azy, azz, agx, agy, agz
+ *     )
+*/
+  __pyx_t_22 = PyFloat_FromDouble(__pyx_v_acceleration_error); if (unlikely(!__pyx_t_22)) __PYX_ERR(0, 356, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_22);
+  __pyx_t_23 = PyFloat_FromDouble(__pyx_v_magnetic_error); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 356, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_23);
+
+  /* "pyIMU/_fcore.pyx":357
+ *         <int>angular_rate_recovery, <int>accelerometer_ignored, <int>magnetometer_ignored,
+ *         acceleration_error, magnetic_error,
+ *         azx, azy, azz, agx, agy, agz             # <<<<<<<<<<<<<<
+ *     )
+*/
+  __pyx_t_24 = PyFloat_FromDouble(__pyx_v_azx); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_24);
+  __pyx_t_25 = PyFloat_FromDouble(__pyx_v_azy); if (unlikely(!__pyx_t_25)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_25);
+  __pyx_t_26 = PyFloat_FromDouble(__pyx_v_azz); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_26);
+  __pyx_t_27 = PyFloat_FromDouble(__pyx_v_agx); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_27);
+  __pyx_t_28 = PyFloat_FromDouble(__pyx_v_agy); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_28);
+  __pyx_t_29 = PyFloat_FromDouble(__pyx_v_agz); if (unlikely(!__pyx_t_29)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_29);
+
+  /* "pyIMU/_fcore.pyx":351
+ * 
+ *     return (
+ *         qw, qx, qy, qz,             # <<<<<<<<<<<<<<
+ *         bias_x, bias_y, bias_z,
+ *         acc_trigger, acc_timeout, mag_trigger, mag_timeout,
+*/
+  __pyx_t_30 = PyTuple_New(25); if (unlikely(!__pyx_t_30)) __PYX_ERR(0, 351, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_30);
+  __Pyx_GIVEREF(__pyx_t_5);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 0, __pyx_t_5) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_6);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 1, __pyx_t_6) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_7);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 2, __pyx_t_7) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_8);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 3, __pyx_t_8) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_9);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 4, __pyx_t_9) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_10);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 5, __pyx_t_10) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_11);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 6, __pyx_t_11) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_12);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 7, __pyx_t_12) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_13);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 8, __pyx_t_13) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_14);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 9, __pyx_t_14) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_15);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 10, __pyx_t_15) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_16);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 11, __pyx_t_16) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_17);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 12, __pyx_t_17) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_18);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 13, __pyx_t_18) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_19);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 14, __pyx_t_19) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_20);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 15, __pyx_t_20) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_21);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 16, __pyx_t_21) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_22);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 17, __pyx_t_22) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_23);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 18, __pyx_t_23) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_24);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 19, __pyx_t_24) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_25);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 20, __pyx_t_25) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_26);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 21, __pyx_t_26) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_27);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 22, __pyx_t_27) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_28);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 23, __pyx_t_28) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_29);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_30, 24, __pyx_t_29) != (0)) __PYX_ERR(0, 351, __pyx_L1_error);
+  __pyx_t_5 = 0;
+  __pyx_t_6 = 0;
+  __pyx_t_7 = 0;
+  __pyx_t_8 = 0;
+  __pyx_t_9 = 0;
+  __pyx_t_10 = 0;
+  __pyx_t_11 = 0;
+  __pyx_t_12 = 0;
+  __pyx_t_13 = 0;
+  __pyx_t_14 = 0;
+  __pyx_t_15 = 0;
+  __pyx_t_16 = 0;
+  __pyx_t_17 = 0;
+  __pyx_t_18 = 0;
+  __pyx_t_19 = 0;
+  __pyx_t_20 = 0;
+  __pyx_t_21 = 0;
+  __pyx_t_22 = 0;
+  __pyx_t_23 = 0;
+  __pyx_t_24 = 0;
+  __pyx_t_25 = 0;
+  __pyx_t_26 = 0;
+  __pyx_t_27 = 0;
+  __pyx_t_28 = 0;
+  __pyx_t_29 = 0;
+  __pyx_r = ((PyObject*)__pyx_t_30);
+  __pyx_t_30 = 0;
+  goto __pyx_L0;
+
+  /* "pyIMU/_fcore.pyx":62
+ * 
+ * 
+ * cpdef tuple fusion_step(             # <<<<<<<<<<<<<<
+ *     double qw, double qx, double qy, double qz,
+ *     double gx, double gy, double gz,
+*/
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_7);
+  __Pyx_XDECREF(__pyx_t_8);
+  __Pyx_XDECREF(__pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_XDECREF(__pyx_t_11);
+  __Pyx_XDECREF(__pyx_t_12);
+  __Pyx_XDECREF(__pyx_t_13);
+  __Pyx_XDECREF(__pyx_t_14);
+  __Pyx_XDECREF(__pyx_t_15);
+  __Pyx_XDECREF(__pyx_t_16);
+  __Pyx_XDECREF(__pyx_t_17);
+  __Pyx_XDECREF(__pyx_t_18);
+  __Pyx_XDECREF(__pyx_t_19);
+  __Pyx_XDECREF(__pyx_t_20);
+  __Pyx_XDECREF(__pyx_t_21);
+  __Pyx_XDECREF(__pyx_t_22);
+  __Pyx_XDECREF(__pyx_t_23);
+  __Pyx_XDECREF(__pyx_t_24);
+  __Pyx_XDECREF(__pyx_t_25);
+  __Pyx_XDECREF(__pyx_t_26);
+  __Pyx_XDECREF(__pyx_t_27);
+  __Pyx_XDECREF(__pyx_t_28);
+  __Pyx_XDECREF(__pyx_t_29);
+  __Pyx_XDECREF(__pyx_t_30);
+  __Pyx_AddTraceback("pyIMU._fcore.fusion_step", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = 0;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_5pyIMU_6_fcore_3fusion_step(PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_5pyIMU_6_fcore_3fusion_step = {"fusion_step", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_5pyIMU_6_fcore_3fusion_step, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_5pyIMU_6_fcore_3fusion_step(PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  double __pyx_v_qw;
+  double __pyx_v_qx;
+  double __pyx_v_qy;
+  double __pyx_v_qz;
+  double __pyx_v_gx;
+  double __pyx_v_gy;
+  double __pyx_v_gz;
+  double __pyx_v_ax;
+  double __pyx_v_ay;
+  double __pyx_v_az;
+  int __pyx_v_mag_present;
+  double __pyx_v_mx;
+  double __pyx_v_my;
+  double __pyx_v_mz;
+  double __pyx_v_bias_x;
+  double __pyx_v_bias_y;
+  double __pyx_v_bias_z;
+  double __pyx_v_dt;
+  double __pyx_v_k_normal;
+  double __pyx_v_ramped_gain;
+  double __pyx_v_gain_ramp_rate;
+  int __pyx_v_initialising;
+  double __pyx_v_gyr_range_rad;
+  double __pyx_v_omega_min;
+  double __pyx_v_fc_bias;
+  double __pyx_v_t_bias;
+  double __pyx_v_g_deviation;
+  double __pyx_v_acceleration_rejection;
+  double __pyx_v_magnetic_rejection;
+  int __pyx_v_mag_min_enabled;
+  double __pyx_v_mag_min;
+  int __pyx_v_mag_max_enabled;
+  double __pyx_v_mag_max;
+  double __pyx_v_t_acc_reject;
+  double __pyx_v_t_mag_reject;
+  int __pyx_v_recovery_timeout_factor;
+  int __pyx_v_acc_trigger;
+  int __pyx_v_acc_timeout;
+  int __pyx_v_mag_trigger;
+  int __pyx_v_mag_timeout;
+  double __pyx_v_stationary_time;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[41] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("fusion_step (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  {
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_qw,&__pyx_mstate_global->__pyx_n_u_qx,&__pyx_mstate_global->__pyx_n_u_qy,&__pyx_mstate_global->__pyx_n_u_qz,&__pyx_mstate_global->__pyx_n_u_gx,&__pyx_mstate_global->__pyx_n_u_gy,&__pyx_mstate_global->__pyx_n_u_gz,&__pyx_mstate_global->__pyx_n_u_ax,&__pyx_mstate_global->__pyx_n_u_ay,&__pyx_mstate_global->__pyx_n_u_az,&__pyx_mstate_global->__pyx_n_u_mag_present,&__pyx_mstate_global->__pyx_n_u_mx,&__pyx_mstate_global->__pyx_n_u_my,&__pyx_mstate_global->__pyx_n_u_mz,&__pyx_mstate_global->__pyx_n_u_bias_x,&__pyx_mstate_global->__pyx_n_u_bias_y,&__pyx_mstate_global->__pyx_n_u_bias_z,&__pyx_mstate_global->__pyx_n_u_dt,&__pyx_mstate_global->__pyx_n_u_k_normal,&__pyx_mstate_global->__pyx_n_u_ramped_gain,&__pyx_mstate_global->__pyx_n_u_gain_ramp_rate,&__pyx_mstate_global->__pyx_n_u_initialising,&__pyx_mstate_global->__pyx_n_u_gyr_range_rad,&__pyx_mstate_global->__pyx_n_u_omega_min,&__pyx_mstate_global->__pyx_n_u_fc_bias,&__pyx_mstate_global->__pyx_n_u_t_bias,&__pyx_mstate_global->__pyx_n_u_g_deviation,&__pyx_mstate_global->__pyx_n_u_acceleration_rejection,&__pyx_mstate_global->__pyx_n_u_magnetic_rejection,&__pyx_mstate_global->__pyx_n_u_mag_min_enabled,&__pyx_mstate_global->__pyx_n_u_mag_min,&__pyx_mstate_global->__pyx_n_u_mag_max_enabled,&__pyx_mstate_global->__pyx_n_u_mag_max,&__pyx_mstate_global->__pyx_n_u_t_acc_reject,&__pyx_mstate_global->__pyx_n_u_t_mag_reject,&__pyx_mstate_global->__pyx_n_u_recovery_timeout_factor,&__pyx_mstate_global->__pyx_n_u_acc_trigger,&__pyx_mstate_global->__pyx_n_u_acc_timeout,&__pyx_mstate_global->__pyx_n_u_mag_trigger,&__pyx_mstate_global->__pyx_n_u_mag_timeout,&__pyx_mstate_global->__pyx_n_u_stationary_time,0};
+    const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 62, __pyx_L3_error)
+    if (__pyx_kwds_len > 0) {
+      switch (__pyx_nargs) {
+        case 41:
+        values[40] = __Pyx_ArgRef_FASTCALL(__pyx_args, 40);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[40])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 40:
+        values[39] = __Pyx_ArgRef_FASTCALL(__pyx_args, 39);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[39])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 39:
+        values[38] = __Pyx_ArgRef_FASTCALL(__pyx_args, 38);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[38])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 38:
+        values[37] = __Pyx_ArgRef_FASTCALL(__pyx_args, 37);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[37])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 37:
+        values[36] = __Pyx_ArgRef_FASTCALL(__pyx_args, 36);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[36])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 36:
+        values[35] = __Pyx_ArgRef_FASTCALL(__pyx_args, 35);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[35])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 35:
+        values[34] = __Pyx_ArgRef_FASTCALL(__pyx_args, 34);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[34])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 34:
+        values[33] = __Pyx_ArgRef_FASTCALL(__pyx_args, 33);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[33])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 33:
+        values[32] = __Pyx_ArgRef_FASTCALL(__pyx_args, 32);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[32])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 32:
+        values[31] = __Pyx_ArgRef_FASTCALL(__pyx_args, 31);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[31])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 31:
+        values[30] = __Pyx_ArgRef_FASTCALL(__pyx_args, 30);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[30])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 30:
+        values[29] = __Pyx_ArgRef_FASTCALL(__pyx_args, 29);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[29])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 29:
+        values[28] = __Pyx_ArgRef_FASTCALL(__pyx_args, 28);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[28])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 28:
+        values[27] = __Pyx_ArgRef_FASTCALL(__pyx_args, 27);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[27])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 27:
+        values[26] = __Pyx_ArgRef_FASTCALL(__pyx_args, 26);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[26])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 26:
+        values[25] = __Pyx_ArgRef_FASTCALL(__pyx_args, 25);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[25])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 25:
+        values[24] = __Pyx_ArgRef_FASTCALL(__pyx_args, 24);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[24])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 24:
+        values[23] = __Pyx_ArgRef_FASTCALL(__pyx_args, 23);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[23])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 23:
+        values[22] = __Pyx_ArgRef_FASTCALL(__pyx_args, 22);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[22])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 22:
+        values[21] = __Pyx_ArgRef_FASTCALL(__pyx_args, 21);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[21])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 21:
+        values[20] = __Pyx_ArgRef_FASTCALL(__pyx_args, 20);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[20])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 20:
+        values[19] = __Pyx_ArgRef_FASTCALL(__pyx_args, 19);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[19])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 19:
+        values[18] = __Pyx_ArgRef_FASTCALL(__pyx_args, 18);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[18])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 18:
+        values[17] = __Pyx_ArgRef_FASTCALL(__pyx_args, 17);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[17])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 17:
+        values[16] = __Pyx_ArgRef_FASTCALL(__pyx_args, 16);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[16])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 16:
+        values[15] = __Pyx_ArgRef_FASTCALL(__pyx_args, 15);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[15])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 15:
+        values[14] = __Pyx_ArgRef_FASTCALL(__pyx_args, 14);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[14])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 14:
+        values[13] = __Pyx_ArgRef_FASTCALL(__pyx_args, 13);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[13])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 13:
+        values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 12:
+        values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 11:
+        values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 10:
+        values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  9:
+        values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  8:
+        values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  7:
+        values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  6:
+        values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  5:
+        values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  4:
+        values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  3:
+        values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  2:
+        values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  1:
+        values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 62, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      const Py_ssize_t kwd_pos_args = __pyx_nargs;
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "fusion_step", 0) < 0) __PYX_ERR(0, 62, __pyx_L3_error)
+      for (Py_ssize_t i = __pyx_nargs; i < 41; i++) {
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("fusion_step", 1, 41, 41, i); __PYX_ERR(0, 62, __pyx_L3_error) }
+      }
+    } else if (unlikely(__pyx_nargs != 41)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[13] = __Pyx_ArgRef_FASTCALL(__pyx_args, 13);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[13])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[14] = __Pyx_ArgRef_FASTCALL(__pyx_args, 14);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[14])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[15] = __Pyx_ArgRef_FASTCALL(__pyx_args, 15);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[15])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[16] = __Pyx_ArgRef_FASTCALL(__pyx_args, 16);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[16])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[17] = __Pyx_ArgRef_FASTCALL(__pyx_args, 17);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[17])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[18] = __Pyx_ArgRef_FASTCALL(__pyx_args, 18);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[18])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[19] = __Pyx_ArgRef_FASTCALL(__pyx_args, 19);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[19])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[20] = __Pyx_ArgRef_FASTCALL(__pyx_args, 20);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[20])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[21] = __Pyx_ArgRef_FASTCALL(__pyx_args, 21);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[21])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[22] = __Pyx_ArgRef_FASTCALL(__pyx_args, 22);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[22])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[23] = __Pyx_ArgRef_FASTCALL(__pyx_args, 23);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[23])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[24] = __Pyx_ArgRef_FASTCALL(__pyx_args, 24);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[24])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[25] = __Pyx_ArgRef_FASTCALL(__pyx_args, 25);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[25])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[26] = __Pyx_ArgRef_FASTCALL(__pyx_args, 26);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[26])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[27] = __Pyx_ArgRef_FASTCALL(__pyx_args, 27);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[27])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[28] = __Pyx_ArgRef_FASTCALL(__pyx_args, 28);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[28])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[29] = __Pyx_ArgRef_FASTCALL(__pyx_args, 29);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[29])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[30] = __Pyx_ArgRef_FASTCALL(__pyx_args, 30);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[30])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[31] = __Pyx_ArgRef_FASTCALL(__pyx_args, 31);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[31])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[32] = __Pyx_ArgRef_FASTCALL(__pyx_args, 32);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[32])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[33] = __Pyx_ArgRef_FASTCALL(__pyx_args, 33);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[33])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[34] = __Pyx_ArgRef_FASTCALL(__pyx_args, 34);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[34])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[35] = __Pyx_ArgRef_FASTCALL(__pyx_args, 35);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[35])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[36] = __Pyx_ArgRef_FASTCALL(__pyx_args, 36);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[36])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[37] = __Pyx_ArgRef_FASTCALL(__pyx_args, 37);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[37])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[38] = __Pyx_ArgRef_FASTCALL(__pyx_args, 38);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[38])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[39] = __Pyx_ArgRef_FASTCALL(__pyx_args, 39);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[39])) __PYX_ERR(0, 62, __pyx_L3_error)
+      values[40] = __Pyx_ArgRef_FASTCALL(__pyx_args, 40);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[40])) __PYX_ERR(0, 62, __pyx_L3_error)
+    }
+    __pyx_v_qw = __Pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_qw == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 63, __pyx_L3_error)
+    __pyx_v_qx = __Pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_qx == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 63, __pyx_L3_error)
+    __pyx_v_qy = __Pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_qy == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 63, __pyx_L3_error)
+    __pyx_v_qz = __Pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_qz == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 63, __pyx_L3_error)
+    __pyx_v_gx = __Pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_gx == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 64, __pyx_L3_error)
+    __pyx_v_gy = __Pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_gy == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 64, __pyx_L3_error)
+    __pyx_v_gz = __Pyx_PyFloat_AsDouble(values[6]); if (unlikely((__pyx_v_gz == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 64, __pyx_L3_error)
+    __pyx_v_ax = __Pyx_PyFloat_AsDouble(values[7]); if (unlikely((__pyx_v_ax == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 65, __pyx_L3_error)
+    __pyx_v_ay = __Pyx_PyFloat_AsDouble(values[8]); if (unlikely((__pyx_v_ay == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 65, __pyx_L3_error)
+    __pyx_v_az = __Pyx_PyFloat_AsDouble(values[9]); if (unlikely((__pyx_v_az == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 65, __pyx_L3_error)
+    __pyx_v_mag_present = __Pyx_PyObject_IsTrue(values[10]); if (unlikely((__pyx_v_mag_present == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 66, __pyx_L3_error)
+    __pyx_v_mx = __Pyx_PyFloat_AsDouble(values[11]); if (unlikely((__pyx_v_mx == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 67, __pyx_L3_error)
+    __pyx_v_my = __Pyx_PyFloat_AsDouble(values[12]); if (unlikely((__pyx_v_my == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 67, __pyx_L3_error)
+    __pyx_v_mz = __Pyx_PyFloat_AsDouble(values[13]); if (unlikely((__pyx_v_mz == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 67, __pyx_L3_error)
+    __pyx_v_bias_x = __Pyx_PyFloat_AsDouble(values[14]); if (unlikely((__pyx_v_bias_x == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 68, __pyx_L3_error)
+    __pyx_v_bias_y = __Pyx_PyFloat_AsDouble(values[15]); if (unlikely((__pyx_v_bias_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 68, __pyx_L3_error)
+    __pyx_v_bias_z = __Pyx_PyFloat_AsDouble(values[16]); if (unlikely((__pyx_v_bias_z == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 68, __pyx_L3_error)
+    __pyx_v_dt = __Pyx_PyFloat_AsDouble(values[17]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 69, __pyx_L3_error)
+    __pyx_v_k_normal = __Pyx_PyFloat_AsDouble(values[18]); if (unlikely((__pyx_v_k_normal == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 70, __pyx_L3_error)
+    __pyx_v_ramped_gain = __Pyx_PyFloat_AsDouble(values[19]); if (unlikely((__pyx_v_ramped_gain == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 71, __pyx_L3_error)
+    __pyx_v_gain_ramp_rate = __Pyx_PyFloat_AsDouble(values[20]); if (unlikely((__pyx_v_gain_ramp_rate == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 72, __pyx_L3_error)
+    __pyx_v_initialising = __Pyx_PyObject_IsTrue(values[21]); if (unlikely((__pyx_v_initialising == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 73, __pyx_L3_error)
+    __pyx_v_gyr_range_rad = __Pyx_PyFloat_AsDouble(values[22]); if (unlikely((__pyx_v_gyr_range_rad == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 74, __pyx_L3_error)
+    __pyx_v_omega_min = __Pyx_PyFloat_AsDouble(values[23]); if (unlikely((__pyx_v_omega_min == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 75, __pyx_L3_error)
+    __pyx_v_fc_bias = __Pyx_PyFloat_AsDouble(values[24]); if (unlikely((__pyx_v_fc_bias == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 76, __pyx_L3_error)
+    __pyx_v_t_bias = __Pyx_PyFloat_AsDouble(values[25]); if (unlikely((__pyx_v_t_bias == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 77, __pyx_L3_error)
+    __pyx_v_g_deviation = __Pyx_PyFloat_AsDouble(values[26]); if (unlikely((__pyx_v_g_deviation == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 78, __pyx_L3_error)
+    __pyx_v_acceleration_rejection = __Pyx_PyFloat_AsDouble(values[27]); if (unlikely((__pyx_v_acceleration_rejection == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 79, __pyx_L3_error)
+    __pyx_v_magnetic_rejection = __Pyx_PyFloat_AsDouble(values[28]); if (unlikely((__pyx_v_magnetic_rejection == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 80, __pyx_L3_error)
+    __pyx_v_mag_min_enabled = __Pyx_PyObject_IsTrue(values[29]); if (unlikely((__pyx_v_mag_min_enabled == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 81, __pyx_L3_error)
+    __pyx_v_mag_min = __Pyx_PyFloat_AsDouble(values[30]); if (unlikely((__pyx_v_mag_min == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 82, __pyx_L3_error)
+    __pyx_v_mag_max_enabled = __Pyx_PyObject_IsTrue(values[31]); if (unlikely((__pyx_v_mag_max_enabled == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 83, __pyx_L3_error)
+    __pyx_v_mag_max = __Pyx_PyFloat_AsDouble(values[32]); if (unlikely((__pyx_v_mag_max == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 84, __pyx_L3_error)
+    __pyx_v_t_acc_reject = __Pyx_PyFloat_AsDouble(values[33]); if (unlikely((__pyx_v_t_acc_reject == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 85, __pyx_L3_error)
+    __pyx_v_t_mag_reject = __Pyx_PyFloat_AsDouble(values[34]); if (unlikely((__pyx_v_t_mag_reject == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 86, __pyx_L3_error)
+    __pyx_v_recovery_timeout_factor = __Pyx_PyLong_As_int(values[35]); if (unlikely((__pyx_v_recovery_timeout_factor == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 87, __pyx_L3_error)
+    __pyx_v_acc_trigger = __Pyx_PyLong_As_int(values[36]); if (unlikely((__pyx_v_acc_trigger == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 88, __pyx_L3_error)
+    __pyx_v_acc_timeout = __Pyx_PyLong_As_int(values[37]); if (unlikely((__pyx_v_acc_timeout == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 89, __pyx_L3_error)
+    __pyx_v_mag_trigger = __Pyx_PyLong_As_int(values[38]); if (unlikely((__pyx_v_mag_trigger == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 90, __pyx_L3_error)
+    __pyx_v_mag_timeout = __Pyx_PyLong_As_int(values[39]); if (unlikely((__pyx_v_mag_timeout == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 91, __pyx_L3_error)
+    __pyx_v_stationary_time = __Pyx_PyFloat_AsDouble(values[40]); if (unlikely((__pyx_v_stationary_time == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 92, __pyx_L3_error)
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("fusion_step", 1, 41, 41, __pyx_nargs); __PYX_ERR(0, 62, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_AddTraceback("pyIMU._fcore.fusion_step", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_5pyIMU_6_fcore_2fusion_step(__pyx_self, __pyx_v_qw, __pyx_v_qx, __pyx_v_qy, __pyx_v_qz, __pyx_v_gx, __pyx_v_gy, __pyx_v_gz, __pyx_v_ax, __pyx_v_ay, __pyx_v_az, __pyx_v_mag_present, __pyx_v_mx, __pyx_v_my, __pyx_v_mz, __pyx_v_bias_x, __pyx_v_bias_y, __pyx_v_bias_z, __pyx_v_dt, __pyx_v_k_normal, __pyx_v_ramped_gain, __pyx_v_gain_ramp_rate, __pyx_v_initialising, __pyx_v_gyr_range_rad, __pyx_v_omega_min, __pyx_v_fc_bias, __pyx_v_t_bias, __pyx_v_g_deviation, __pyx_v_acceleration_rejection, __pyx_v_magnetic_rejection, __pyx_v_mag_min_enabled, __pyx_v_mag_min, __pyx_v_mag_max_enabled, __pyx_v_mag_max, __pyx_v_t_acc_reject, __pyx_v_t_mag_reject, __pyx_v_recovery_timeout_factor, __pyx_v_acc_trigger, __pyx_v_acc_timeout, __pyx_v_mag_trigger, __pyx_v_mag_timeout, __pyx_v_stationary_time);
+
+  /* function exit code */
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_5pyIMU_6_fcore_2fusion_step(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_qw, double __pyx_v_qx, double __pyx_v_qy, double __pyx_v_qz, double __pyx_v_gx, double __pyx_v_gy, double __pyx_v_gz, double __pyx_v_ax, double __pyx_v_ay, double __pyx_v_az, int __pyx_v_mag_present, double __pyx_v_mx, double __pyx_v_my, double __pyx_v_mz, double __pyx_v_bias_x, double __pyx_v_bias_y, double __pyx_v_bias_z, double __pyx_v_dt, double __pyx_v_k_normal, double __pyx_v_ramped_gain, double __pyx_v_gain_ramp_rate, int __pyx_v_initialising, double __pyx_v_gyr_range_rad, double __pyx_v_omega_min, double __pyx_v_fc_bias, double __pyx_v_t_bias, double __pyx_v_g_deviation, double __pyx_v_acceleration_rejection, double __pyx_v_magnetic_rejection, int __pyx_v_mag_min_enabled, double __pyx_v_mag_min, int __pyx_v_mag_max_enabled, double __pyx_v_mag_max, double __pyx_v_t_acc_reject, double __pyx_v_t_mag_reject, int __pyx_v_recovery_timeout_factor, int __pyx_v_acc_trigger, int __pyx_v_acc_timeout, int __pyx_v_mag_trigger, int __pyx_v_mag_timeout, double __pyx_v_stationary_time) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("fusion_step", 0);
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __pyx_f_5pyIMU_6_fcore_fusion_step(__pyx_v_qw, __pyx_v_qx, __pyx_v_qy, __pyx_v_qz, __pyx_v_gx, __pyx_v_gy, __pyx_v_gz, __pyx_v_ax, __pyx_v_ay, __pyx_v_az, __pyx_v_mag_present, __pyx_v_mx, __pyx_v_my, __pyx_v_mz, __pyx_v_bias_x, __pyx_v_bias_y, __pyx_v_bias_z, __pyx_v_dt, __pyx_v_k_normal, __pyx_v_ramped_gain, __pyx_v_gain_ramp_rate, __pyx_v_initialising, __pyx_v_gyr_range_rad, __pyx_v_omega_min, __pyx_v_fc_bias, __pyx_v_t_bias, __pyx_v_g_deviation, __pyx_v_acceleration_rejection, __pyx_v_magnetic_rejection, __pyx_v_mag_min_enabled, __pyx_v_mag_min, __pyx_v_mag_max_enabled, __pyx_v_mag_max, __pyx_v_t_acc_reject, __pyx_v_t_mag_reject, __pyx_v_recovery_timeout_factor, __pyx_v_acc_trigger, __pyx_v_acc_timeout, __pyx_v_mag_trigger, __pyx_v_mag_timeout, __pyx_v_stationary_time, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 62, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("pyIMU._fcore.fusion_step", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3160,22 +6136,52 @@ __Pyx_RefNannySetupContext("PyInit__fcore", 0);
   (void)__Pyx_modinit_function_import_code(__pyx_mstate);
   /*--- Execution code ---*/
 
+  /* "pyIMU/_fcore.pyx":5
+ * from libc.math cimport sqrt, asin, sin, fabs, round
+ * 
+ * cdef double EPSILON = 1e-15             # <<<<<<<<<<<<<<
+ * cdef double TWO_PI = 6.283185307179586476925286766559
+ * 
+*/
+  __pyx_v_5pyIMU_6_fcore_EPSILON = 1e-15;
+
   /* "pyIMU/_fcore.pyx":6
+ * 
+ * cdef double EPSILON = 1e-15
+ * cdef double TWO_PI = 6.283185307179586476925286766559             # <<<<<<<<<<<<<<
+ * 
+ * 
+*/
+  __pyx_v_5pyIMU_6_fcore_TWO_PI = 6.283185307179586476925286766559;
+
+  /* "pyIMU/_fcore.pyx":25
  * 
  * 
  * cpdef tuple integrate_quaternion_step(             # <<<<<<<<<<<<<<
  *     double qw, double qx, double qy, double qz,
  *     double gx, double gy, double gz,
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5pyIMU_6_fcore_1integrate_quaternion_step, 0, __pyx_mstate_global->__pyx_n_u_integrate_quaternion_step, NULL, __pyx_mstate_global->__pyx_n_u_pyIMU__fcore, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 6, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5pyIMU_6_fcore_1integrate_quaternion_step, 0, __pyx_mstate_global->__pyx_n_u_integrate_quaternion_step, NULL, __pyx_mstate_global->__pyx_n_u_pyIMU__fcore, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 25, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_integrate_quaternion_step, __pyx_t_2) < 0) __PYX_ERR(0, 6, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_integrate_quaternion_step, __pyx_t_2) < 0) __PYX_ERR(0, 25, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "pyIMU/_fcore.pyx":62
+ * 
+ * 
+ * cpdef tuple fusion_step(             # <<<<<<<<<<<<<<
+ *     double qw, double qx, double qy, double qz,
+ *     double gx, double gy, double gz,
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5pyIMU_6_fcore_3fusion_step, 0, __pyx_mstate_global->__pyx_n_u_fusion_step, NULL, __pyx_mstate_global->__pyx_n_u_pyIMU__fcore, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 62, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_fusion_step, __pyx_t_2) < 0) __PYX_ERR(0, 62, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "pyIMU/_fcore.pyx":1
  * # cython: language_level=3             # <<<<<<<<<<<<<<
  * 
- * from libc.math cimport sqrt
+ * from libc.math cimport sqrt, asin, sin, fabs, round
 */
   __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -3241,25 +6247,53 @@ typedef struct {
 static const char * const __pyx_string_tab_encodings[] = { 0 };
 static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_, sizeof(__pyx_k_), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_ */
+  {__pyx_k_acc_timeout, sizeof(__pyx_k_acc_timeout), 0, 1, 1}, /* PyObject cname: __pyx_n_u_acc_timeout */
+  {__pyx_k_acc_trigger, sizeof(__pyx_k_acc_trigger), 0, 1, 1}, /* PyObject cname: __pyx_n_u_acc_trigger */
+  {__pyx_k_acceleration_rejection, sizeof(__pyx_k_acceleration_rejection), 0, 1, 1}, /* PyObject cname: __pyx_n_u_acceleration_rejection */
   {__pyx_k_asyncio_coroutines, sizeof(__pyx_k_asyncio_coroutines), 0, 1, 1}, /* PyObject cname: __pyx_n_u_asyncio_coroutines */
+  {__pyx_k_ax, sizeof(__pyx_k_ax), 0, 1, 1}, /* PyObject cname: __pyx_n_u_ax */
+  {__pyx_k_ay, sizeof(__pyx_k_ay), 0, 1, 1}, /* PyObject cname: __pyx_n_u_ay */
+  {__pyx_k_az, sizeof(__pyx_k_az), 0, 1, 1}, /* PyObject cname: __pyx_n_u_az */
+  {__pyx_k_bias_x, sizeof(__pyx_k_bias_x), 0, 1, 1}, /* PyObject cname: __pyx_n_u_bias_x */
+  {__pyx_k_bias_y, sizeof(__pyx_k_bias_y), 0, 1, 1}, /* PyObject cname: __pyx_n_u_bias_y */
+  {__pyx_k_bias_z, sizeof(__pyx_k_bias_z), 0, 1, 1}, /* PyObject cname: __pyx_n_u_bias_z */
   {__pyx_k_bx, sizeof(__pyx_k_bx), 0, 1, 1}, /* PyObject cname: __pyx_n_u_bx */
   {__pyx_k_by, sizeof(__pyx_k_by), 0, 1, 1}, /* PyObject cname: __pyx_n_u_by */
   {__pyx_k_bz, sizeof(__pyx_k_bz), 0, 1, 1}, /* PyObject cname: __pyx_n_u_bz */
   {__pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 1, 1}, /* PyObject cname: __pyx_n_u_cline_in_traceback */
   {__pyx_k_dt, sizeof(__pyx_k_dt), 0, 1, 1}, /* PyObject cname: __pyx_n_u_dt */
+  {__pyx_k_fc_bias, sizeof(__pyx_k_fc_bias), 0, 1, 1}, /* PyObject cname: __pyx_n_u_fc_bias */
   {__pyx_k_func, sizeof(__pyx_k_func), 0, 1, 1}, /* PyObject cname: __pyx_n_u_func */
+  {__pyx_k_fusion_step, sizeof(__pyx_k_fusion_step), 0, 1, 1}, /* PyObject cname: __pyx_n_u_fusion_step */
   {__pyx_k_fx, sizeof(__pyx_k_fx), 0, 1, 1}, /* PyObject cname: __pyx_n_u_fx */
   {__pyx_k_fy, sizeof(__pyx_k_fy), 0, 1, 1}, /* PyObject cname: __pyx_n_u_fy */
   {__pyx_k_fz, sizeof(__pyx_k_fz), 0, 1, 1}, /* PyObject cname: __pyx_n_u_fz */
+  {__pyx_k_g_deviation, sizeof(__pyx_k_g_deviation), 0, 1, 1}, /* PyObject cname: __pyx_n_u_g_deviation */
   {__pyx_k_gain, sizeof(__pyx_k_gain), 0, 1, 1}, /* PyObject cname: __pyx_n_u_gain */
+  {__pyx_k_gain_ramp_rate, sizeof(__pyx_k_gain_ramp_rate), 0, 1, 1}, /* PyObject cname: __pyx_n_u_gain_ramp_rate */
   {__pyx_k_gx, sizeof(__pyx_k_gx), 0, 1, 1}, /* PyObject cname: __pyx_n_u_gx */
   {__pyx_k_gy, sizeof(__pyx_k_gy), 0, 1, 1}, /* PyObject cname: __pyx_n_u_gy */
+  {__pyx_k_gyr_range_rad, sizeof(__pyx_k_gyr_range_rad), 0, 1, 1}, /* PyObject cname: __pyx_n_u_gyr_range_rad */
   {__pyx_k_gz, sizeof(__pyx_k_gz), 0, 1, 1}, /* PyObject cname: __pyx_n_u_gz */
+  {__pyx_k_initialising, sizeof(__pyx_k_initialising), 0, 1, 1}, /* PyObject cname: __pyx_n_u_initialising */
   {__pyx_k_integrate_quaternion_step, sizeof(__pyx_k_integrate_quaternion_step), 0, 1, 1}, /* PyObject cname: __pyx_n_u_integrate_quaternion_step */
   {__pyx_k_is_coroutine, sizeof(__pyx_k_is_coroutine), 0, 1, 1}, /* PyObject cname: __pyx_n_u_is_coroutine */
+  {__pyx_k_k_normal, sizeof(__pyx_k_k_normal), 0, 1, 1}, /* PyObject cname: __pyx_n_u_k_normal */
+  {__pyx_k_mag_max, sizeof(__pyx_k_mag_max), 0, 1, 1}, /* PyObject cname: __pyx_n_u_mag_max */
+  {__pyx_k_mag_max_enabled, sizeof(__pyx_k_mag_max_enabled), 0, 1, 1}, /* PyObject cname: __pyx_n_u_mag_max_enabled */
+  {__pyx_k_mag_min, sizeof(__pyx_k_mag_min), 0, 1, 1}, /* PyObject cname: __pyx_n_u_mag_min */
+  {__pyx_k_mag_min_enabled, sizeof(__pyx_k_mag_min_enabled), 0, 1, 1}, /* PyObject cname: __pyx_n_u_mag_min_enabled */
+  {__pyx_k_mag_present, sizeof(__pyx_k_mag_present), 0, 1, 1}, /* PyObject cname: __pyx_n_u_mag_present */
+  {__pyx_k_mag_timeout, sizeof(__pyx_k_mag_timeout), 0, 1, 1}, /* PyObject cname: __pyx_n_u_mag_timeout */
+  {__pyx_k_mag_trigger, sizeof(__pyx_k_mag_trigger), 0, 1, 1}, /* PyObject cname: __pyx_n_u_mag_trigger */
+  {__pyx_k_magnetic_rejection, sizeof(__pyx_k_magnetic_rejection), 0, 1, 1}, /* PyObject cname: __pyx_n_u_magnetic_rejection */
   {__pyx_k_main, sizeof(__pyx_k_main), 0, 1, 1}, /* PyObject cname: __pyx_n_u_main */
   {__pyx_k_module, sizeof(__pyx_k_module), 0, 1, 1}, /* PyObject cname: __pyx_n_u_module */
+  {__pyx_k_mx, sizeof(__pyx_k_mx), 0, 1, 1}, /* PyObject cname: __pyx_n_u_mx */
+  {__pyx_k_my, sizeof(__pyx_k_my), 0, 1, 1}, /* PyObject cname: __pyx_n_u_my */
+  {__pyx_k_mz, sizeof(__pyx_k_mz), 0, 1, 1}, /* PyObject cname: __pyx_n_u_mz */
   {__pyx_k_name, sizeof(__pyx_k_name), 0, 1, 1}, /* PyObject cname: __pyx_n_u_name */
+  {__pyx_k_omega_min, sizeof(__pyx_k_omega_min), 0, 1, 1}, /* PyObject cname: __pyx_n_u_omega_min */
   {__pyx_k_pop, sizeof(__pyx_k_pop), 0, 1, 1}, /* PyObject cname: __pyx_n_u_pop */
   {__pyx_k_pyIMU__fcore, sizeof(__pyx_k_pyIMU__fcore), 0, 1, 1}, /* PyObject cname: __pyx_n_u_pyIMU__fcore */
   {__pyx_k_pyIMU__fcore_pyx, sizeof(__pyx_k_pyIMU__fcore_pyx), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_pyIMU__fcore_pyx */
@@ -3268,6 +6302,12 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_qx, sizeof(__pyx_k_qx), 0, 1, 1}, /* PyObject cname: __pyx_n_u_qx */
   {__pyx_k_qy, sizeof(__pyx_k_qy), 0, 1, 1}, /* PyObject cname: __pyx_n_u_qy */
   {__pyx_k_qz, sizeof(__pyx_k_qz), 0, 1, 1}, /* PyObject cname: __pyx_n_u_qz */
+  {__pyx_k_ramped_gain, sizeof(__pyx_k_ramped_gain), 0, 1, 1}, /* PyObject cname: __pyx_n_u_ramped_gain */
+  {__pyx_k_recovery_timeout_factor, sizeof(__pyx_k_recovery_timeout_factor), 0, 1, 1}, /* PyObject cname: __pyx_n_u_recovery_timeout_factor */
+  {__pyx_k_stationary_time, sizeof(__pyx_k_stationary_time), 0, 1, 1}, /* PyObject cname: __pyx_n_u_stationary_time */
+  {__pyx_k_t_acc_reject, sizeof(__pyx_k_t_acc_reject), 0, 1, 1}, /* PyObject cname: __pyx_n_u_t_acc_reject */
+  {__pyx_k_t_bias, sizeof(__pyx_k_t_bias), 0, 1, 1}, /* PyObject cname: __pyx_n_u_t_bias */
+  {__pyx_k_t_mag_reject, sizeof(__pyx_k_t_mag_reject), 0, 1, 1}, /* PyObject cname: __pyx_n_u_t_mag_reject */
   {__pyx_k_test, sizeof(__pyx_k_test), 0, 1, 1}, /* PyObject cname: __pyx_n_u_test */
   {0, 0, 0, 0, 0}
 };
@@ -3303,13 +6343,13 @@ static int __Pyx_InitConstants(__pyx_mstatetype *__pyx_mstate) {
 /* #### Code section: init_codeobjects ### */
 \
         typedef struct {
-            unsigned int argcount : 4;
+            unsigned int argcount : 6;
             unsigned int num_posonly_args : 1;
             unsigned int num_kwonly_args : 1;
-            unsigned int nlocals : 4;
+            unsigned int nlocals : 6;
             unsigned int flags : 10;
-            unsigned int first_line : 3;
-            unsigned int line_table_length : 13;
+            unsigned int first_line : 6;
+            unsigned int line_table_length : 16;
         } __Pyx_PyCode_New_function_description;
 /* NewCodeObj.proto */
 static PyObject* __Pyx_PyCode_New(
@@ -3326,9 +6366,14 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
   PyObject* tuple_dedup_map = PyDict_New();
   if (unlikely(!tuple_dedup_map)) return -1;
   {
-    __Pyx_PyCode_New_function_description descr = {15, 0, 0, 15, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 6, 291};
+    __Pyx_PyCode_New_function_description descr = {15, 0, 0, 15, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 25, 291};
     PyObject* varnames[] = {__pyx_mstate->__pyx_n_u_qw, __pyx_mstate->__pyx_n_u_qx, __pyx_mstate->__pyx_n_u_qy, __pyx_mstate->__pyx_n_u_qz, __pyx_mstate->__pyx_n_u_gx, __pyx_mstate->__pyx_n_u_gy, __pyx_mstate->__pyx_n_u_gz, __pyx_mstate->__pyx_n_u_bx, __pyx_mstate->__pyx_n_u_by, __pyx_mstate->__pyx_n_u_bz, __pyx_mstate->__pyx_n_u_fx, __pyx_mstate->__pyx_n_u_fy, __pyx_mstate->__pyx_n_u_fz, __pyx_mstate->__pyx_n_u_gain, __pyx_mstate->__pyx_n_u_dt};
     __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pyIMU__fcore_pyx, __pyx_mstate->__pyx_n_u_integrate_quaternion_step, __pyx_k_c_Bd_E_1_c_Bd_E_1_c_Bd_E_1_3b_B, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
+  }
+  {
+    __Pyx_PyCode_New_function_description descr = {41, 0, 0, 41, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 62, 2322};
+    PyObject* varnames[] = {__pyx_mstate->__pyx_n_u_qw, __pyx_mstate->__pyx_n_u_qx, __pyx_mstate->__pyx_n_u_qy, __pyx_mstate->__pyx_n_u_qz, __pyx_mstate->__pyx_n_u_gx, __pyx_mstate->__pyx_n_u_gy, __pyx_mstate->__pyx_n_u_gz, __pyx_mstate->__pyx_n_u_ax, __pyx_mstate->__pyx_n_u_ay, __pyx_mstate->__pyx_n_u_az, __pyx_mstate->__pyx_n_u_mag_present, __pyx_mstate->__pyx_n_u_mx, __pyx_mstate->__pyx_n_u_my, __pyx_mstate->__pyx_n_u_mz, __pyx_mstate->__pyx_n_u_bias_x, __pyx_mstate->__pyx_n_u_bias_y, __pyx_mstate->__pyx_n_u_bias_z, __pyx_mstate->__pyx_n_u_dt, __pyx_mstate->__pyx_n_u_k_normal, __pyx_mstate->__pyx_n_u_ramped_gain, __pyx_mstate->__pyx_n_u_gain_ramp_rate, __pyx_mstate->__pyx_n_u_initialising, __pyx_mstate->__pyx_n_u_gyr_range_rad, __pyx_mstate->__pyx_n_u_omega_min, __pyx_mstate->__pyx_n_u_fc_bias, __pyx_mstate->__pyx_n_u_t_bias, __pyx_mstate->__pyx_n_u_g_deviation, __pyx_mstate->__pyx_n_u_acceleration_rejection, __pyx_mstate->__pyx_n_u_magnetic_rejection, __pyx_mstate->__pyx_n_u_mag_min_enabled, __pyx_mstate->__pyx_n_u_mag_min, __pyx_mstate->__pyx_n_u_mag_max_enabled, __pyx_mstate->__pyx_n_u_mag_max, __pyx_mstate->__pyx_n_u_t_acc_reject, __pyx_mstate->__pyx_n_u_t_mag_reject, __pyx_mstate->__pyx_n_u_recovery_timeout_factor, __pyx_mstate->__pyx_n_u_acc_trigger, __pyx_mstate->__pyx_n_u_acc_timeout, __pyx_mstate->__pyx_n_u_mag_trigger, __pyx_mstate->__pyx_n_u_mag_timeout, __pyx_mstate->__pyx_n_u_stationary_time};
+    __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pyIMU__fcore_pyx, __pyx_mstate->__pyx_n_u_fusion_step, __pyx_k_D_a_a_a_Q_a_Q_D_r_b_s_1_b_T_b_D, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
   }
   Py_DECREF(tuple_dedup_map);
   return 0;
@@ -6219,148 +9264,6 @@ bad:
 }
 #endif
 
-/* FormatTypeName */
-#if CYTHON_COMPILING_IN_LIMITED_API && __PYX_LIMITED_VERSION_HEX < 0x030d0000
-static __Pyx_TypeName
-__Pyx_PyType_GetFullyQualifiedName(PyTypeObject* tp)
-{
-    PyObject *module = NULL, *name = NULL, *result = NULL;
-    #if __PYX_LIMITED_VERSION_HEX < 0x030b0000
-    name = __Pyx_PyObject_GetAttrStr((PyObject *)tp,
-                                               __pyx_mstate_global->__pyx_n_u_qualname);
-    #else
-    name = PyType_GetQualName(tp);
-    #endif
-    if (unlikely(name == NULL) || unlikely(!PyUnicode_Check(name))) goto bad;
-    module = __Pyx_PyObject_GetAttrStr((PyObject *)tp,
-                                               __pyx_mstate_global->__pyx_n_u_module);
-    if (unlikely(module == NULL) || unlikely(!PyUnicode_Check(module))) goto bad;
-    if (PyUnicode_CompareWithASCIIString(module, "builtins") == 0) {
-        result = name;
-        name = NULL;
-        goto done;
-    }
-    result = PyUnicode_FromFormat("%U.%U", module, name);
-    if (unlikely(result == NULL)) goto bad;
-  done:
-    Py_XDECREF(name);
-    Py_XDECREF(module);
-    return result;
-  bad:
-    PyErr_Clear();
-    if (name) {
-        result = name;
-        name = NULL;
-    } else {
-        result = __Pyx_NewRef(__pyx_mstate_global->__pyx_kp_u_);
-    }
-    goto done;
-}
-#endif
-
-/* PyObjectVectorCallKwBuilder */
-#if CYTHON_VECTORCALL
-static int __Pyx_VectorcallBuilder_AddArg(PyObject *key, PyObject *value, PyObject *builder, PyObject **args, int n) {
-    (void)__Pyx_PyObject_FastCallDict;
-    if (__Pyx_PyTuple_SET_ITEM(builder, n, key) != (0)) return -1;
-    Py_INCREF(key);
-    args[n] = value;
-    return 0;
-}
-CYTHON_UNUSED static int __Pyx_VectorcallBuilder_AddArg_Check(PyObject *key, PyObject *value, PyObject *builder, PyObject **args, int n) {
-    (void)__Pyx_VectorcallBuilder_AddArgStr;
-    if (unlikely(!PyUnicode_Check(key))) {
-        PyErr_SetString(PyExc_TypeError, "keywords must be strings");
-        return -1;
-    }
-    return __Pyx_VectorcallBuilder_AddArg(key, value, builder, args, n);
-}
-static int __Pyx_VectorcallBuilder_AddArgStr(const char *key, PyObject *value, PyObject *builder, PyObject **args, int n) {
-    PyObject *pyKey = PyUnicode_FromString(key);
-    if (!pyKey) return -1;
-    return __Pyx_VectorcallBuilder_AddArg(pyKey, value, builder, args, n);
-}
-#else // CYTHON_VECTORCALL
-CYTHON_UNUSED static int __Pyx_VectorcallBuilder_AddArg_Check(PyObject *key, PyObject *value, PyObject *builder, CYTHON_UNUSED PyObject **args, CYTHON_UNUSED int n) {
-    if (unlikely(!PyUnicode_Check(key))) {
-        PyErr_SetString(PyExc_TypeError, "keywords must be strings");
-        return -1;
-    }
-    return PyDict_SetItem(builder, key, value);
-}
-#endif
-
-/* CIntToPy */
-static CYTHON_INLINE PyObject* __Pyx_PyLong_From_long(long value) {
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wconversion"
-#endif
-    const long neg_one = (long) -1, const_zero = (long) 0;
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic pop
-#endif
-    const int is_unsigned = neg_one > const_zero;
-    if (is_unsigned) {
-        if (sizeof(long) < sizeof(long)) {
-            return PyLong_FromLong((long) value);
-        } else if (sizeof(long) <= sizeof(unsigned long)) {
-            return PyLong_FromUnsignedLong((unsigned long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
-            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
-#endif
-        }
-    } else {
-        if (sizeof(long) <= sizeof(long)) {
-            return PyLong_FromLong((long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
-            return PyLong_FromLongLong((PY_LONG_LONG) value);
-#endif
-        }
-    }
-    {
-        unsigned char *bytes = (unsigned char *)&value;
-#if !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX >= 0x030d00A4
-        if (is_unsigned) {
-            return PyLong_FromUnsignedNativeBytes(bytes, sizeof(value), -1);
-        } else {
-            return PyLong_FromNativeBytes(bytes, sizeof(value), -1);
-        }
-#elif !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX < 0x030d0000
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        return _PyLong_FromByteArray(bytes, sizeof(long),
-                                     little, !is_unsigned);
-#else
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        PyObject *from_bytes, *result = NULL, *kwds = NULL;
-        PyObject *py_bytes = NULL, *order_str = NULL;
-        from_bytes = PyObject_GetAttrString((PyObject*)&PyLong_Type, "from_bytes");
-        if (!from_bytes) return NULL;
-        py_bytes = PyBytes_FromStringAndSize((char*)bytes, sizeof(long));
-        if (!py_bytes) goto limited_bad;
-        order_str = PyUnicode_FromString(little ? "little" : "big");
-        if (!order_str) goto limited_bad;
-        {
-            PyObject *args[3+(CYTHON_VECTORCALL ? 1 : 0)] = { NULL, py_bytes, order_str };
-            if (!is_unsigned) {
-                kwds = __Pyx_MakeVectorcallBuilderKwds(1);
-                if (!kwds) goto limited_bad;
-                if (__Pyx_VectorcallBuilder_AddArgStr("signed", __Pyx_NewRef(Py_True), kwds, args+3, 0) < 0) goto limited_bad;
-            }
-            result = __Pyx_Object_Vectorcall_CallFromBuilder(from_bytes, args+1, 2 | __Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET, kwds);
-        }
-        limited_bad:
-        Py_XDECREF(kwds);
-        Py_XDECREF(order_str);
-        Py_XDECREF(py_bytes);
-        Py_XDECREF(from_bytes);
-        return result;
-#endif
-    }
-}
-
 /* CIntFromPyVerify */
 #define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
     __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
@@ -6382,260 +9285,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyLong_From_long(long value) {
         }\
         return (target_type) value;\
     }
-
-/* CIntFromPy */
-static CYTHON_INLINE long __Pyx_PyLong_As_long(PyObject *x) {
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wconversion"
-#endif
-    const long neg_one = (long) -1, const_zero = (long) 0;
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic pop
-#endif
-    const int is_unsigned = neg_one > const_zero;
-    if (unlikely(!PyLong_Check(x))) {
-        long val;
-        PyObject *tmp = __Pyx_PyNumber_Long(x);
-        if (!tmp) return (long) -1;
-        val = __Pyx_PyLong_As_long(tmp);
-        Py_DECREF(tmp);
-        return val;
-    }
-    if (is_unsigned) {
-#if CYTHON_USE_PYLONG_INTERNALS
-        if (unlikely(__Pyx_PyLong_IsNeg(x))) {
-            goto raise_neg_overflow;
-        } else if (__Pyx_PyLong_IsCompact(x)) {
-            __PYX_VERIFY_RETURN_INT(long, __Pyx_compact_upylong, __Pyx_PyLong_CompactValueUnsigned(x))
-        } else {
-            const digit* digits = __Pyx_PyLong_Digits(x);
-            assert(__Pyx_PyLong_DigitCount(x) > 1);
-            switch (__Pyx_PyLong_DigitCount(x)) {
-                case 2:
-                    if ((8 * sizeof(long) > 1 * PyLong_SHIFT)) {
-                        if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if ((8 * sizeof(long) >= 2 * PyLong_SHIFT)) {
-                            return (long) (((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
-                        }
-                    }
-                    break;
-                case 3:
-                    if ((8 * sizeof(long) > 2 * PyLong_SHIFT)) {
-                        if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if ((8 * sizeof(long) >= 3 * PyLong_SHIFT)) {
-                            return (long) (((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
-                        }
-                    }
-                    break;
-                case 4:
-                    if ((8 * sizeof(long) > 3 * PyLong_SHIFT)) {
-                        if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if ((8 * sizeof(long) >= 4 * PyLong_SHIFT)) {
-                            return (long) (((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
-                        }
-                    }
-                    break;
-            }
-        }
-#endif
-#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX < 0x030C00A7
-        if (unlikely(Py_SIZE(x) < 0)) {
-            goto raise_neg_overflow;
-        }
-#else
-        {
-            int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
-            if (unlikely(result < 0))
-                return (long) -1;
-            if (unlikely(result == 1))
-                goto raise_neg_overflow;
-        }
-#endif
-        if ((sizeof(long) <= sizeof(unsigned long))) {
-            __PYX_VERIFY_RETURN_INT_EXC(long, unsigned long, PyLong_AsUnsignedLong(x))
-#ifdef HAVE_LONG_LONG
-        } else if ((sizeof(long) <= sizeof(unsigned PY_LONG_LONG))) {
-            __PYX_VERIFY_RETURN_INT_EXC(long, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
-#endif
-        }
-    } else {
-#if CYTHON_USE_PYLONG_INTERNALS
-        if (__Pyx_PyLong_IsCompact(x)) {
-            __PYX_VERIFY_RETURN_INT(long, __Pyx_compact_pylong, __Pyx_PyLong_CompactValue(x))
-        } else {
-            const digit* digits = __Pyx_PyLong_Digits(x);
-            assert(__Pyx_PyLong_DigitCount(x) > 1);
-            switch (__Pyx_PyLong_SignedDigitCount(x)) {
-                case -2:
-                    if ((8 * sizeof(long) - 1 > 1 * PyLong_SHIFT)) {
-                        if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
-                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if ((8 * sizeof(long) - 1 > 2 * PyLong_SHIFT)) {
-                            return (long) (((long)-1)*(((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case 2:
-                    if ((8 * sizeof(long) > 1 * PyLong_SHIFT)) {
-                        if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if ((8 * sizeof(long) - 1 > 2 * PyLong_SHIFT)) {
-                            return (long) ((((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case -3:
-                    if ((8 * sizeof(long) - 1 > 2 * PyLong_SHIFT)) {
-                        if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
-                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if ((8 * sizeof(long) - 1 > 3 * PyLong_SHIFT)) {
-                            return (long) (((long)-1)*(((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case 3:
-                    if ((8 * sizeof(long) > 2 * PyLong_SHIFT)) {
-                        if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if ((8 * sizeof(long) - 1 > 3 * PyLong_SHIFT)) {
-                            return (long) ((((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case -4:
-                    if ((8 * sizeof(long) - 1 > 3 * PyLong_SHIFT)) {
-                        if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
-                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if ((8 * sizeof(long) - 1 > 4 * PyLong_SHIFT)) {
-                            return (long) (((long)-1)*(((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case 4:
-                    if ((8 * sizeof(long) > 3 * PyLong_SHIFT)) {
-                        if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if ((8 * sizeof(long) - 1 > 4 * PyLong_SHIFT)) {
-                            return (long) ((((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-            }
-        }
-#endif
-        if ((sizeof(long) <= sizeof(long))) {
-            __PYX_VERIFY_RETURN_INT_EXC(long, long, PyLong_AsLong(x))
-#ifdef HAVE_LONG_LONG
-        } else if ((sizeof(long) <= sizeof(PY_LONG_LONG))) {
-            __PYX_VERIFY_RETURN_INT_EXC(long, PY_LONG_LONG, PyLong_AsLongLong(x))
-#endif
-        }
-    }
-    {
-        long val;
-        int ret = -1;
-#if PY_VERSION_HEX >= 0x030d00A6 && !CYTHON_COMPILING_IN_LIMITED_API
-        Py_ssize_t bytes_copied = PyLong_AsNativeBytes(
-            x, &val, sizeof(val), Py_ASNATIVEBYTES_NATIVE_ENDIAN | (is_unsigned ? Py_ASNATIVEBYTES_UNSIGNED_BUFFER | Py_ASNATIVEBYTES_REJECT_NEGATIVE : 0));
-        if (unlikely(bytes_copied == -1)) {
-        } else if (unlikely(bytes_copied > (Py_ssize_t) sizeof(val))) {
-            goto raise_overflow;
-        } else {
-            ret = 0;
-        }
-#elif PY_VERSION_HEX < 0x030d0000 && !(CYTHON_COMPILING_IN_PYPY || CYTHON_COMPILING_IN_LIMITED_API) || defined(_PyLong_AsByteArray)
-        int one = 1; int is_little = (int)*(unsigned char *)&one;
-        unsigned char *bytes = (unsigned char *)&val;
-        ret = _PyLong_AsByteArray((PyLongObject *)x,
-                                    bytes, sizeof(val),
-                                    is_little, !is_unsigned);
-#else
-        PyObject *v;
-        PyObject *stepval = NULL, *mask = NULL, *shift = NULL;
-        int bits, remaining_bits, is_negative = 0;
-        int chunk_size = (sizeof(long) < 8) ? 30 : 62;
-        if (likely(PyLong_CheckExact(x))) {
-            v = __Pyx_NewRef(x);
-        } else {
-            v = PyNumber_Long(x);
-            if (unlikely(!v)) return (long) -1;
-            assert(PyLong_CheckExact(v));
-        }
-        {
-            int result = PyObject_RichCompareBool(v, Py_False, Py_LT);
-            if (unlikely(result < 0)) {
-                Py_DECREF(v);
-                return (long) -1;
-            }
-            is_negative = result == 1;
-        }
-        if (is_unsigned && unlikely(is_negative)) {
-            Py_DECREF(v);
-            goto raise_neg_overflow;
-        } else if (is_negative) {
-            stepval = PyNumber_Invert(v);
-            Py_DECREF(v);
-            if (unlikely(!stepval))
-                return (long) -1;
-        } else {
-            stepval = v;
-        }
-        v = NULL;
-        val = (long) 0;
-        mask = PyLong_FromLong((1L << chunk_size) - 1); if (unlikely(!mask)) goto done;
-        shift = PyLong_FromLong(chunk_size); if (unlikely(!shift)) goto done;
-        for (bits = 0; bits < (int) sizeof(long) * 8 - chunk_size; bits += chunk_size) {
-            PyObject *tmp, *digit;
-            long idigit;
-            digit = PyNumber_And(stepval, mask);
-            if (unlikely(!digit)) goto done;
-            idigit = PyLong_AsLong(digit);
-            Py_DECREF(digit);
-            if (unlikely(idigit < 0)) goto done;
-            val |= ((long) idigit) << bits;
-            tmp = PyNumber_Rshift(stepval, shift);
-            if (unlikely(!tmp)) goto done;
-            Py_DECREF(stepval); stepval = tmp;
-        }
-        Py_DECREF(shift); shift = NULL;
-        Py_DECREF(mask); mask = NULL;
-        {
-            long idigit = PyLong_AsLong(stepval);
-            if (unlikely(idigit < 0)) goto done;
-            remaining_bits = ((int) sizeof(long) * 8) - bits - (is_unsigned ? 0 : 1);
-            if (unlikely(idigit >= (1L << remaining_bits)))
-                goto raise_overflow;
-            val |= ((long) idigit) << bits;
-        }
-        if (!is_unsigned) {
-            if (unlikely(val & (((long) 1) << (sizeof(long) * 8 - 1))))
-                goto raise_overflow;
-            if (is_negative)
-                val = ~val;
-        }
-        ret = 0;
-    done:
-        Py_XDECREF(shift);
-        Py_XDECREF(mask);
-        Py_XDECREF(stepval);
-#endif
-        if (unlikely(ret))
-            return (long) -1;
-        return val;
-    }
-raise_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "value too large to convert to long");
-    return (long) -1;
-raise_neg_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "can't convert negative value to long");
-    return (long) -1;
-}
 
 /* CIntFromPy */
 static CYTHON_INLINE int __Pyx_PyLong_As_int(PyObject *x) {
@@ -6889,6 +9538,473 @@ raise_neg_overflow:
     PyErr_SetString(PyExc_OverflowError,
         "can't convert negative value to int");
     return (int) -1;
+}
+
+/* PyObjectVectorCallKwBuilder */
+#if CYTHON_VECTORCALL
+static int __Pyx_VectorcallBuilder_AddArg(PyObject *key, PyObject *value, PyObject *builder, PyObject **args, int n) {
+    (void)__Pyx_PyObject_FastCallDict;
+    if (__Pyx_PyTuple_SET_ITEM(builder, n, key) != (0)) return -1;
+    Py_INCREF(key);
+    args[n] = value;
+    return 0;
+}
+CYTHON_UNUSED static int __Pyx_VectorcallBuilder_AddArg_Check(PyObject *key, PyObject *value, PyObject *builder, PyObject **args, int n) {
+    (void)__Pyx_VectorcallBuilder_AddArgStr;
+    if (unlikely(!PyUnicode_Check(key))) {
+        PyErr_SetString(PyExc_TypeError, "keywords must be strings");
+        return -1;
+    }
+    return __Pyx_VectorcallBuilder_AddArg(key, value, builder, args, n);
+}
+static int __Pyx_VectorcallBuilder_AddArgStr(const char *key, PyObject *value, PyObject *builder, PyObject **args, int n) {
+    PyObject *pyKey = PyUnicode_FromString(key);
+    if (!pyKey) return -1;
+    return __Pyx_VectorcallBuilder_AddArg(pyKey, value, builder, args, n);
+}
+#else // CYTHON_VECTORCALL
+CYTHON_UNUSED static int __Pyx_VectorcallBuilder_AddArg_Check(PyObject *key, PyObject *value, PyObject *builder, CYTHON_UNUSED PyObject **args, CYTHON_UNUSED int n) {
+    if (unlikely(!PyUnicode_Check(key))) {
+        PyErr_SetString(PyExc_TypeError, "keywords must be strings");
+        return -1;
+    }
+    return PyDict_SetItem(builder, key, value);
+}
+#endif
+
+/* CIntToPy */
+static CYTHON_INLINE PyObject* __Pyx_PyLong_From_int(int value) {
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+    const int neg_one = (int) -1, const_zero = (int) 0;
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic pop
+#endif
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(int) < sizeof(long)) {
+            return PyLong_FromLong((long) value);
+        } else if (sizeof(int) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(int) <= sizeof(long)) {
+            return PyLong_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        unsigned char *bytes = (unsigned char *)&value;
+#if !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX >= 0x030d00A4
+        if (is_unsigned) {
+            return PyLong_FromUnsignedNativeBytes(bytes, sizeof(value), -1);
+        } else {
+            return PyLong_FromNativeBytes(bytes, sizeof(value), -1);
+        }
+#elif !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX < 0x030d0000
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        return _PyLong_FromByteArray(bytes, sizeof(int),
+                                     little, !is_unsigned);
+#else
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        PyObject *from_bytes, *result = NULL, *kwds = NULL;
+        PyObject *py_bytes = NULL, *order_str = NULL;
+        from_bytes = PyObject_GetAttrString((PyObject*)&PyLong_Type, "from_bytes");
+        if (!from_bytes) return NULL;
+        py_bytes = PyBytes_FromStringAndSize((char*)bytes, sizeof(int));
+        if (!py_bytes) goto limited_bad;
+        order_str = PyUnicode_FromString(little ? "little" : "big");
+        if (!order_str) goto limited_bad;
+        {
+            PyObject *args[3+(CYTHON_VECTORCALL ? 1 : 0)] = { NULL, py_bytes, order_str };
+            if (!is_unsigned) {
+                kwds = __Pyx_MakeVectorcallBuilderKwds(1);
+                if (!kwds) goto limited_bad;
+                if (__Pyx_VectorcallBuilder_AddArgStr("signed", __Pyx_NewRef(Py_True), kwds, args+3, 0) < 0) goto limited_bad;
+            }
+            result = __Pyx_Object_Vectorcall_CallFromBuilder(from_bytes, args+1, 2 | __Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET, kwds);
+        }
+        limited_bad:
+        Py_XDECREF(kwds);
+        Py_XDECREF(order_str);
+        Py_XDECREF(py_bytes);
+        Py_XDECREF(from_bytes);
+        return result;
+#endif
+    }
+}
+
+/* FormatTypeName */
+#if CYTHON_COMPILING_IN_LIMITED_API && __PYX_LIMITED_VERSION_HEX < 0x030d0000
+static __Pyx_TypeName
+__Pyx_PyType_GetFullyQualifiedName(PyTypeObject* tp)
+{
+    PyObject *module = NULL, *name = NULL, *result = NULL;
+    #if __PYX_LIMITED_VERSION_HEX < 0x030b0000
+    name = __Pyx_PyObject_GetAttrStr((PyObject *)tp,
+                                               __pyx_mstate_global->__pyx_n_u_qualname);
+    #else
+    name = PyType_GetQualName(tp);
+    #endif
+    if (unlikely(name == NULL) || unlikely(!PyUnicode_Check(name))) goto bad;
+    module = __Pyx_PyObject_GetAttrStr((PyObject *)tp,
+                                               __pyx_mstate_global->__pyx_n_u_module);
+    if (unlikely(module == NULL) || unlikely(!PyUnicode_Check(module))) goto bad;
+    if (PyUnicode_CompareWithASCIIString(module, "builtins") == 0) {
+        result = name;
+        name = NULL;
+        goto done;
+    }
+    result = PyUnicode_FromFormat("%U.%U", module, name);
+    if (unlikely(result == NULL)) goto bad;
+  done:
+    Py_XDECREF(name);
+    Py_XDECREF(module);
+    return result;
+  bad:
+    PyErr_Clear();
+    if (name) {
+        result = name;
+        name = NULL;
+    } else {
+        result = __Pyx_NewRef(__pyx_mstate_global->__pyx_kp_u_);
+    }
+    goto done;
+}
+#endif
+
+/* CIntToPy */
+static CYTHON_INLINE PyObject* __Pyx_PyLong_From_long(long value) {
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+    const long neg_one = (long) -1, const_zero = (long) 0;
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic pop
+#endif
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(long) < sizeof(long)) {
+            return PyLong_FromLong((long) value);
+        } else if (sizeof(long) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(long) <= sizeof(long)) {
+            return PyLong_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        unsigned char *bytes = (unsigned char *)&value;
+#if !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX >= 0x030d00A4
+        if (is_unsigned) {
+            return PyLong_FromUnsignedNativeBytes(bytes, sizeof(value), -1);
+        } else {
+            return PyLong_FromNativeBytes(bytes, sizeof(value), -1);
+        }
+#elif !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX < 0x030d0000
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        return _PyLong_FromByteArray(bytes, sizeof(long),
+                                     little, !is_unsigned);
+#else
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        PyObject *from_bytes, *result = NULL, *kwds = NULL;
+        PyObject *py_bytes = NULL, *order_str = NULL;
+        from_bytes = PyObject_GetAttrString((PyObject*)&PyLong_Type, "from_bytes");
+        if (!from_bytes) return NULL;
+        py_bytes = PyBytes_FromStringAndSize((char*)bytes, sizeof(long));
+        if (!py_bytes) goto limited_bad;
+        order_str = PyUnicode_FromString(little ? "little" : "big");
+        if (!order_str) goto limited_bad;
+        {
+            PyObject *args[3+(CYTHON_VECTORCALL ? 1 : 0)] = { NULL, py_bytes, order_str };
+            if (!is_unsigned) {
+                kwds = __Pyx_MakeVectorcallBuilderKwds(1);
+                if (!kwds) goto limited_bad;
+                if (__Pyx_VectorcallBuilder_AddArgStr("signed", __Pyx_NewRef(Py_True), kwds, args+3, 0) < 0) goto limited_bad;
+            }
+            result = __Pyx_Object_Vectorcall_CallFromBuilder(from_bytes, args+1, 2 | __Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET, kwds);
+        }
+        limited_bad:
+        Py_XDECREF(kwds);
+        Py_XDECREF(order_str);
+        Py_XDECREF(py_bytes);
+        Py_XDECREF(from_bytes);
+        return result;
+#endif
+    }
+}
+
+/* CIntFromPy */
+static CYTHON_INLINE long __Pyx_PyLong_As_long(PyObject *x) {
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+    const long neg_one = (long) -1, const_zero = (long) 0;
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic pop
+#endif
+    const int is_unsigned = neg_one > const_zero;
+    if (unlikely(!PyLong_Check(x))) {
+        long val;
+        PyObject *tmp = __Pyx_PyNumber_Long(x);
+        if (!tmp) return (long) -1;
+        val = __Pyx_PyLong_As_long(tmp);
+        Py_DECREF(tmp);
+        return val;
+    }
+    if (is_unsigned) {
+#if CYTHON_USE_PYLONG_INTERNALS
+        if (unlikely(__Pyx_PyLong_IsNeg(x))) {
+            goto raise_neg_overflow;
+        } else if (__Pyx_PyLong_IsCompact(x)) {
+            __PYX_VERIFY_RETURN_INT(long, __Pyx_compact_upylong, __Pyx_PyLong_CompactValueUnsigned(x))
+        } else {
+            const digit* digits = __Pyx_PyLong_Digits(x);
+            assert(__Pyx_PyLong_DigitCount(x) > 1);
+            switch (__Pyx_PyLong_DigitCount(x)) {
+                case 2:
+                    if ((8 * sizeof(long) > 1 * PyLong_SHIFT)) {
+                        if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if ((8 * sizeof(long) >= 2 * PyLong_SHIFT)) {
+                            return (long) (((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
+                        }
+                    }
+                    break;
+                case 3:
+                    if ((8 * sizeof(long) > 2 * PyLong_SHIFT)) {
+                        if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if ((8 * sizeof(long) >= 3 * PyLong_SHIFT)) {
+                            return (long) (((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
+                        }
+                    }
+                    break;
+                case 4:
+                    if ((8 * sizeof(long) > 3 * PyLong_SHIFT)) {
+                        if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if ((8 * sizeof(long) >= 4 * PyLong_SHIFT)) {
+                            return (long) (((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
+                        }
+                    }
+                    break;
+            }
+        }
+#endif
+#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX < 0x030C00A7
+        if (unlikely(Py_SIZE(x) < 0)) {
+            goto raise_neg_overflow;
+        }
+#else
+        {
+            int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
+            if (unlikely(result < 0))
+                return (long) -1;
+            if (unlikely(result == 1))
+                goto raise_neg_overflow;
+        }
+#endif
+        if ((sizeof(long) <= sizeof(unsigned long))) {
+            __PYX_VERIFY_RETURN_INT_EXC(long, unsigned long, PyLong_AsUnsignedLong(x))
+#ifdef HAVE_LONG_LONG
+        } else if ((sizeof(long) <= sizeof(unsigned PY_LONG_LONG))) {
+            __PYX_VERIFY_RETURN_INT_EXC(long, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
+#endif
+        }
+    } else {
+#if CYTHON_USE_PYLONG_INTERNALS
+        if (__Pyx_PyLong_IsCompact(x)) {
+            __PYX_VERIFY_RETURN_INT(long, __Pyx_compact_pylong, __Pyx_PyLong_CompactValue(x))
+        } else {
+            const digit* digits = __Pyx_PyLong_Digits(x);
+            assert(__Pyx_PyLong_DigitCount(x) > 1);
+            switch (__Pyx_PyLong_SignedDigitCount(x)) {
+                case -2:
+                    if ((8 * sizeof(long) - 1 > 1 * PyLong_SHIFT)) {
+                        if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
+                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if ((8 * sizeof(long) - 1 > 2 * PyLong_SHIFT)) {
+                            return (long) (((long)-1)*(((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case 2:
+                    if ((8 * sizeof(long) > 1 * PyLong_SHIFT)) {
+                        if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if ((8 * sizeof(long) - 1 > 2 * PyLong_SHIFT)) {
+                            return (long) ((((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case -3:
+                    if ((8 * sizeof(long) - 1 > 2 * PyLong_SHIFT)) {
+                        if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
+                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if ((8 * sizeof(long) - 1 > 3 * PyLong_SHIFT)) {
+                            return (long) (((long)-1)*(((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case 3:
+                    if ((8 * sizeof(long) > 2 * PyLong_SHIFT)) {
+                        if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if ((8 * sizeof(long) - 1 > 3 * PyLong_SHIFT)) {
+                            return (long) ((((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case -4:
+                    if ((8 * sizeof(long) - 1 > 3 * PyLong_SHIFT)) {
+                        if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
+                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if ((8 * sizeof(long) - 1 > 4 * PyLong_SHIFT)) {
+                            return (long) (((long)-1)*(((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case 4:
+                    if ((8 * sizeof(long) > 3 * PyLong_SHIFT)) {
+                        if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if ((8 * sizeof(long) - 1 > 4 * PyLong_SHIFT)) {
+                            return (long) ((((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+            }
+        }
+#endif
+        if ((sizeof(long) <= sizeof(long))) {
+            __PYX_VERIFY_RETURN_INT_EXC(long, long, PyLong_AsLong(x))
+#ifdef HAVE_LONG_LONG
+        } else if ((sizeof(long) <= sizeof(PY_LONG_LONG))) {
+            __PYX_VERIFY_RETURN_INT_EXC(long, PY_LONG_LONG, PyLong_AsLongLong(x))
+#endif
+        }
+    }
+    {
+        long val;
+        int ret = -1;
+#if PY_VERSION_HEX >= 0x030d00A6 && !CYTHON_COMPILING_IN_LIMITED_API
+        Py_ssize_t bytes_copied = PyLong_AsNativeBytes(
+            x, &val, sizeof(val), Py_ASNATIVEBYTES_NATIVE_ENDIAN | (is_unsigned ? Py_ASNATIVEBYTES_UNSIGNED_BUFFER | Py_ASNATIVEBYTES_REJECT_NEGATIVE : 0));
+        if (unlikely(bytes_copied == -1)) {
+        } else if (unlikely(bytes_copied > (Py_ssize_t) sizeof(val))) {
+            goto raise_overflow;
+        } else {
+            ret = 0;
+        }
+#elif PY_VERSION_HEX < 0x030d0000 && !(CYTHON_COMPILING_IN_PYPY || CYTHON_COMPILING_IN_LIMITED_API) || defined(_PyLong_AsByteArray)
+        int one = 1; int is_little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&val;
+        ret = _PyLong_AsByteArray((PyLongObject *)x,
+                                    bytes, sizeof(val),
+                                    is_little, !is_unsigned);
+#else
+        PyObject *v;
+        PyObject *stepval = NULL, *mask = NULL, *shift = NULL;
+        int bits, remaining_bits, is_negative = 0;
+        int chunk_size = (sizeof(long) < 8) ? 30 : 62;
+        if (likely(PyLong_CheckExact(x))) {
+            v = __Pyx_NewRef(x);
+        } else {
+            v = PyNumber_Long(x);
+            if (unlikely(!v)) return (long) -1;
+            assert(PyLong_CheckExact(v));
+        }
+        {
+            int result = PyObject_RichCompareBool(v, Py_False, Py_LT);
+            if (unlikely(result < 0)) {
+                Py_DECREF(v);
+                return (long) -1;
+            }
+            is_negative = result == 1;
+        }
+        if (is_unsigned && unlikely(is_negative)) {
+            Py_DECREF(v);
+            goto raise_neg_overflow;
+        } else if (is_negative) {
+            stepval = PyNumber_Invert(v);
+            Py_DECREF(v);
+            if (unlikely(!stepval))
+                return (long) -1;
+        } else {
+            stepval = v;
+        }
+        v = NULL;
+        val = (long) 0;
+        mask = PyLong_FromLong((1L << chunk_size) - 1); if (unlikely(!mask)) goto done;
+        shift = PyLong_FromLong(chunk_size); if (unlikely(!shift)) goto done;
+        for (bits = 0; bits < (int) sizeof(long) * 8 - chunk_size; bits += chunk_size) {
+            PyObject *tmp, *digit;
+            long idigit;
+            digit = PyNumber_And(stepval, mask);
+            if (unlikely(!digit)) goto done;
+            idigit = PyLong_AsLong(digit);
+            Py_DECREF(digit);
+            if (unlikely(idigit < 0)) goto done;
+            val |= ((long) idigit) << bits;
+            tmp = PyNumber_Rshift(stepval, shift);
+            if (unlikely(!tmp)) goto done;
+            Py_DECREF(stepval); stepval = tmp;
+        }
+        Py_DECREF(shift); shift = NULL;
+        Py_DECREF(mask); mask = NULL;
+        {
+            long idigit = PyLong_AsLong(stepval);
+            if (unlikely(idigit < 0)) goto done;
+            remaining_bits = ((int) sizeof(long) * 8) - bits - (is_unsigned ? 0 : 1);
+            if (unlikely(idigit >= (1L << remaining_bits)))
+                goto raise_overflow;
+            val |= ((long) idigit) << bits;
+        }
+        if (!is_unsigned) {
+            if (unlikely(val & (((long) 1) << (sizeof(long) * 8 - 1))))
+                goto raise_overflow;
+            if (is_negative)
+                val = ~val;
+        }
+        ret = 0;
+    done:
+        Py_XDECREF(shift);
+        Py_XDECREF(mask);
+        Py_XDECREF(stepval);
+#endif
+        if (unlikely(ret))
+            return (long) -1;
+        return val;
+    }
+raise_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "value too large to convert to long");
+    return (long) -1;
+raise_neg_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "can't convert negative value to long");
+    return (long) -1;
 }
 
 /* FastTypeChecks */

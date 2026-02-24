@@ -25,7 +25,7 @@ def build_extensions():
     Build optional Cython extensions when Cython is available.
     If Cython is not installed, fall back to pre-generated C sources when present.
     """
-    module_names = ["_qcore", "_vcore", "_mcore", "_motion_core", "_fcore"]
+    module_names = ["_qcore", "_vcore", "_mcore", "_motion_core", "_fcore", "_ucore"]
 
     def extension_for(module_name: str, use_pyx: bool):
         suffix = ".pyx" if use_pyx else ".c"

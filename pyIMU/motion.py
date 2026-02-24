@@ -15,7 +15,7 @@
 ###########################################################
 
 from pyIMU.quaternion import Quaternion, Vector3D, TWOPI
-from pyIMU.utilities import gravity, RunningAverage
+from pyIMU.utilities import gravity, RunningAverage, q2gravity
 import math, time
 
 try:
@@ -136,7 +136,6 @@ class Motion:
         # Keep track of previous status
         self.motion_previous = moving
 
-        r33 = q.r33
         if _HAS_MOTION_CORE:
             (
                 residual_x, residual_y, residual_z,
@@ -148,12 +147,9 @@ class Motion:
                 wv_drift_x, wv_drift_y, wv_drift_z,
                 bias_x, bias_y, bias_z,
                 dtmotion
-            ) = _motion_core.motion_step(
+            ) = _motion_core.motion_step_quat(
                 acc.x, acc.y, acc.z,
                 q.w, q.x, q.y, q.z,
-                r33[0, 0], r33[0, 1], r33[0, 2],
-                r33[1, 0], r33[1, 1], r33[1, 2],
-                r33[2, 0], r33[2, 1], r33[2, 2],
                 self.localGravity,
                 self.residuals_bias.x, self.residuals_bias.y, self.residuals_bias.z,
                 self.worldResiduals_previous.x, self.worldResiduals_previous.y, self.worldResiduals_previous.z,
@@ -168,28 +164,54 @@ class Motion:
                 motion_ended,
                 MINMOTIONTIME
             )
+            self.residuals.x = residual_x
+            self.residuals.y = residual_y
+            self.residuals.z = residual_z
+
+            self.worldResiduals.x = wr_x
+            self.worldResiduals.y = wr_y
+            self.worldResiduals.z = wr_z
+
+            self.worldResiduals_previous.x = wr_prev_x
+            self.worldResiduals_previous.y = wr_prev_y
+            self.worldResiduals_previous.z = wr_prev_z
+
+            self.worldVelocity.x = wv_x
+            self.worldVelocity.y = wv_y
+            self.worldVelocity.z = wv_z
+
+            self.worldVelocity_previous.x = wv_prev_x
+            self.worldVelocity_previous.y = wv_prev_y
+            self.worldVelocity_previous.z = wv_prev_z
+
+            self.worldPosition.x = wp_prev_x
+            self.worldPosition.y = wp_prev_y
+            self.worldPosition.z = wp_prev_z
+
+            self.worldPosition_previous.x = wp_prev_x
+            self.worldPosition_previous.y = wp_prev_y
+            self.worldPosition_previous.z = wp_prev_z
+
+            self.worldVelocity_drift.x = wv_drift_x
+            self.worldVelocity_drift.y = wv_drift_y
+            self.worldVelocity_drift.z = wv_drift_z
+
+            self.residuals_bias.x = bias_x
+            self.residuals_bias.y = bias_y
+            self.residuals_bias.z = bias_z
         else:
-            (
-                residual_x, residual_y, residual_z,
-                wr_x, wr_y, wr_z,
-                wr_prev_x, wr_prev_y, wr_prev_z,
-                wv_x, wv_y, wv_z,
-                wv_prev_x, wv_prev_y, wv_prev_z,
-                wp_prev_x, wp_prev_y, wp_prev_z,
-                wv_drift_x, wv_drift_y, wv_drift_z,
-                bias_x, bias_y, bias_z,
-                dtmotion
-            ) = _motion_step_python(
-                acc.x, acc.y, acc.z,
-                q.w, q.x, q.y, q.z,
-                r33,
+            dtmotion = _motion_step_python(
+                acc,
+                q,
                 self.localGravity,
-                self.residuals_bias.x, self.residuals_bias.y, self.residuals_bias.z,
-                self.worldResiduals_previous.x, self.worldResiduals_previous.y, self.worldResiduals_previous.z,
-                self.worldVelocity.x, self.worldVelocity.y, self.worldVelocity.z,
-                self.worldVelocity_previous.x, self.worldVelocity_previous.y, self.worldVelocity_previous.z,
-                self.worldPosition_previous.x, self.worldPosition_previous.y, self.worldPosition_previous.z,
-                self.worldVelocity_drift.x, self.worldVelocity_drift.y, self.worldVelocity_drift.z,
+                self.residuals,
+                self.residuals_bias,
+                self.worldResiduals,
+                self.worldResiduals_previous,
+                self.worldVelocity,
+                self.worldVelocity_previous,
+                self.worldPosition_previous,
+                self.worldVelocity_drift,
                 self.driftLearningAlpha,
                 dt,
                 self.dtmotion,
@@ -197,42 +219,8 @@ class Motion:
                 motion_ended,
                 MINMOTIONTIME
             )
-
-        self.residuals.x = residual_x
-        self.residuals.y = residual_y
-        self.residuals.z = residual_z
-
-        self.worldResiduals.x = wr_x
-        self.worldResiduals.y = wr_y
-        self.worldResiduals.z = wr_z
-
-        self.worldResiduals_previous.x = wr_prev_x
-        self.worldResiduals_previous.y = wr_prev_y
-        self.worldResiduals_previous.z = wr_prev_z
-
-        self.worldVelocity.x = wv_x
-        self.worldVelocity.y = wv_y
-        self.worldVelocity.z = wv_z
-
-        self.worldVelocity_previous.x = wv_prev_x
-        self.worldVelocity_previous.y = wv_prev_y
-        self.worldVelocity_previous.z = wv_prev_z
-
-        self.worldPosition.x = wp_prev_x
-        self.worldPosition.y = wp_prev_y
-        self.worldPosition.z = wp_prev_z
-
-        self.worldPosition_previous.x = wp_prev_x
-        self.worldPosition_previous.y = wp_prev_y
-        self.worldPosition_previous.z = wp_prev_z
-
-        self.worldVelocity_drift.x = wv_drift_x
-        self.worldVelocity_drift.y = wv_drift_y
-        self.worldVelocity_drift.z = wv_drift_z
-
-        self.residuals_bias.x = bias_x
-        self.residuals_bias.y = bias_y
-        self.residuals_bias.z = bias_z
+            # keep position mirror field behavior consistent with C-core path
+            self.worldPosition = Vector3D(self.worldPosition_previous)
 
         self.dtmotion = dtmotion
 
@@ -240,104 +228,103 @@ class Motion:
 
 
 def _motion_step_python(
-    accx: float, accy: float, accz: float,
-    qw: float, qx: float, qy: float, qz: float,
-    r33,
-    local_gravity: float,
-    bias_x: float, bias_y: float, bias_z: float,
-    wr_prev_x: float, wr_prev_y: float, wr_prev_z: float,
-    wv_x: float, wv_y: float, wv_z: float,
-    wv_prev_x: float, wv_prev_y: float, wv_prev_z: float,
-    wp_prev_x: float, wp_prev_y: float, wp_prev_z: float,
-    wv_drift_x: float, wv_drift_y: float, wv_drift_z: float,
-    drift_alpha: float,
-    dt: float,
-    dtmotion: float,
-    moving: bool,
-    motion_ended: bool,
-    min_motion_time: float,
+    acc: Vector3D,         # acceleration in sensor frame, in m/s^2
+    q: Quaternion,         # orientation of sensor frame with respect to world frame
+    local_gravity: float,  # local gravity magnitude, in m/s^2
+    residual: Vector3D,    # residual acceleration in sensor frame, in m/s^2
+    bias: Vector3D,        # acceleration bias, in m/s^2
+    wr: Vector3D,          # residual acceleration in world frame, in m/s^2
+    wr_prev: Vector3D,     # previous residuals in world frame, in m/s^2
+    wv: Vector3D,          # current velocity in world frame, in m/s
+    wv_prev: Vector3D,     # previous velocity in world frame, in m/s
+    wp_prev: Vector3D,     # previous position in world frame, in m
+    wv_drift: Vector3D,    # learned drift velocity in world frame, in m/s
+    drift_alpha: float,    # learning rate for drift estimation
+    dt: float,             # time step, in s
+    dtmotion: float,       # accumulated motion time, in s
+    moving: bool,          # flag indicating if device is moving
+    motion_ended: bool,    # flag indicating if motion has ended
+    min_motion_time: float # minimum motion time threshold, in s
 ):
     # q2gravity + sensor residual on sensor frame
-    gx = 2.0 * (qx * qz - qw * qy)
-    gy = 2.0 * (qy * qz + qw * qx)
-    gz = 1.0 - 2.0 * (qx * qx + qy * qy)
+    g = q2gravity(q)
+    # residual = acc - local_gravity * g - bias
+    residual.x = acc.x - local_gravity * g.x - bias.x
+    residual.y = acc.y - local_gravity * g.y - bias.y
+    residual.z = acc.z - local_gravity * g.z - bias.z
 
-    residual_x = accx - (local_gravity * gx) - bias_x
-    residual_y = accy - (local_gravity * gy) - bias_y
-    residual_z = accz - (local_gravity * gz) - bias_z
+    # residuals in world frame: r33 * residual (inline, no NumPy matrix path)
+    xx = q.x * q.x
+    xy = q.x * q.y
+    xz = q.x * q.z
+    xw = q.x * q.w
+    yy = q.y * q.y
+    yz = q.y * q.z
+    yw = q.y * q.w
+    zz = q.z * q.z
+    zw = q.z * q.w
 
-    # residuals in world frame: r33 * residual
-    wr_x = r33[0, 0] * residual_x + r33[0, 1] * residual_y + r33[0, 2] * residual_z
-    wr_y = r33[1, 0] * residual_x + r33[1, 1] * residual_y + r33[1, 2] * residual_z
-    wr_z = r33[2, 0] * residual_x + r33[2, 1] * residual_y + r33[2, 2] * residual_z
+    wr.x = (1.0 - 2.0 * (yy + zz)) * residual.x + (2.0 * (xy - zw)) * residual.y + (2.0 * (xz + yw)) * residual.z
+    wr.y = (2.0 * (xy + zw)) * residual.x + (1.0 - 2.0 * (xx + zz)) * residual.y + (2.0 * (yz - xw)) * residual.z
+    wr.z = (2.0 * (xz - yw)) * residual.x + (2.0 * (yz + xw)) * residual.y + (1.0 - 2.0 * (xx + yy)) * residual.z
 
     if moving:
         scale = 0.5 * dt
         # trapezoidal integrate acceleration -> velocity
-        wv_x = wv_prev_x + (wr_x + wr_prev_x) * scale
-        wv_y = wv_prev_y + (wr_y + wr_prev_y) * scale
-        wv_z = wv_prev_z + (wr_z + wr_prev_z) * scale
+        # wv = wv_prev + (wr + wr_prev) * scale
+        wv.x = wv_prev.x + (wr.x + wr_prev.x) * scale
+        wv.y = wv_prev.y + (wr.y + wr_prev.y) * scale
+        wv.z = wv_prev.z + (wr.z + wr_prev.z) * scale
         dtmotion += dt
 
         # subtract learned drift
-        wv_x -= wv_drift_x * dt
-        wv_y -= wv_drift_y * dt
-        wv_z -= wv_drift_z * dt
+        # wv = wv - wv_drift * dt
+        wv.x -= wv_drift.x * dt
+        wv.y -= wv_drift.y * dt
+        wv.z -= wv_drift.z * dt
 
         # trapezoidal integrate velocity -> position
-        wp_x = wp_prev_x + (wv_x + wv_prev_x) * scale
-        wp_y = wp_prev_y + (wv_y + wv_prev_y) * scale
-        wp_z = wp_prev_z + (wv_z + wv_prev_z) * scale
+        # wp = wp_prev + (wv + wv_prev) * scale
+        wp_prev.x += (wv.x + wv_prev.x) * scale
+        wp_prev.y += (wv.y + wv_prev.y) * scale
+        wp_prev.z += (wv.z + wv_prev.z) * scale
 
-        wr_prev_x = wr_x
-        wr_prev_y = wr_y
-        wr_prev_z = wr_z
-
-        wv_prev_x = wv_x
-        wv_prev_y = wv_y
-        wv_prev_z = wv_z
-
-        wp_prev_x = wp_x
-        wp_prev_y = wp_y
-        wp_prev_z = wp_z
+        # wr_prev = wr
+        # wv_prev = wv
+        wr_prev.x = wr.x
+        wr_prev.y = wr.y
+        wr_prev.z = wr.z
+        wv_prev.x = wv.x
+        wv_prev.y = wv.y
+        wv_prev.z = wv.z
 
     else: # no Motion
         # Estimate Velocity Bias when not moving
         # When motion ends, velocity should be zero
         if motion_ended and (dtmotion > min_motion_time):
-            alpha = drift_alpha
-            one_minus_alpha = 1.0 - alpha
-            scale = alpha / dtmotion
-            wv_drift_x = wv_drift_x * one_minus_alpha + wv_x * scale
-            wv_drift_y = wv_drift_y * one_minus_alpha + wv_y * scale
-            wv_drift_z = wv_drift_z * one_minus_alpha + wv_z * scale
+            one_minus_alpha = 1.0 - drift_alpha
+            scale = drift_alpha / dtmotion
+            wv_drift.x = wv_drift.x * one_minus_alpha + wv.x * scale
+            wv_drift.y = wv_drift.y * one_minus_alpha + wv.y * scale
+            wv_drift.z = wv_drift.z * one_minus_alpha + wv.z * scale
             dtmotion = 0.0
 
         # Reset Residuals / Velocity
-        wr_prev_x = 0.0
-        wr_prev_y = 0.0
-        wr_prev_z = 0.0
-        wv_x = 0.0
-        wv_y = 0.0
-        wv_z = 0.0
-        wv_prev_x = 0.0
-        wv_prev_y = 0.0
-        wv_prev_z = 0.0
+        wr_prev.x = 0.0
+        wr_prev.y = 0.0
+        wr_prev.z = 0.0
+        wv.x = 0.0
+        wv.y = 0.0
+        wv.z = 0.0
+        wv_prev.x = 0.0
+        wv_prev.y = 0.0
+        wv_prev.z = 0.0
 
         # Update acceleration bias, when not moving residuals should be zero
         one_minus_alpha = 1.0 - drift_alpha
-        bias_x = (bias_x * one_minus_alpha) + (residual_x * drift_alpha)
-        bias_y = (bias_y * one_minus_alpha) + (residual_y * drift_alpha)
-        bias_z = (bias_z * one_minus_alpha) + (residual_z * drift_alpha)
+        # bias = bias * (1 - alpha) + residual * alpha
+        bias.x = bias.x * one_minus_alpha + residual.x * drift_alpha
+        bias.y = bias.y * one_minus_alpha + residual.y * drift_alpha
+        bias.z = bias.z * one_minus_alpha + residual.z * drift_alpha
 
-    return (
-        residual_x, residual_y, residual_z,
-        wr_x, wr_y, wr_z,
-        wr_prev_x, wr_prev_y, wr_prev_z,
-        wv_x, wv_y, wv_z,
-        wv_prev_x, wv_prev_y, wv_prev_z,
-        wp_prev_x, wp_prev_y, wp_prev_z,
-        wv_drift_x, wv_drift_y, wv_drift_z,
-        bias_x, bias_y, bias_z,
-        dtmotion,
-    )
+    return dtmotion
