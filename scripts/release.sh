@@ -92,10 +92,29 @@ if [[ "${DO_UPLOAD_TESTPYPI}" -eq 1 || "${DO_UPLOAD_PYPI}" -eq 1 ]]; then
     echo "Error: twine not found. Install with: python3 -m pip install twine"
     exit 2
   fi
+  # Upload only PyPI-compatible artifacts by default:
+  # - Always include source distributions.
+  # - Include wheels except local platform-tagged Linux wheels (e.g. linux_x86_64),
+  #   which PyPI rejects. manylinux/musllinux wheels remain included.
+  shopt -s nullglob
+  upload_files=(dist/*.tar.gz)
+  for whl in dist/*.whl; do
+    base="$(basename "${whl}")"
+    if [[ "${base}" == *"-linux_"*".whl" ]]; then
+      echo "Skipping non-PyPI wheel: ${whl}"
+      continue
+    fi
+    upload_files+=("${whl}")
+  done
+  shopt -u nullglob
+  if [[ "${#upload_files[@]}" -eq 0 ]]; then
+    echo "Error: no uploadable artifacts found in dist/."
+    exit 2
+  fi
   if [[ "${DO_UPLOAD_TESTPYPI}" -eq 1 ]]; then
-    python3 -m twine upload --repository testpypi dist/*
+    python3 -m twine upload --repository testpypi "${upload_files[@]}"
   else
-    python3 -m twine upload dist/*
+    python3 -m twine upload "${upload_files[@]}"
   fi
 fi
 

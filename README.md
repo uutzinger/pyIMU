@@ -195,4 +195,5 @@ Examples:
 - build only: `scripts/release.sh --clean`
 - build + install wheel: `scripts/release.sh --clean --install`
 - build + commit + tag: `scripts/release.sh --clean --version 1.0.1 --commit --tag`
+- build + commit + tag + push: `scripts/release.sh --clean --version 1.0.1 --commit --tag --push`
 - build + upload TestPyPI: `scripts/release.sh --clean --upload-testpypi`

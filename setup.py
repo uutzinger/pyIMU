@@ -73,7 +73,7 @@ def build_extensions():
     return extensions
 
 setup(
-    name='pyIMU',
+    name='uutzinger-pyimu',
     version='1.0.0',
     description=("Python implementation of AHRS with motion." ),
     url='https://github.com/uutzinger/pyIMU',
@@ -94,7 +94,7 @@ setup(
         #   5 - Production/Stable
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
-        'Topic :: IMU :: AHRS :: Sensor',
+        'Topic :: Scientific/Engineering',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3'
     ]
