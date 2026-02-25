@@ -74,7 +74,7 @@ def build_extensions():
 
 setup(
     name='uutzinger-pyimu',
-    version='1.0.3',
+    version='1.0.4',
     description=("Python implementation of AHRS with motion." ),
     url='https://github.com/uutzinger/pyIMU',
     author='Urs Utzinger',
