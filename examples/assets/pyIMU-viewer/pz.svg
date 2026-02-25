@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 344.02872 358.09714"
+   version="1.1"
+   id="svg2226"
+   sodipodi:docname="pz.svg"
+   width="344.02872"
+   height="358.09714"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2230" />
+  <sodipodi:namedview
+     id="namedview2228"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="1.5722656"
+     inkscape:cx="71.234784"
+     inkscape:cy="181.26708"
+     inkscape:window-width="2560"
+     inkscape:window-height="1304"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2226" />
+  <!-- In-plane axes -->
+  <!-- Perpendicular axis (+z out of plane) -->
+  <line
+     x1="90.975006"
+     y1="35.876427"
+     x2="270.97501"
+     y2="35.876427"
+     stroke="#2e6cff"
+     stroke-width="14"
+     stroke-linecap="round"
+     id="line2208" />
+  <polygon
+     points="350,110 320,92 320,128 "
+     fill="#2e6cff"
+     id="polygon2210"
+     transform="translate(-29.025,-74.123573)" />
+  <text
+     x="332.97501"
+     y="35.876427"
+     font-size="42px"
+     font-family="'DejaVu Sans'"
+     fill="#2e6cff"
+     text-anchor="middle"
+     dominant-baseline="middle"
+     id="text2212">x</text>
+  <line
+     x1="32.975014"
+     y1="351.09714"
+     x2="32.975014"
+     y2="171.09712"
+     stroke="#d64242"
+     stroke-width="14"
+     stroke-linecap="round"
+     id="line2214" />
+  <polygon
+     points="120,400 100,370 140,370 "
+     fill="#d64242"
+     id="polygon2216"
+     transform="matrix(1,0,0,-1,-87.025,521.09713)" />
+  <text
+     x="32.975014"
+     y="100.36079"
+     font-size="42px"
+     font-family="'DejaVu Sans'"
+     fill="#d64242"
+     text-anchor="middle"
+     dominant-baseline="middle"
+     id="text2218">y</text>
+  <circle
+     cx="35"
+     cy="35"
+     r="30"
+     stroke="#2ea44f"
+     stroke-width="10"
+     fill="none"
+     id="circle2220" />
+  <circle
+     cx="35"
+     cy="35"
+     r="8"
+     fill="#2ea44f"
+     id="circle2222" />
+  <text
+     x="63.602783"
+     y="71.271507"
+     font-size="40px"
+     font-family="'DejaVu Sans'"
+     fill="#2ea44f"
+     dominant-baseline="middle"
+     id="text2224">z</text>
+  <text
+     x="75.085892"
+     y="134.82558"
+     font-size="40px"
+     font-family="'DejaVu Sans'"
+     fill="#000000"
+     id="text6735"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1"><tspan
+       sodipodi:role="line"
+       id="tspan7297"
+       x="75.085892"
+       y="134.82558">bottom</tspan></text>
+</svg>

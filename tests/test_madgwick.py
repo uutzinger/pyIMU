@@ -68,3 +68,34 @@ def test_madgwick_update_imu_inplace_mutates_reference():
 
     assert out is q
     assert abs(q.norm - 1.0) < 1e-9
+
+
+def test_madgwick_acc_outputs_stationary_are_near_zero():
+    f = Madgwick(dt=0.01)
+    for _ in range(50):
+        f.update(
+            gyr=Vector3D(0.0, 0.0, 0.0),
+            acc=Vector3D(0.0, 0.0, 1.0),
+            mag=None,
+            dt=0.01,
+        )
+
+    assert abs(f.azero.x) < 1e-3
+    assert abs(f.azero.y) < 1e-3
+    assert abs(f.azero.z) < 1e-3
+    assert abs(f.aglobal.x) < 1e-3
+    assert abs(f.aglobal.y) < 1e-3
+    assert abs(f.aglobal.z) < 1e-3
+
+
+def test_madgwick_exposes_acc_outputs():
+    f = Madgwick(dt=0.01)
+    f.update(
+        gyr=Vector3D(0.01, -0.02, 0.03),
+        acc=Vector3D(0.0, 0.0, 1.0),
+        mag=None,
+        dt=0.01,
+    )
+
+    assert isinstance(f.azero, Vector3D)
+    assert isinstance(f.aglobal, Vector3D)

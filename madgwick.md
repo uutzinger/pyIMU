@@ -35,6 +35,14 @@ Behavior:
 - First call initializes orientation from accel (`accel2q`) or accel+mag (`accelmag2q`).
 - Later calls run IMU or MARG update equations.
 
+Outputs (instance fields updated on each `update(...)` call):
+- `q`: `Quaternion`
+  - Current attitude estimate.
+- `azero`: `Vector3D`
+  - Gravity-removed acceleration in sensor/body frame, in `g`.
+- `aglobal`: `Vector3D`
+  - Gravity-removed acceleration in earth/NED frame, in `g`.
+
 ## Functional API
 - `updateIMU(q, gyr, acc, dt, gain) -> Quaternion`
 - `updateMARG(q, gyr, acc, mag, dt, gain) -> Quaternion`

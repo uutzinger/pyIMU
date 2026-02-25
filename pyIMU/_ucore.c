@@ -4,7 +4,7 @@
 {
     "distutils": {
         "include_dirs": [
-            "/usr/local/lib/python3.10/dist-packages/numpy/_core/include"
+            "/home/uutzinger/Python/pyqt6/lib/python3.10/site-packages/numpy/_core/include"
         ],
         "name": "pyIMU._ucore",
         "sources": [

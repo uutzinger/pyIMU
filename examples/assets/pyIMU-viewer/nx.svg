@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 330.73877 342.371"
+   version="1.1"
+   id="svg910"
+   sodipodi:docname="nx.svg"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   width="330.73877"
+   height="342.371"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs914" />
+  <sodipodi:namedview
+     id="namedview912"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="1.0178471"
+     inkscape:cx="-216.63372"
+     inkscape:cy="66.807677"
+     inkscape:window-width="3840"
+     inkscape:window-height="2128"
+     inkscape:window-x="2560"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg910"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <line
+     x1="91.013916"
+     y1="35"
+     x2="265.05637"
+     y2="35"
+     stroke="#d64242"
+     stroke-width="14.3915"
+     id="line888"
+     style="fill:none;stroke-width:14;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none" />
+  <polygon
+     points="360,92 360,128 390,110 "
+     fill="#d64242"
+     id="polygon890"
+     style="stroke-linecap:round;stroke-linejoin:round"
+     transform="translate(-84.865707,-75)" />
+  <text
+     x="307.13431"
+     y="42.116211"
+     font-size="42px"
+     font-family="'DejaVu Sans'"
+     fill="#d64242"
+     id="text892"
+     style="stroke-linecap:round;stroke-linejoin:round">y</text>
+  <line
+     x1="35"
+     y1="95.224701"
+     x2="35"
+     y2="266.4584"
+     stroke="#2ea44f"
+     stroke-width="14.1343"
+     id="line894"
+     style="fill:none;stroke-width:14;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none" />
+  <polygon
+     points="100,355 140,355 120,390 "
+     fill="#2ea44f"
+     id="polygon896"
+     style="stroke-linecap:round;stroke-linejoin:round"
+     transform="translate(-84.865707,-75)" />
+  <text
+     x="24.111343"
+     y="342.371"
+     font-size="42px"
+     font-family="'DejaVu Sans'"
+     fill="#2ea44f"
+     id="text898"
+     style="stroke-linecap:round;stroke-linejoin:round">z</text>
+  <g
+     id="g1097"
+     transform="translate(-86.102272,-74.961517)">
+    <circle
+       cx="121.10227"
+       cy="109.96152"
+       r="30"
+       stroke="#2e6cff"
+       stroke-width="10"
+       fill="none"
+       id="circle902" />
+    <line
+       x1="105.10227"
+       y1="93.961525"
+       x2="137.10226"
+       y2="125.96152"
+       stroke="#2e6cff"
+       stroke-width="8"
+       id="line904" />
+    <line
+       x1="105.10227"
+       y1="125.96152"
+       x2="137.10226"
+       y2="93.961525"
+       stroke="#2e6cff"
+       stroke-width="8"
+       id="line906" />
+  </g>
+  <text
+     x="64.256042"
+     y="83.067108"
+     font-size="40px"
+     font-family="'DejaVu Sans'"
+     fill="#2e6cff"
+     id="text908">x</text>
+  <text
+     x="90.578743"
+     y="128.10283"
+     font-size="40px"
+     font-family="'DejaVu Sans'"
+     fill="#000000"
+     id="text6735"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1"><tspan
+       sodipodi:role="line"
+       id="tspan7297"
+       x="90.578743"
+       y="128.10283">back</tspan></text>
+</svg>

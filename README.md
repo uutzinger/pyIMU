@@ -5,8 +5,25 @@ Python implementation of quaternion/vector math for Attitude and Heading Referen
 AHRS based on Madgwick filters.
 
 ## Authors
-Urs Utzinger 2023-2026
-Gpt 5.3 efficiency, cythonization and codereview, 2026
+<table>
+  <tbody>
+    <tr>
+      <td><em>Auth</em></td>
+      <td><em>Contrib</em></td>
+      <td><em>Years</em></td>
+    </tr>
+    <tr>
+      <td>Urs Utzinger</td>
+      <td>quaternion, vector, madgwick, motion</td>
+      <td>2023 - 2026</td>
+    </tr>
+    <tr>
+      <td>Gpt 5.3</td>
+      <td>efficiency, cythonization and codereview</td>
+      <td>2026</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Coordinate Convention
 `pyIMU` uses a pilot-style NED frame:
@@ -197,3 +214,4 @@ Examples:
 - build + commit + tag: `scripts/release.sh --clean --version 1.0.1 --commit --tag`
 - build + commit + tag + push: `scripts/release.sh --clean --version 1.0.1 --commit --tag --push`
 - build + upload TestPyPI: `scripts/release.sh --clean --upload-testpypi`
+- build + upload PyPI: `scripts/release.sh --clean --upload-pypi`

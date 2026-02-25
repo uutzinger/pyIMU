@@ -286,6 +286,8 @@ class Madgwick:
         self.acc                   = None
         self.gyr                   = None
         self.mag                   = None
+        self.azero                 = Vector3D(0.0, 0.0, 0.0)   # gravity-removed acceleration (sensor frame, g)
+        self.aglobal               = Vector3D(0.0, 0.0, 0.0)   # gravity-removed acceleration (earth frame, g)
         self.dt: float             = kwargs.get('dt', 0.01)
         gain                       = kwargs.get('gain', None)
         self.gain_imu              = kwargs.get('gain_imu', gain if gain is not None else 0.033)
@@ -305,6 +307,29 @@ class Madgwick:
         if self.gyr_in_dps:
             return Vector3D(gyr.x * DEG2RAD, gyr.y * DEG2RAD, gyr.z * DEG2RAD)
         return Vector3D(gyr)
+
+    def _gravity_sensor(self) -> Vector3D:
+        q = self.q
+        return Vector3D(
+            2.0 * (q.x * q.z - q.w * q.y),
+            2.0 * (q.w * q.x + q.y * q.z),
+            q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z,
+        )
+
+    def _update_acc_outputs(self) -> None:
+        if self.q is None or self.acc is None:
+            self.azero.x = self.azero.y = self.azero.z = 0.0
+            self.aglobal.x = self.aglobal.y = self.aglobal.z = 0.0
+            return
+
+        gravity_sensor = self._gravity_sensor()
+        self.azero.x = self.acc.x - gravity_sensor.x
+        self.azero.y = self.acc.y - gravity_sensor.y
+        self.azero.z = self.acc.z - gravity_sensor.z
+        aq = self.q.conjugate * Quaternion(self.azero) * self.q
+        self.aglobal.x = aq.x
+        self.aglobal.y = aq.y
+        self.aglobal.z = aq.z
         
     def update(self, gyr: Vector3D, acc: Vector3D, mag: Vector3D = None, dt: float = -1) -> Quaternion:        
         """
@@ -369,5 +394,6 @@ class Madgwick:
             else:    
                 updateMARG_inplace(self.q, self.gyr, self.acc, self.mag, dt=dt, gain=self.gain_marg)
 
+        self._update_acc_outputs()
         return self.q
         
