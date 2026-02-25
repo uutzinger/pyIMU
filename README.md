@@ -4,12 +4,18 @@ Python implementation of quaternion/vector math for Attitude and Heading Referen
 
 AHRS based on Madgwick filters.
 
+<p>
+  <a href="example.png">
+    <img src="example.png" alt="pyIMU example output" width="420">
+  </a>
+</p>
+
 ## Authors
 <table>
   <tbody>
     <tr>
-      <td><em>Auth</em></td>
-      <td><em>Contrib</em></td>
+      <td><em>Author</em></td>
+      <td><em>Contribution</em></td>
       <td><em>Years</em></td>
     </tr>
     <tr>
@@ -19,7 +25,7 @@ AHRS based on Madgwick filters.
     </tr>
     <tr>
       <td>Gpt 5.3</td>
-      <td>efficiency, cythonization and codereview</td>
+      <td>efficiency, cythonization and codereview, fusion</td>
       <td>2026</td>
     </tr>
   </tbody>
