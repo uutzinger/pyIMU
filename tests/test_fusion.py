@@ -1,5 +1,11 @@
+import math
+
+import pytest
+
+import pyIMU.fusion as fusion_module
 from pyIMU.fusion import Fusion
 from pyIMU.quaternion import Vector3D, Quaternion
+from pyIMU.utilities import rpy2q
 
 
 def test_fusion_stationary_identity():
@@ -72,6 +78,60 @@ def test_fusion_acc_input_mps2_path():
         dt=0.01,
     )
     assert abs(q.norm - 1.0) < 1e-9
+
+
+def test_fusion_aglobal_rotates_sensor_acceleration_to_earth_frame(monkeypatch):
+    """
+    Uses a pose with 30° roll, 20° pitch, and 10° yaw.
+    Constructs sensor measurements from known Earth-frame gravity and linear acceleration.
+    Confirms azero remains correct in the sensor frame.
+    Confirms aglobal recovers the known Earth-frame acceleration.
+    Exercises the pure-Python path and the compiled _fcore path when available.
+    Confirms both paths produce equivalent acceleration outputs.
+    """
+    pose = rpy2q(
+        math.radians(30.0),
+        math.radians(20.0),
+        math.radians(10.0),
+    )
+    earth_linear = Vector3D(0.2, -0.1, 0.05)
+    earth_gravity = Vector3D(0.0, 0.0, 1.0)
+    sensor_linear = earth_linear.rotate(pose.r33.T)
+    sensor_gravity = earth_gravity.rotate(pose.r33.T)
+    sensor_acc = sensor_gravity + sensor_linear
+
+    def run_backend(use_fcore):
+        monkeypatch.setattr(fusion_module, "_HAS_FCORE", use_fcore)
+        f = Fusion(k_init=0.0, k_normal=0.0, t_init=0.0)
+        f.q = Quaternion(pose)
+        f.update_inplace(
+            gyr=Vector3D(0.0, 0.0, 0.0),
+            acc=sensor_acc,
+            mag=None,
+            dt=0.01,
+        )
+        return f.azero, f.aglobal
+
+    python_azero, python_aglobal = run_backend(use_fcore=False)
+
+    assert python_azero.x == pytest.approx(sensor_linear.x)
+    assert python_azero.y == pytest.approx(sensor_linear.y)
+    assert python_azero.z == pytest.approx(sensor_linear.z)
+    assert python_aglobal.x == pytest.approx(earth_linear.x)
+    assert python_aglobal.y == pytest.approx(earth_linear.y)
+    assert python_aglobal.z == pytest.approx(earth_linear.z)
+
+    if fusion_module._fcore is None:
+        return
+
+    fcore_azero, fcore_aglobal = run_backend(use_fcore=True)
+
+    assert fcore_azero.x == pytest.approx(python_azero.x)
+    assert fcore_azero.y == pytest.approx(python_azero.y)
+    assert fcore_azero.z == pytest.approx(python_azero.z)
+    assert fcore_aglobal.x == pytest.approx(python_aglobal.x)
+    assert fcore_aglobal.y == pytest.approx(python_aglobal.y)
+    assert fcore_aglobal.z == pytest.approx(python_aglobal.z)
 
 
 def test_fusion_update_inplace_returns_internal_quaternion():

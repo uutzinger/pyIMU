@@ -103,6 +103,8 @@ class Fusion:
             return Vector3D(gyr.x * DEG2RAD, gyr.y * DEG2RAD, gyr.z * DEG2RAD)
         return Vector3D(gyr)
 
+    # For a normalized quaternion, _gravity_sensor() == 2 * _half_gravity().
+    # The half-scaled form is used by feedback; the full vector is used for gravity subtraction.
     def _half_gravity(self) -> Vector3D:
         q = self.q
         return Vector3D(
@@ -343,12 +345,13 @@ class Fusion:
             self.q.z = qz0 + qdz * dt
             self.q.normalize()
 
-        # Optional acceleration outputs (in g)
+        # Acceleration outputs are in g: azero is gravity-compensated in the
+        # sensor/body frame, and aglobal is azero rotated into the NED Earth frame.
         gravity_sensor = self._gravity_sensor()
         self.azero.x = acc_g.x - gravity_sensor.x
         self.azero.y = acc_g.y - gravity_sensor.y
         self.azero.z = acc_g.z - gravity_sensor.z
-        aq = self.q.conjugate * Quaternion(self.azero) * self.q
+        aq = self.q * Quaternion(self.azero) * self.q.conjugate
         self.aglobal.x = aq.x
         self.aglobal.y = aq.y
         self.aglobal.z = aq.z

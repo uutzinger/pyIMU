@@ -32,15 +32,24 @@ AHRS based on Madgwick filters.
 </table>
 
 ## Coordinate Convention
-`pyIMU` uses a pilot-style NED frame:
+
+`pyIMU` currently supports the pilot-style NED frame:
 - `x`: forward (North)
 - `y`: right (East)
 - `z`: down (Down)
 
-Positive rotations follow this convention:
+Positive rotations follow the right-hand rule:
 - roll: right wing down
 - pitch: nose up
 - yaw: nose right
+
+Sensor inputs use an aerospace body frame:
+- `x`: forward
+- `y`: right
+- `z`: down
+
+The sensor's accelerometer, gyroscope, and magnetometer need to be transformed so that all three use the body axes defined above. For example for a level, stationary, and NED-aligned body, the accelerometer input should be approximately `[0, 0, +1] g`
+
 
 ## Units
 Default units in filters:

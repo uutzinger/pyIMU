@@ -5,7 +5,7 @@
 ###################################
 import numpy as np
 import random
-import ahrs
+# import ahrs
 import datetime
 
 from pyIMU.madgwick import Madgwick
@@ -23,8 +23,8 @@ LATITUDE     = 32.253460   # [degrees] Tucson
 LONGITUDE    = -110.911789 # [degrees] Tucson
 ALTITUDE     = 730         # [m], Tucson
 
-tucson_wmm = ahrs.utils.WMM(datetime.date(2023, 7, 20), latitude=LATITUDE, longitude=LONGITUDE, height=ALTITUDE)
-tucson_wmm.magnetic_elements
+# tucson_wmm = ahrs.utils.WMM(datetime.date(2023, 7, 20), latitude=LATITUDE, longitude=LONGITUDE, height=ALTITUDE)
+# tucson_wmm.magnetic_elements
 
 FUSER = Madgwick(frequency=150.0, gain=0.033)
 

@@ -332,20 +332,15 @@ cpdef tuple fusion_step(
     azy = ay - gsy
     azz = az - gsz
 
-    # aglobal = q.conjugate * [0,azero] * q
-    qcw = qw
-    qcx = -qx
-    qcy = -qy
-    qcz = -qz
+    # aglobal = q * [0,azero] * q.conjugate
+    tw = -(qx * azx + qy * azy + qz * azz)
+    tx = qw * azx + qy * azz - qz * azy
+    ty = qw * azy - qx * azz + qz * azx
+    tz = qw * azz + qx * azy - qy * azx
 
-    tw = -(qcx * azx + qcy * azy + qcz * azz)
-    tx = qcw * azx + qcy * azz - qcz * azy
-    ty = qcw * azy - qcx * azz + qcz * azx
-    tz = qcw * azz + qcx * azy - qcy * azx
-
-    agx = tw * qx + tx * qw + ty * qz - tz * qy
-    agy = tw * qy - tx * qz + ty * qw + tz * qx
-    agz = tw * qz + tx * qy - ty * qx + tz * qw
+    agx = -tw * qx + tx * qw - ty * qz + tz * qy
+    agy = -tw * qy + tx * qz + ty * qw - tz * qx
+    agz = -tw * qz - tx * qy + ty * qx + tz * qw
 
     return (
         qw, qx, qy, qz,

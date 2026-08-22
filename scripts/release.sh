@@ -20,7 +20,7 @@ Options:
   -h, --help               Show this help.
 
 Notes:
-  - Uses SETUPTOOLS_USE_DISTUTILS=stdlib for build compatibility.
+  - Uses setuptools' bundled distutils for Python 3.12+ compatibility.
   - Requires twine for upload steps.
 EOF
 }
@@ -75,9 +75,9 @@ if ! python3 -m build --help >/dev/null 2>&1; then
 fi
 
 if [[ "${USE_ISOLATION}" -eq 1 ]]; then
-  SETUPTOOLS_USE_DISTUTILS=stdlib python3 -m build
+  python3 -m build
 else
-  SETUPTOOLS_USE_DISTUTILS=stdlib python3 -m build --no-isolation
+  python3 -m build --no-isolation
 fi
 
 WHEEL_PATH="$(ls -t dist/*.whl | head -n1)"

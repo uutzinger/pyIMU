@@ -322,11 +322,13 @@ class Madgwick:
             self.aglobal.x = self.aglobal.y = self.aglobal.z = 0.0
             return
 
+        # Acceleration outputs are in g: azero is gravity-compensated in the
+        # sensor/body frame, and aglobal is azero rotated into the NED Earth frame.
         gravity_sensor = self._gravity_sensor()
         self.azero.x = self.acc.x - gravity_sensor.x
         self.azero.y = self.acc.y - gravity_sensor.y
         self.azero.z = self.acc.z - gravity_sensor.z
-        aq = self.q.conjugate * Quaternion(self.azero) * self.q
+        aq = self.q * Quaternion(self.azero) * self.q.conjugate
         self.aglobal.x = aq.x
         self.aglobal.y = aq.y
         self.aglobal.z = aq.z
